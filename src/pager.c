@@ -1,6 +1,7 @@
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
  * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
+ * Copyright (C) 2014, Yuras Shumovich <shumovichy@gmail.com>
  * Version 1.1.6
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -2683,6 +2684,26 @@ static int unqliteKvIoPageDontMakeHot(unqlite_page *pRaw)
 		return UNQLITE_OK;
 	}
 	pPage->flags |= PAGE_DONT_MAKE_HOT;
+
+	/* Remove from hot dirty list if it is already there */
+	if( pPage->flags & PAGE_HOT_DIRTY ){
+		Pager *pPager = pPage->pPager;
+		if( pPage->pNextHot ){
+			pPage->pNextHot->pPrevHot = pPage->pPrevHot;
+		}
+		if( pPage->pPrevHot ){
+			pPage->pPrevHot->pNextHot = pPage->pNextHot;
+		}
+		if( pPager->pFirstHot == pPage ){
+			pPager->pFirstHot = pPage->pPrevHot;
+		}
+		if( pPager->pHotDirty == pPage ){
+			pPager->pHotDirty = pPage->pNextHot;
+		}
+		pPager->nHot--;
+		pPage->flags &= ~PAGE_HOT_DIRTY;
+	}
+
 	return UNQLITE_OK;
 }
 /* 
