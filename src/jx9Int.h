@@ -1207,6 +1207,7 @@ struct jx9_vm
  */
 enum iErrCode
 {
+    E_ABORT             = -1,  /* deadliness error， should halt script execution. */
 	E_ERROR             = 1,   /* Fatal run-time errors. These indicate errors that can not be recovered 
 							    * from, such as a memory allocation problem. Execution of the script is
 							    * halted.

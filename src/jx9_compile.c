@@ -1081,6 +1081,14 @@ JX9_PRIVATE sxi32 jx9CompileJsonObject(jx9_gen_state *pGen, sxi32 iCompileFlag)
 			pCur++;
 		}
 		rc = SXERR_EMPTY;
+        if( (pCur->nType & JX9_TK_COLON) == 0 ){
+            rc = jx9GenCompileError(&(*pGen), E_ABORT, pCur->nLine, "JSON Object: Missing colon string \":\"");
+            if( rc == SXERR_ABORT ){
+                return SXERR_ABORT;
+            }
+            return SXRET_OK;
+        }
+
 		if( pCur < pGen->pIn ){
 			if( &pCur[1] >= pGen->pIn ){
 				/* Missing value */
