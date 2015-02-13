@@ -453,7 +453,7 @@ JX9_PRIVATE sxi32 jx9CompileSimpleString(jx9_gen_state *pGen, sxi32 iCompileFlag
 	/* Delimit the string */
 	zIn  = pStr->zString;
 	zEnd = &zIn[pStr->nByte];
-	if( zIn >= zEnd ){
+	if( zIn > zEnd ){
 		/* Empty string, load NULL */
 		jx9VmEmitInstr(pGen->pVm, JX9_OP_LOADC, 0, 0, 0, 0);
 		return SXRET_OK;
@@ -487,6 +487,10 @@ JX9_PRIVATE sxi32 jx9CompileSimpleString(jx9_gen_state *pGen, sxi32 iCompileFlag
 			/* Append raw contents*/
 			jx9MemObjStringAppend(pObj, zCur, (sxu32)(zIn-zCur));
 		}
+        else
+        {
+            jx9MemObjStringAppend(pObj, "", 0);
+        }
 		zIn++;
 		if( zIn < zEnd ){
 			if( zIn[0] == '\\' ){
@@ -633,7 +637,7 @@ static sxi32 GenStateCompileString(jx9_gen_state *pGen)
 	/* Delimit the string */
 	zIn  = pStr->zString;
 	zEnd = &zIn[pStr->nByte];
-	if( zIn >= zEnd ){
+	if( zIn > zEnd ){
 		/* Empty string, load NULL */
 		jx9VmEmitInstr(pGen->pVm, JX9_OP_LOADC, 0, 0, 0, 0);
 		return SXRET_OK;
@@ -659,6 +663,16 @@ static sxi32 GenStateCompileString(jx9_gen_state *pGen)
 			}
 			jx9MemObjStringAppend(pObj, zCur, (sxu32)(zIn-zCur));
 		}
+        else
+        {
+            if( pObj == 0 ){
+                pObj = GenStateNewStrObj(&(*pGen), &iCons);
+                if( pObj == 0 ){
+                    return SXERR_ABORT;
+                }
+            }
+            jx9MemObjStringAppend(pObj, "", 0);
+        }
 		if( zIn >= zEnd ){
 			break;
 		}

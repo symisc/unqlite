@@ -824,7 +824,7 @@ JX9_PRIVATE sxi32 jx9MemObjCmp(jx9_value *pObj1, jx9_value *pObj2, int bStrict, 
 	}
 	/* Combine flag together */
 	iComb = pObj1->iFlags|pObj2->iFlags;
-	if( iComb & (MEMOBJ_NULL|MEMOBJ_RES|MEMOBJ_BOOL) ){
+	if( iComb & (MEMOBJ_RES|MEMOBJ_BOOL) ){
 		/* Convert to boolean: Keep in mind FALSE < TRUE */
 		if( (pObj1->iFlags & MEMOBJ_BOOL) == 0 ){
 			jx9MemObjToBool(pObj1);
@@ -833,7 +833,14 @@ JX9_PRIVATE sxi32 jx9MemObjCmp(jx9_value *pObj1, jx9_value *pObj2, int bStrict, 
 			jx9MemObjToBool(pObj2);
 		}
 		return (sxi32)((pObj1->x.iVal != 0) - (pObj2->x.iVal != 0));
-	}else if ( iComb & MEMOBJ_HASHMAP ){
+	}else if( iComb & MEMOBJ_NULL ){
+        if( (pObj1->iFlags & MEMOBJ_NULL) == 0 ){
+            return 1;
+        }
+        if( (pObj2->iFlags & MEMOBJ_NULL) == 0 ){
+            return -1;
+        }
+    }else if ( iComb & MEMOBJ_HASHMAP ){
 		/* Hashmap aka 'array' comparison */
 		if( (pObj1->iFlags & MEMOBJ_HASHMAP) == 0 ){
 			/* Array is always greater */
