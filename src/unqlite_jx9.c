@@ -754,6 +754,57 @@ static int unqliteBuiltin_db_drop_record(jx9_context *pCtx,int argc,jx9_value **
 	return JX9_OK;
 }
 /*
+ * bool db_update_record(string $col_name, int_64 record_id, object $json_object)
+ *   Update a given record with new json object
+ * Parameter
+ * col_name: Collection name
+ *   record_id: ID of the record
+ *   json_object: New Record data
+ * Return
+ *   TRUE on success. FALSE on failure.
+ */
+static int unqliteBuiltin_db_update_record(jx9_context *pCtx,int argc,jx9_value **argv)
+{
+    unqlite_col *pCol;
+    const char *zName;
+    unqlite_vm *pVm;
+    SyString sName;
+    jx9_int64 nId;
+    int nByte;
+    int rc;
+    /* Extract collection name */
+    if( argc < 2 ){
+        /* Missing arguments */
+        jx9_context_throw_error(pCtx,JX9_CTX_ERR,"Missing collection name and/or records");
+        /* Return false */
+        jx9_result_bool(pCtx,0);
+        return JX9_OK;
+    }
+    zName = jx9_value_to_string(argv[0],&nByte);
+    if( nByte < 1){
+        jx9_context_throw_error(pCtx,JX9_CTX_ERR,"Invalid collection name");
+        /* Return false */
+        jx9_result_bool(pCtx,0);
+        return JX9_OK;
+    }
+    SyStringInitFromBuf(&sName,zName,nByte);
+    pVm = (unqlite_vm *)jx9_context_user_data(pCtx);
+    /* Fetch the collection */
+    pCol = unqliteCollectionFetch(pVm,&sName,UNQLITE_VM_AUTO_LOAD);
+    if( pCol == 0 ){
+        jx9_context_throw_error_format(pCtx,JX9_CTX_ERR,"No such collection '%z'",&sName);
+        /* Return false */
+        jx9_result_bool(pCtx,0);
+        return JX9_OK;
+    }
+    /* Update a record with the given value */
+    nId = jx9_value_to_int64(argv[1]);
+    rc = unqliteCollectionUpdateRecord(pCol, nId, argv[2], 0);
+    /* All done, return TRUE */
+    jx9_result_bool(pCtx,rc == UNQLITE_OK);
+    return JX9_OK;
+}
+/*
  * bool db_set_schema(string $col_name, object $json_object)
  *   Set a schema for a given collection.
  * Parameter
@@ -961,6 +1012,7 @@ UNQLITE_PRIVATE int unqliteRegisterJx9Functions(unqlite_vm *pVm)
 		{ "db_drop_collection", unqliteBuiltin_db_drop_col      },
 		{ "collection_delete", unqliteBuiltin_db_drop_col       },
 		{ "db_drop_record",    unqliteBuiltin_db_drop_record    },
+		{ "db_update_record",  unqliteBuiltin_db_update_record  },
 		{ "db_set_schema",     unqliteBuiltin_db_set_schema     },
 		{ "db_get_schema",     unqliteBuiltin_db_get_schema     },
 		{ "db_begin",          unqliteBuiltin_db_begin          },

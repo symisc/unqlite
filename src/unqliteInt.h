@@ -251,6 +251,7 @@ UNQLITE_PRIVATE unqlite_col * unqliteCollectionFetch(unqlite_vm *pVm,SyString *p
 UNQLITE_PRIVATE int unqliteCollectionSetSchema(unqlite_col *pCol,jx9_value *pValue);
 UNQLITE_PRIVATE int unqliteCollectionPut(unqlite_col *pCol,jx9_value *pValue,int iFlag);
 UNQLITE_PRIVATE int unqliteCollectionDropRecord(unqlite_col *pCol,jx9_int64 nId,int wr_header,int log_err);
+UNQLITE_PRIVATE int unqliteCollectionUpdateRecord(unqlite_col *pCol,jx9_int64 nId, jx9_value *pValue,int iFlag);
 UNQLITE_PRIVATE int unqliteDropCollection(unqlite_col *pCol);
 /* unql_jx9.c */
 UNQLITE_PRIVATE int unqliteRegisterJx9Functions(unqlite_vm *pVm);
