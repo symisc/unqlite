@@ -291,10 +291,12 @@ static sxi32 unqliteCoreInitialize(void)
 	if( sUnqlMPGlobal.nMagic == UNQLITE_LIB_MAGIC ){
 		return UNQLITE_OK; /* Already initialized */
 	}
-	/* Point to the built-in vfs */
-	pVfs = unqliteExportBuiltinVfs();
-	/* Install it */
-	unqlite_lib_config(UNQLITE_LIB_CONFIG_VFS, pVfs);
+	if( sUnqlMPGlobal.pVfs == 0 ){  /* Allow setting your own vfs */
+		/* Point to the built-in vfs */
+		pVfs = unqliteExportBuiltinVfs();
+		/* Install it */
+		unqlite_lib_config(UNQLITE_LIB_CONFIG_VFS, pVfs);
+	}
 #if defined(UNQLITE_ENABLE_THREADS)
 	if( sUnqlMPGlobal.nThreadingLevel != UNQLITE_THREAD_LEVEL_SINGLE ){
 		pMutexMethods = sUnqlMPGlobal.pMutexMethods;
