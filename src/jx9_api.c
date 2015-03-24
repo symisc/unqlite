@@ -273,10 +273,12 @@ static sxi32 Jx9CoreInitialize(void)
 	if( sJx9MPGlobal.nMagic == JX9_LIB_MAGIC ){
 		return JX9_OK; /* Already initialized */
 	}
-	/* Point to the built-in vfs */
-	pVfs = jx9ExportBuiltinVfs();
-	/* Install it */
-	jx9_lib_config(JX9_LIB_CONFIG_VFS, pVfs);
+	if( sJx9MPGlobal.pVfs == 0 ){
+		/* Point to the built-in vfs */
+		pVfs = jx9ExportBuiltinVfs();
+		/* Install it */
+		jx9_lib_config(JX9_LIB_CONFIG_VFS, pVfs);
+	}
 #if defined(JX9_ENABLE_THREADS)
 	if( sJx9MPGlobal.nThreadingLevel != JX9_THREAD_LEVEL_SINGLE ){
 		pMutexMethods = sJx9MPGlobal.pMutexMethods;
