@@ -844,7 +844,7 @@ static int CollectionStore(
                             );
     if( rc == UNQLITE_OK ){
         /* Save the value in the cache */
-        CollectionCacheInstallRecord(pCol,pCol->nLastid,pValue);
+        CollectionCacheInstallRecord(pCol,nId,pValue);
     }
     if( rc != UNQLITE_OK ){
         unqliteGenErrorFormat(pCol->pVm->pDb,
