@@ -451,9 +451,9 @@ JX9_PRIVATE int jx9_init(jx9 **ppEngine)
 	if( rc != JX9_OK ){
 		goto Release;
 	}
-#if defined(JX9_ENABLE_THREADS)
-	SyMemBackendDisbaleMutexing(&pEngine->sAllocator);
-#endif
+//#if defined(JX9_ENABLE_THREADS)
+//	SyMemBackendDisbaleMutexing(&pEngine->sAllocator);
+//#endif
 	/* Default configuration */
 	SyBlobInit(&pEngine->xConf.sErrConsumer, &pEngine->sAllocator);
 	/* Install a default compile-time error consumer routine */
