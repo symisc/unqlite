@@ -2639,10 +2639,10 @@ static int lhash_kv_init(unqlite_kv_engine *pEngine,int iPageSize)
 
 	/* This structure is always zeroed, go to the initialization directly */
 	SyMemBackendInitFromParent(&pHash->sAllocator,unqliteExportMemBackend());
-#if defined(UNQLITE_ENABLE_THREADS)
-	/* Already protected by the upper layers */
-	SyMemBackendDisbaleMutexing(&pHash->sAllocator);
-#endif
+//#if defined(UNQLITE_ENABLE_THREADS)
+//	/* Already protected by the upper layers */
+//	SyMemBackendDisbaleMutexing(&pHash->sAllocator);
+//#endif
 	pHash->iPageSize = iPageSize;
 	/* Default hash function */
 	pHash->xHash = lhash_bin_hash;

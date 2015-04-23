@@ -443,12 +443,16 @@ static int unqliteVmLoadCollection(
 	}
 	if( (iFlag & UNQLITE_VM_COLLECTION_CREATE) == 0 ){
 		/* Seek to the desired location */
-		rc = pMethods->xSeek(pCursor,(const void *)zName,(unqlite_int64)nByte,UNQLITE_CURSOR_MATCH_EXACT);
-		if( rc != UNQLITE_OK ){
-			unqliteGenErrorFormat(pDb,"Collection '%.*s' not defined in the underlying database",nByte,zName);
+		rc = pMethods->xSeek(pCursor,(const void *)zName,(int)nByte,UNQLITE_CURSOR_MATCH_EXACT);
+		if( rc != UNQLITE_OK & (iFlag & UNQLITE_VM_COLLECTION_EXISTS) == 0){
+            unqliteGenErrorFormat(pDb,"Collection '%.*s' not defined in the underlying database",nByte,zName);
 			unqliteReleaseCursor(pDb,pCursor);
 			return rc;
 		}
+        else if((iFlag & UNQLITE_VM_COLLECTION_EXISTS)){
+            unqliteReleaseCursor(pDb,pCursor);
+            return rc;
+        }
 	}
 	/* Allocate a new instance */
 	pCol = (unqlite_col *)SyMemBackendPoolAlloc(&pVm->sAlloc,sizeof(unqlite_col));
@@ -658,6 +662,25 @@ UNQLITE_PRIVATE int unqliteCollectionFetchNextRecord(unqlite_col *pCol,jx9_value
 	return rc;
 }
 /*
+ * Judge a collection whether exists
+ */
+UNQLITE_PRIVATE int unqliteExistsCollection(
+    unqlite_vm *pVm, /* Target VM */
+    SyString *pName  /* Collection name */
+    )
+{
+    unqlite_col *pCol;
+    int rc;
+    /* Perform a lookup first */
+    pCol = unqliteVmFetchCollection(pVm,pName);
+    if( pCol ){
+        /* Already loaded in memory*/
+        return UNQLITE_OK;
+    }
+    rc = unqliteVmLoadCollection(pVm,pName->zString,pName->nByte,UNQLITE_VM_COLLECTION_EXISTS,0);
+    return rc;
+}
+/*
  * Create a new collection.
  */
 UNQLITE_PRIVATE int unqliteCreateCollection(
@@ -844,7 +867,7 @@ static int CollectionStore(
                             );
     if( rc == UNQLITE_OK ){
         /* Save the value in the cache */
-        CollectionCacheInstallRecord(pCol,pCol->nLastid,pValue);
+        CollectionCacheInstallRecord(pCol,nId,pValue);
     }
     if( rc != UNQLITE_OK ){
         unqliteGenErrorFormat(pCol->pVm->pDb,

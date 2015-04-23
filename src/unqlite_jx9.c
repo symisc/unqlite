@@ -98,11 +98,11 @@ static int unqliteBuiltin_db_sig(jx9_context *pCtx,int argc,jx9_value **argv)
  */
 static int unqliteBuiltin_collection_exists(jx9_context *pCtx,int argc,jx9_value **argv)
 {
-	unqlite_col *pCol;
 	const char *zName;
 	unqlite_vm *pVm;
 	SyString sName;
-	int nByte;
+    int nByte;
+    int rc;
 	/* Extract collection name */
 	if( argc < 1 ){
 		/* Missing arguments */
@@ -121,9 +121,9 @@ static int unqliteBuiltin_collection_exists(jx9_context *pCtx,int argc,jx9_value
 	SyStringInitFromBuf(&sName,zName,nByte);
 	pVm = (unqlite_vm *)jx9_context_user_data(pCtx);
 	/* Perform the lookup */
-	pCol = unqliteCollectionFetch(pVm,&sName,UNQLITE_VM_AUTO_LOAD);
+	rc = unqliteExistsCollection(pVm, &sName);
 	/* Lookup result */
-	jx9_result_bool(pCtx,pCol ? 1 : 0);
+	jx9_result_bool(pCtx, rc == UNQLITE_OK ? 1 : 0);
 	return JX9_OK;
 }
 /*

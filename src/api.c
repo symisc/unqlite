@@ -572,11 +572,11 @@ static int unqliteInitDatabase(
 	int rc;
 	/* Initialiaze the memory subsystem */
 	SyMemBackendInitFromParent(&pDB->sMem,pParent);
-#if defined(UNQLITE_ENABLE_THREADS)
-	/* No need for internal mutexes */
-	SyMemBackendDisbaleMutexing(&pDB->sMem);
-#endif
-	SyBlobInit(&pDB->sErr,&pDB->sMem);	
+//#if defined(UNQLITE_ENABLE_THREADS)
+//	/* No need for internal mutexes */
+//	SyMemBackendDisbaleMutexing(&pDB->sMem);
+//#endif
+	SyBlobInit(&pDB->sErr,&pDB->sMem);
 	/* Sanityze flags */
 	iFlags = unqliteSanityzeFlag(iFlags);
 	/* Init the pager and the transaction manager */
