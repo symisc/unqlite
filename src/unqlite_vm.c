@@ -444,7 +444,7 @@ static int unqliteVmLoadCollection(
 	if( (iFlag & UNQLITE_VM_COLLECTION_CREATE) == 0 ){
 		/* Seek to the desired location */
 		rc = pMethods->xSeek(pCursor,(const void *)zName,(int)nByte,UNQLITE_CURSOR_MATCH_EXACT);
-		if( rc != UNQLITE_OK & (iFlag & UNQLITE_VM_COLLECTION_EXISTS) == 0){
+		if( rc != UNQLITE_OK && (iFlag & UNQLITE_VM_COLLECTION_EXISTS) == 0){
             unqliteGenErrorFormat(pDb,"Collection '%.*s' not defined in the underlying database",nByte,zName);
 			unqliteReleaseCursor(pDb,pCursor);
 			return rc;
