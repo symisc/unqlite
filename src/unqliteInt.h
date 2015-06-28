@@ -126,7 +126,7 @@ struct unqlite
  * VM control flags (Mostly related to collection handling).
  */
 #define UNQLITE_VM_COLLECTION_CREATE     0x001 /* Create a new collection */
-#define UNQLITE_VM_COLLECTION_OVERWRITE  0x002 /* Overwrite old collection */
+#define UNQLITE_VM_COLLECTION_EXISTS     0x002 /* Exists old collection */
 #define UNQLITE_VM_AUTO_LOAD             0x004 /* Auto load a collection from the vfs */
 /* Forward declaration */
 typedef struct unqlite_col_record unqlite_col_record;
@@ -239,6 +239,7 @@ UNQLITE_PRIVATE int unqliteGenError(unqlite *pDb,const char *zErr);
 UNQLITE_PRIVATE int unqliteGenErrorFormat(unqlite *pDb,const char *zFmt,...);
 UNQLITE_PRIVATE int unqliteGenOutofMem(unqlite *pDb);
 /* unql_vm.c */
+UNQLITE_PRIVATE int unqliteExistsCollection(unqlite_vm *pVm, SyString *pName);
 UNQLITE_PRIVATE int unqliteCreateCollection(unqlite_vm *pVm,SyString *pName);
 UNQLITE_PRIVATE jx9_int64 unqliteCollectionLastRecordId(unqlite_col *pCol);
 UNQLITE_PRIVATE jx9_int64 unqliteCollectionCurrentRecordId(unqlite_col *pCol);

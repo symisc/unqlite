@@ -372,7 +372,13 @@ static Page * pager_alloc_page(Pager *pPager,pgno num_page)
  */
 static void page_ref(Page *pPage)
 {
+    if( pPage->pPager->pAllocator->pMutexMethods ){
+        SyMutexEnter(pPage->pPager->pAllocator->pMutexMethods, pPage->pPager->pAllocator->pMutex);
+    }
 	pPage->nRef++;
+    if( pPage->pPager->pAllocator->pMutexMethods ){
+        SyMutexLeave(pPage->pPager->pAllocator->pMutexMethods, pPage->pPager->pAllocator->pMutex);
+    }
 }
 /*
  * Release an in-memory page after its reference count reach zero.
@@ -402,8 +408,15 @@ static int pager_unlink_page(Pager *pPager,Page *pPage);
  */
 static void page_unref(Page *pPage)
 {
-	pPage->nRef--;
-	if( pPage->nRef < 1	){
+	int nRef;
+    if( pPage->pPager->pAllocator->pMutexMethods ){
+        SyMutexEnter(pPage->pPager->pAllocator->pMutexMethods, pPage->pPager->pAllocator->pMutex);
+    }
+	nRef = pPage->nRef--;
+    if( pPage->pPager->pAllocator->pMutexMethods ){
+        SyMutexLeave(pPage->pPager->pAllocator->pMutexMethods, pPage->pPager->pAllocator->pMutex);
+    }
+	if( nRef == 0){
 		Pager *pPager = pPage->pPager;
 		if( !(pPage->flags & PAGE_DIRTY)  ){
 			pager_unlink_page(pPager,pPage);

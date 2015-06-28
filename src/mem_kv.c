@@ -467,10 +467,10 @@ static int MemHashInit(unqlite_kv_engine *pKvEngine,int iPageSize)
 	/* Note that this instance is already zeroed */	
 	/* Memory backend */
 	SyMemBackendInitFromParent(&pEngine->sAlloc,unqliteExportMemBackend());
-#if defined(UNQLITE_ENABLE_THREADS)
-	/* Already protected by the upper layers */
-	SyMemBackendDisbaleMutexing(&pEngine->sAlloc);
-#endif
+//#if defined(UNQLITE_ENABLE_THREADS)
+//	/* Already protected by the upper layers */
+//	SyMemBackendDisbaleMutexing(&pEngine->sAlloc);
+//#endif
 	/* Default hash & comparison function */
 	pEngine->xHash = MemHashFunc;
 	pEngine->xCmp = SyMemcmp;
