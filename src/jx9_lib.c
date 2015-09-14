@@ -2446,8 +2446,8 @@ struct SyFmtInfo
   sxu8 base;     /* The base for radix conversion */
   int flags;    /* One or more of SXFLAG_ constants below */
   sxu8 type;     /* Conversion paradigm */
-  char *charset; /* The character set for conversion */
-  char *prefix;  /* Prefix on non-zero values in alt format */
+  const char *charset; /* The character set for conversion */
+  const char *prefix;  /* Prefix on non-zero values in alt format */
 };
 typedef struct SyFmtConsumer SyFmtConsumer;
 struct SyFmtConsumer
@@ -2711,7 +2711,7 @@ static const SyFmtInfo aFmt[] = {
         }
         bufpt = &buf[SXFMT_BUFSIZ-1];
         {
-          register char *cset;      /* Use registers for speed */
+          register const char *cset;      /* Use registers for speed */
           register int base;
           cset = infop->charset;
           base = infop->base;
@@ -2726,7 +2726,8 @@ static const SyFmtInfo aFmt[] = {
         }
         if( prefix ) *(--bufpt) = prefix;               /* Add sign */
         if( flag_alternateform && infop->prefix ){      /* Add "0" or "0x" */
-          char *pre, x;
+          const char *pre;
+          char x;
           pre = infop->prefix;
           if( *bufpt!=pre[0] ){
             for(pre=infop->prefix; (x=(*pre))!=0; pre++) *(--bufpt) = x;
@@ -2767,7 +2768,7 @@ static const SyFmtInfo aFmt[] = {
           while( realvalue<1e-8 && exp>=-350 ){ realvalue *= 1e8; exp-=8; }
           while( realvalue<1.0 && exp>=-350 ){ realvalue *= 10.0; exp--; }
           if( exp>350 || exp<-350 ){
-            bufpt = "NaN";
+            bufpt = (char*)"NaN";
             length = 3;
             break;
           }
@@ -2888,7 +2889,7 @@ static const SyFmtInfo aFmt[] = {
       case SXFMT_STRING:
         bufpt = va_arg(ap, char*);
         if( bufpt==0 ){
-          bufpt = " ";
+          bufpt = (char*)" ";
 		  length = (int)sizeof(" ")-1;
 		  break;
         }
@@ -2903,7 +2904,7 @@ static const SyFmtInfo aFmt[] = {
 		/* Symisc extension */
 		SyString *pStr = va_arg(ap, SyString *);
 		if( pStr == 0 || pStr->zString == 0 ){
-			 bufpt = " ";
+			 bufpt = (char*)" ";
 		     length = (int)sizeof(char);
 		     break;
 		}

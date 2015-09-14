@@ -4375,7 +4375,7 @@ static int jx9Builtin_fputcsv(jx9_context *pCtx, int nArg, jx9_value **apArg)
 	const jx9_io_stream *pStream;
 	struct csv_data sCsv;
 	io_private *pDev;
-	char *zEol;
+	const char *zEol;
 	int eolen;
 	if( nArg < 2 || !jx9_value_is_resource(apArg[0]) || !jx9_value_is_json_array(apArg[1]) ){
 		/* Missing/Invalid arguments, return FALSE */
