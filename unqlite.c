@@ -878,6 +878,10 @@ UNQLITE_APIEXPORT int unqlite_open(unqlite **ppDB,const char *zFilename,unsigned
 UNQLITE_APIEXPORT int unqlite_config(unqlite *pDb,int nOp,...);
 UNQLITE_APIEXPORT int unqlite_close(unqlite *pDb);
 
+/* Memory Allocation */
+UNQLITE_APIEXPORT void* unqlite_malloc(unsigned int nByte);
+UNQLITE_APIEXPORT void unqlite_free(void *p);
+
 /* Key/Value (KV) Store Interfaces */
 UNQLITE_APIEXPORT int unqlite_kv_store(unqlite *pDb,const void *pKey,int nKeyLen,const void *pData,unqlite_int64 nDataLen);
 UNQLITE_APIEXPORT int unqlite_kv_append(unqlite *pDb,const void *pKey,int nKeyLen,const void *pData,unqlite_int64 nDataLen);
@@ -52874,7 +52878,7 @@ static unixInodeInfo *inodeList = 0;
 /*
  * Local memory allocation stuff.
  */
-static void * unqlite_malloc(sxu32 nByte)
+void * unqlite_malloc(unsigned int nByte)
 {
 	SyMemBackend *pAlloc;
 	void *p;
@@ -52882,7 +52886,7 @@ static void * unqlite_malloc(sxu32 nByte)
 	p = SyMemBackendAlloc(pAlloc,nByte);
 	return p;
 }
-static void unqlite_free(void *p)
+void unqlite_free(void *p)
 {
 	SyMemBackend *pAlloc;
 	pAlloc = (SyMemBackend *)unqliteExportMemBackend();

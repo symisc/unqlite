@@ -328,7 +328,7 @@ static unixInodeInfo *inodeList = 0;
 /*
  * Local memory allocation stuff.
  */
-static void * unqlite_malloc(sxu32 nByte)
+void * unqlite_malloc(unsigned int nByte)
 {
 	SyMemBackend *pAlloc;
 	void *p;
@@ -336,7 +336,7 @@ static void * unqlite_malloc(sxu32 nByte)
 	p = SyMemBackendAlloc(pAlloc,nByte);
 	return p;
 }
-static void unqlite_free(void *p)
+void unqlite_free(void *p)
 {
 	SyMemBackend *pAlloc;
 	pAlloc = (SyMemBackend *)unqliteExportMemBackend();

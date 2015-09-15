@@ -803,6 +803,10 @@ UNQLITE_APIEXPORT int unqlite_open(unqlite **ppDB,const char *zFilename,unsigned
 UNQLITE_APIEXPORT int unqlite_config(unqlite *pDb,int nOp,...);
 UNQLITE_APIEXPORT int unqlite_close(unqlite *pDb);
 
+/* Memory Allocation */
+UNQLITE_APIEXPORT void* unqlite_malloc(unsigned int nByte);
+UNQLITE_APIEXPORT void unqlite_free(void *p);
+
 /* Key/Value (KV) Store Interfaces */
 UNQLITE_APIEXPORT int unqlite_kv_store(unqlite *pDb,const void *pKey,int nKeyLen,const void *pData,unqlite_int64 nDataLen);
 UNQLITE_APIEXPORT int unqlite_kv_append(unqlite *pDb,const void *pKey,int nKeyLen,const void *pData,unqlite_int64 nDataLen);
