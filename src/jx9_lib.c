@@ -350,7 +350,7 @@ JX9_PRIVATE sxi32 SyByteListFind(const char *zSrc, sxu32 nLen, const char *zList
 	}	
 	return SXERR_NOTFOUND; 
 }
-#ifndef JX9_DISABLE_BUILTIN_FUNC
+#if !defined(JX9_DISABLE_BUILTIN_FUNC) || defined(__APPLE__)
 JX9_PRIVATE sxi32 SyStrncmp(const char *zLeft, const char *zRight, sxu32 nLen)
 {
 	const unsigned char *zP = (const unsigned char *)zLeft;
