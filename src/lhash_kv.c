@@ -1430,11 +1430,11 @@ static int lhCellWriteOvflPayload(lhcell *pCell,const void *pKey,sxu32 nKeylen,.
 		sxu32 nDatalen;
 		sxu64 nData;
 		pData = va_arg(ap,const void *);
-		nData = va_arg(ap,sxu64);
 		if( pData == 0 ){
 			/* No more chunks */
 			break;
 		}
+		nData = va_arg(ap,sxu64);
 		/* Write this chunk */
 		zPtr = (const unsigned char *)pData;
 		zEnd = &zPtr[nData];
