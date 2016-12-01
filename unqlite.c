@@ -1,8 +1,8 @@
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
+ * Copyright (C) 2012-2016, Symisc Systems http://unqlite.org/
  * Copyright (C) 2014, Yuras Shumovich <shumovichy@gmail.com>
- * Version 1.1.6
+ * Version 1.1.7
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
@@ -12,7 +12,7 @@
  *      http://unqlite.org/licensing.html
  */
 /*
- * Copyright (C) 2012, 2013 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
+ * Copyright (C) 2012, 2016 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- * $SymiscID: unqlite.c v1.1.6 Unix|Win32/64 2013-07-08 03:38:18 stable <chm@symisc.net> $ 
+ * $SymiscID: unqlite.c v1.1.7 Win10 2106-12-02 00:04:12 stable <chm@symisc.net> $ 
  */
 /* This file is an amalgamation of many separate C source files from unqlite version 1.1.6
  * By combining all the individual C code files into this single large file, the entire code
@@ -76,7 +76,7 @@
 #define _UNQLITE_H_
 /*
  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
+ * Copyright (C) 2012-2016, Symisc Systems http://unqlite.org/
  * Version 1.1.6
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -87,7 +87,7 @@
  *      http://unqlite.org/licensing.html
  */
 /*
- * Copyright (C) 2012, 2013 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
+ * Copyright (C) 2012, 2016 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -111,7 +111,7 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- /* $SymiscID: unqlite.h v1.1 UNIX|WIN32/64 2012-11-02 02:10 stable <chm@symisc.net> $ */
+ /* $SymiscID: unqlite.h v1.2 Win10 2106-12-02 00:04:12 stable  <chm@symisc.net> $ */
 #include <stdarg.h> /* needed for the definition of va_list */
 /*
  * Compile time engine version, signature, identification in the symisc source tree
@@ -127,13 +127,13 @@
  * version number and Y is the minor version number and Z is the release
  * number.
  */
-#define UNQLITE_VERSION "1.1.6"
+#define UNQLITE_VERSION "1.1.7"
 /*
  * The UNQLITE_VERSION_NUMBER C preprocessor macro resolves to an integer
  * with the value (X*1000000 + Y*1000 + Z) where X, Y, and Z are the same
  * numbers used in [UNQLITE_VERSION].
  */
-#define UNQLITE_VERSION_NUMBER 1001006
+#define UNQLITE_VERSION_NUMBER 1001007
 /*
  * The UNQLITE_SIG C preprocessor macro evaluates to a string
  * literal which is the public signature of the unqlite engine.
@@ -141,7 +141,7 @@
  * generated Server MIME header as follows:
  *   Server: YourWebServer/x.x unqlite/x.x.x \r\n
  */
-#define UNQLITE_SIG "unqlite/1.1.6"
+#define UNQLITE_SIG "unqlite/1.1.7"
 /*
  * UnQLite identification in the Symisc source tree:
  * Each particular check-in of a particular software released
@@ -158,7 +158,7 @@
  *   licensing@symisc.net
  *   contact@symisc.net
  */
-#define UNQLITE_COPYRIGHT "Copyright (C) Symisc Systems, S.U.A.R.L [Mrad Chems Eddine <chm@symisc.net>] 2012-2013, http://unqlite.org/"
+#define UNQLITE_COPYRIGHT "Copyright (C) Symisc Systems, S.U.A.R.L [Mrad Chems Eddine <chm@symisc.net>] 2012-2016, http://unqlite.org/"
 /* Make sure we can call this stuff from C++ */
 #ifdef __cplusplus
 extern "C" { 
@@ -878,10 +878,6 @@ struct unqlite_kv_methods
 UNQLITE_APIEXPORT int unqlite_open(unqlite **ppDB,const char *zFilename,unsigned int iMode);
 UNQLITE_APIEXPORT int unqlite_config(unqlite *pDb,int nOp,...);
 UNQLITE_APIEXPORT int unqlite_close(unqlite *pDb);
-
-/* Memory Allocation */
-UNQLITE_APIEXPORT void* unqlite_malloc(unsigned int nByte);
-UNQLITE_APIEXPORT void unqlite_free(void *p);
 
 /* Key/Value (KV) Store Interfaces */
 UNQLITE_APIEXPORT int unqlite_kv_store(unqlite *pDb,const void *pKey,int nKeyLen,const void *pData,unqlite_int64 nDataLen);
@@ -50775,7 +50771,7 @@ static int lhFindSlavePage(lhpage *pPage,sxu64 nAmount,sxu16 *pOfft,lhpage **ppS
 	/* Look for an already attached slave page */
 	for( i = 0 ; i < pMaster->iSlave ; ++i ){
 		/* Find a free chunk big enough */
-		sxu16 size = L_HASH_CELL_SZ + nAmount;
+		sxu16 size = (sxu16)(L_HASH_CELL_SZ + nAmount);
 		rc = lhAllocateSpace(pSlave,size,&iOfft);
 		if( rc != UNQLITE_OK ){
 			/* A space for cell header only */
@@ -54109,7 +54105,7 @@ static int unixOpen(
   ** a file-descriptor on the directory too. The first time unixSync()
   ** is called the directory file descriptor will be fsync()ed and close()d.
   */
-  int isOpenDirectory = isCreate ;
+  int isOpenDirectory = isCreate;
   const char *zName = zPath;
 
   SyZero(p,sizeof(unixFile));
@@ -59264,7 +59260,6 @@ static int unqliteBuiltin_db_sig(jx9_context *pCtx,int argc,jx9_value **argv)
  */
 static int unqliteBuiltin_collection_exists(jx9_context *pCtx,int argc,jx9_value **argv)
 {
-	unqlite_col *pCol;
 	const char *zName;
 	unqlite_vm *pVm;
 	SyString sName;
