@@ -68,7 +68,7 @@
 /*
  * ----------------------------------------------------------
  * File: unqlite.h
- * MD5: d26e9847c6587edbbb183d0115d172cb
+ * ID: 59047eb96a0db4f85a1727f2cfb9d34f
  * ----------------------------------------------------------
  */
 /* This file was automatically generated.  Do not edit (Except for compile time directives)! */ 
@@ -1028,7 +1028,7 @@ UNQLITE_APIEXPORT const char * unqlite_lib_copyright(void);
 /*
  * ----------------------------------------------------------
  * File: jx9.h
- * MD5: d23a1e182f596794001533e1d6aa16a0
+ * ID: d23a1e182f596794001533e1d6aa16a0
  * ----------------------------------------------------------
  */
 /* This file was automatically generated.  Do not edit (except for compile time directive)! */ 
@@ -1497,7 +1497,7 @@ JX9_PRIVATE const char * jx9_lib_signature(void);
 /*
  * ----------------------------------------------------------
  * File: jx9Int.h
- * MD5: fb8dffc8ba1425a139091aa145067e16
+ * ID: 5cf7c41d705e506b3a783068cc36b2bc
  * ----------------------------------------------------------
  */
 /*
@@ -3210,7 +3210,7 @@ JX9_PRIVATE void SyDosTimeFormat(sxu32 nDosDate, Sytm *pOut);
 /*
  * ----------------------------------------------------------
  * File: unqliteInt.h
- * MD5: 325816ce05f6adbaab2c39a41875dedd
+ * ID: 005911eba855fe169967454b24952963
  * ----------------------------------------------------------
  */
 /*
@@ -3536,7 +3536,7 @@ UNQLITE_PRIVATE sxu32 unqlitePagerRandomNum(Pager *pPager);
 /*
  * ----------------------------------------------------------
  * File: api.c
- * MD5: d79e8404e50dacd0ea75635c1ebe553a
+ * ID: f5217e26d92dc2c65af57aee7a40da90
  * ----------------------------------------------------------
  */
 /*
@@ -6333,7 +6333,7 @@ UNQLITE_APIEXPORT unsigned int unqlite_util_random_num(unqlite *pDb)
 /*
  * ----------------------------------------------------------
  * File: bitvec.c
- * MD5: 7e3376710d8454ebcf8c77baacca880f
+ * ID: 7e3376710d8454ebcf8c77baacca880f
  * ----------------------------------------------------------
  */
 /*
@@ -6561,7 +6561,7 @@ UNQLITE_PRIVATE void unqliteBitvecDestroy(Bitvec *p)
 /*
  * ----------------------------------------------------------
  * File: fastjson.c
- * MD5: 3693c0022edc7d37b65124d7aef68397
+ * ID: 3693c0022edc7d37b65124d7aef68397
  * ----------------------------------------------------------
  */
 /*
@@ -6960,7 +6960,7 @@ UNQLITE_PRIVATE sxi32 FastJsonDecode(
 /*
  * ----------------------------------------------------------
  * File: jx9_api.c
- * MD5: 73cba599c009cee0ff878666d0543438
+ * ID: a61ea06ae6fa05265325891fdbab76ec
  * ----------------------------------------------------------
  */
 /*
@@ -8712,7 +8712,7 @@ JX9_PRIVATE int jx9_value_is_empty(jx9_value *pVal)
 /*
  * ----------------------------------------------------------
  * File: jx9_builtin.c
- * MD5: 97ae6ddf8ded9fe14634060675e12f80
+ * ID: 97ae6ddf8ded9fe14634060675e12f80
  * ----------------------------------------------------------
  */
 /*
@@ -17016,7 +17016,7 @@ JX9_PRIVATE void jx9RegisterBuiltInFunction(jx9_vm *pVm)
 /*
  * ----------------------------------------------------------
  * File: jx9_compile.c
- * MD5: 562e73eb7214f890e71713c6b97a7863
+ * ID: 51af5da3f55d41cc686bcf74d45e690a
  * ----------------------------------------------------------
  */
 /*
@@ -20715,7 +20715,7 @@ JX9_PRIVATE sxi32 jx9GenCompileError(jx9_gen_state *pGen,sxi32 nErrType,sxu32 nL
 /*
  * ----------------------------------------------------------
  * File: jx9_const.c
- * MD5: f3980b00dd1eda0bb2b749424a8dfffe
+ * ID: f3980b00dd1eda0bb2b749424a8dfffe
  * ----------------------------------------------------------
  */
 /*
@@ -22144,7 +22144,7 @@ JX9_PRIVATE void jx9RegisterBuiltInConstant(jx9_vm *pVm)
 /*
  * ----------------------------------------------------------
  * File: jx9_hashmap.c
- * MD5: 4e93d15cd37e6093e25d8ede3064e210
+ * ID: 4e93d15cd37e6093e25d8ede3064e210
  * ----------------------------------------------------------
  */
 /*
@@ -25139,7 +25139,7 @@ JX9_PRIVATE sxi32 jx9HashmapWalk(
 /*
  * ----------------------------------------------------------
  * File: jx9_json.c
- * MD5: 31a27f8797418de511c669feed763341
+ * ID: 31a27f8797418de511c669feed763341
  * ----------------------------------------------------------
  */
 /*
@@ -25875,7 +25875,7 @@ JX9_PRIVATE int jx9JsonDecode(jx9_context *pCtx,const char *zJSON,int nByte)
 /*
  * ----------------------------------------------------------
  * File: jx9_lex.c
- * MD5: a79518c0635dbaf5dcfaca62efa2faf8
+ * ID: a79518c0635dbaf5dcfaca62efa2faf8
  * ----------------------------------------------------------
  */
 /*
@@ -26640,7 +26640,7 @@ JX9_PRIVATE sxi32 jx9Tokenize(const char *zInput,sxu32 nLen,SySet *pOut)
 /*
  * ----------------------------------------------------------
  * File: jx9_lib.c
- * MD5: a684fb6677b1ab0110d03536f1280c50
+ * ID: 0bdde8210e80756941493cf700d8d46c
  * ----------------------------------------------------------
  */
 /*
@@ -31035,7 +31035,7 @@ JX9_PRIVATE void SyDosTimeFormat(sxu32 nDosDate, Sytm *pOut)
 /*
  * ----------------------------------------------------------
  * File: jx9_memobj.c
- * MD5: 8692d7f4cb297c0946066b4a9034c637
+ * ID: 9912bba9f8634554e474f1e37b9f2760
  * ----------------------------------------------------------
  */
 /*
@@ -32126,7 +32126,7 @@ JX9_PRIVATE sxi32 jx9MemObjDump(
 /*
  * ----------------------------------------------------------
  * File: jx9_parse.c
- * MD5: d8fcac4c6cd7672f0103c0bf4a4b61fc
+ * ID: d8fcac4c6cd7672f0103c0bf4a4b61fc
  * ----------------------------------------------------------
  */
 /*
@@ -33309,7 +33309,7 @@ JX9_PRIVATE sxi32 jx9ExprMakeTree(jx9_gen_state *pGen, SySet *pExprNode, jx9_exp
 /*
  * ----------------------------------------------------------
  * File: jx9_vfs.c
- * MD5: 8b73046a366acaf6aa7227c2133e16c0
+ * ID: 8b73046a366acaf6aa7227c2133e16c0
  * ----------------------------------------------------------
  */
 /*
@@ -41538,7 +41538,7 @@ JX9_PRIVATE void * jx9ExportStderr(jx9_vm *pVm)
 /*
  * ----------------------------------------------------------
  * File: jx9_vm.c
- * MD5: beca4be65a9a49c932c356d7680034c9
+ * ID: 7b857a4089c2003b8b85b60058b47526
  * ----------------------------------------------------------
  */
 /*
@@ -48686,7 +48686,7 @@ static sxi32 VmGetNextLine(SyString *pCursor, SyString *pCurrent)
 /*
  * ----------------------------------------------------------
  * File: lhash_kv.c
- * MD5: 581b07ce2984fd95740677285d8a11d3
+ * ID: bd46b0ebe557e6d81b22465a4daac7e5
  * ----------------------------------------------------------
  */
 /*
@@ -51773,7 +51773,7 @@ UNQLITE_PRIVATE const unqlite_kv_methods * unqliteExportDiskKvStorage(void)
 /*
  * ----------------------------------------------------------
  * File: mem_kv.c
- * MD5: 32e2610c95f53038114d9566f0d0489e
+ * ID: e16dc2ee710df58163229126d1854f12
  * ----------------------------------------------------------
  */
 /*
@@ -52457,7 +52457,7 @@ UNQLITE_PRIVATE const unqlite_kv_methods * unqliteExportMemKvStorage(void)
 /*
  * ----------------------------------------------------------
  * File: os.c
- * MD5: e7ad243c3cd9e6aac5fba406eedb7766
+ * ID: e7ad243c3cd9e6aac5fba406eedb7766
  * ----------------------------------------------------------
  */
 /*
@@ -52580,7 +52580,7 @@ UNQLITE_PRIVATE int unqliteOsAccess(
 /*
  * ----------------------------------------------------------
  * File: os_unix.c
- * MD5: 5efd57d03f8fb988d081c5bcf5cc2998
+ * ID: e415b76cc106b7436c90799774b49e32
  * ----------------------------------------------------------
  */
 /*
@@ -54356,7 +54356,7 @@ UNQLITE_PRIVATE const unqlite_vfs * unqliteExportBuiltinVfs(void)
 /*
  * ----------------------------------------------------------
  * File: os_win.c
- * MD5: ab70fb386c21b39a08b0eb776a8391ab
+ * ID: ab70fb386c21b39a08b0eb776a8391ab
  * ----------------------------------------------------------
  */
 /*
@@ -55302,7 +55302,7 @@ UNQLITE_PRIVATE const unqlite_vfs * unqliteExportBuiltinVfs(void)
 /*
  * ----------------------------------------------------------
  * File: pager.c
- * MD5: 57ff77347402fbf6892af589ff8a5df7
+ * ID: 4c3bd02bdc0943e8989533a210b7f6b4
  * ----------------------------------------------------------
  */
 /*
@@ -58128,7 +58128,7 @@ static int pager_kv_io_init(Pager *pPager,unqlite_kv_methods *pMethods,unqlite_k
 /*
  * ----------------------------------------------------------
  * File: unqlite_vm.c
- * MD5: 2a0c56efb2ab87d3e52d0d7c3147c53b
+ * ID: a1c9b9d75ceba9a615c7e08111064c49
  * ----------------------------------------------------------
  */
 /*
@@ -59157,7 +59157,7 @@ UNQLITE_PRIVATE int unqliteDropCollection(unqlite_col *pCol)
 /*
  * ----------------------------------------------------------
  * File: unqlite_jx9.c
- * MD5: 8fddc15b667e85d7b5df5367132518fb
+ * ID: 4ed75fe01dd7b7c7eb617570c2f5e8be
  * ----------------------------------------------------------
  */
 /*
