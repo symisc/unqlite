@@ -1529,7 +1529,7 @@ static int unixOpen(
   if( pUnused ){
 	  fd = pUnused->fd;
   }else{
-	  pUnused = unqlite_malloc(sizeof(*pUnused));
+	  pUnused = (UnixUnusedFd*)unqlite_malloc(sizeof(*pUnused));
       if( !pUnused ){
         return UNQLITE_NOMEM;
       }
