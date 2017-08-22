@@ -658,11 +658,7 @@ struct unqlite_page
 {
   unsigned char *zData;       /* Content of this page */
   void *pUserData;            /* Extra content */
-#ifdef FASTO
   sxu64 pgno;                  /* Page number for this page */
-#else
-  pgno pgno;                  /* Page number for this page */
-#endif
 };
 /*
  * UnQLite handle to the underlying Key/Value Storage Engine (See below).
