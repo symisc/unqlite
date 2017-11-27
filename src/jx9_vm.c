@@ -4627,6 +4627,7 @@ JX9_PRIVATE sxi32 jx9VmCallUserFunctionAp(
 	/* Call the core routine */
 	rc = jx9VmCallUserFunction(&(*pVm), pFunc, (int)SySetUsed(&aArg), (jx9_value **)SySetBasePtr(&aArg), pResult);
 	/* Cleanup */
+	va_end(ap);
 	SySetRelease(&aArg);
 	return rc;
 }
