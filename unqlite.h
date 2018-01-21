@@ -3,8 +3,8 @@
 #define _UNQLITE_H_
 /*
  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2016, Symisc Systems http://unqlite.org/
- * Version 1.1.7
+ * Copyright (C) 2012-2018, Symisc Systems http://unqlite.org/
+ * Version 1.1.8
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
@@ -14,7 +14,7 @@
  *      http://unqlite.org/licensing.html
  */
 /*
- * Copyright (C) 2012, 2016 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
+ * Copyright (C) 2012, 2018 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- /* $SymiscID: unqlite.h v1.2 Win10 2106-12-02 00:04:12 stable <chm@symisc.net>  $ */
+ /* $SymiscID: unqlite.h v1.2 Win10 2108-01-21 23:59:12 stable <chm@symisc.net>  $ */
 #include <stdarg.h> /* needed for the definition of va_list */
 /*
  * Compile time engine version, signature, identification in the symisc source tree
@@ -54,13 +54,13 @@
  * version number and Y is the minor version number and Z is the release
  * number.
  */
-#define UNQLITE_VERSION "1.1.7"
+#define UNQLITE_VERSION "1.1.8"
 /*
  * The UNQLITE_VERSION_NUMBER C preprocessor macro resolves to an integer
  * with the value (X*1000000 + Y*1000 + Z) where X, Y, and Z are the same
  * numbers used in [UNQLITE_VERSION].
  */
-#define UNQLITE_VERSION_NUMBER 1001007
+#define UNQLITE_VERSION_NUMBER 1001008
 /*
  * The UNQLITE_SIG C preprocessor macro evaluates to a string
  * literal which is the public signature of the unqlite engine.
@@ -68,7 +68,7 @@
  * generated Server MIME header as follows:
  *   Server: YourWebServer/x.x unqlite/x.x.x \r\n
  */
-#define UNQLITE_SIG "unqlite/1.1.7"
+#define UNQLITE_SIG "unqlite/1.1.8"
 /*
  * UnQLite identification in the Symisc source tree:
  * Each particular check-in of a particular software released
@@ -85,7 +85,7 @@
  *   licensing@symisc.net
  *   contact@symisc.net
  */
-#define UNQLITE_COPYRIGHT "Copyright (C) Symisc Systems, S.U.A.R.L [Mrad Chems Eddine <chm@symisc.net>] 2012-2016, http://unqlite.org/"
+#define UNQLITE_COPYRIGHT "Copyright (C) Symisc Systems, S.U.A.R.L [Mrad Chems Eddine <chm@symisc.net>] 2012-2018, http://unqlite.org/"
 
 /* Forward declaration to public objects */
 typedef struct unqlite_io_methods unqlite_io_methods;
@@ -658,7 +658,7 @@ struct unqlite_page
 {
   unsigned char *zData;       /* Content of this page */
   void *pUserData;            /* Extra content */
-  sxu64 pgno;                  /* Page number for this page */
+  pgno pgno;                  /* Page number for this page */
 };
 /*
  * UnQLite handle to the underlying Key/Value Storage Engine (See below).
