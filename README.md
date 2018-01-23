@@ -1,7 +1,8 @@
-unqlite
-=======
+## UnQLite - Transactional Embedded Database Engine https://unqlite.org
 
-Transactional Embedded Database Engine https://unqlite.org
+
+**Release 1.1.8**: As of January 2018 - Symisc Systems decided to **revive the UnQLite project**. All known data corruption bug are fixed and expect new features (LZ compression), performance improvements, etc to be pushed here.
+You should rely for your production build on the amalgamation file and its header file available here or to be downloaded direclty from https://unqlite.org/downloads.html
 
 
 UnQLite is a in-process software library which implements a self-contained, serverless, zero-configuration, transactional NoSQL database engine. UnQLite is a document store database similar to MongoDB, Redis, CouchDB etc. as well a standard Key/Value store similar to BerkeleyDB, LevelDB, etc.
