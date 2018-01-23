@@ -57174,7 +57174,7 @@ static int pager_commit_phase1(Pager *pPager)
 		}
 	}
 	if( pPager->iFlags & PAGER_CTRL_DIRTY_COMMIT ){
-		/* Synce the database first if a dirty commit have been applied */
+		/* Sync the database first if a dirty commit have been applied */
 		unqliteOsSync(pPager->pfd,UNQLITE_SYNC_NORMAL);
 	}
 	/* Write the dirty pages */
@@ -57185,6 +57185,18 @@ static int pager_commit_phase1(Pager *pPager)
 		pPager->pFirstDirty = pDirty;
 		unqliteGenError(pPager->pDb,"IO error while writing dirty pages, rollback your database");
 		return rc;
+	}
+	/* release all pages */
+	{
+		Page *p;
+
+		while (1) {
+			p = pPager->pAll;
+			if (p == 0) {
+				break;
+			}
+			pager_unlink_page(pPager, p);
+		}
 	}
 	/* If the file on disk is not the same size as the database image,
      * then use unqliteOsTruncate to grow or shrink the file here.
@@ -57213,7 +57225,7 @@ static int pager_commit_phase2(Pager *pPager)
 				/* Finally, unlink the journal file */
 				unqliteOsDelete(pPager->pVfs,pPager->zJournal,1);
 			}
-			/* Downgrade to shraed lock */
+			/* Downgrade to shared lock */
 			pager_unlock_db(pPager,SHARED_LOCK);
 			pPager->iState = PAGER_READER;
 			if( pPager->pVec ){
