@@ -1,6 +1,10 @@
 /* This file was automatically generated.  Do not edit (Except for compile time directives)! */ 
 #ifndef _UNQLITE_H_
 #define _UNQLITE_H_
+/* Make sure we can call this stuff from C++ */
+#ifdef __cplusplus
+ extern "C" {
+#endif 
 /*
  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
  * Copyright (C) 2012-2018, Symisc Systems http://unqlite.org/
@@ -946,5 +950,7 @@ UNQLITE_APIEXPORT const char * unqlite_lib_version(void);
 UNQLITE_APIEXPORT const char * unqlite_lib_signature(void);
 UNQLITE_APIEXPORT const char * unqlite_lib_ident(void);
 UNQLITE_APIEXPORT const char * unqlite_lib_copyright(void);
-
+#ifdef __cplusplus
+ }
+#endif
 #endif /* _UNQLITE_H_ */
