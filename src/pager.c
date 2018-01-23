@@ -1882,6 +1882,18 @@ static int pager_commit_phase1(Pager *pPager)
 		unqliteGenError(pPager->pDb,"IO error while writing dirty pages, rollback your database");
 		return rc;
 	}
+	/* release all pages */
+    {
+        Page *p;
+
+        while (1) {
+            p = pPager->pAll;
+            if (p == NULL) {
+                break;
+            }
+            pager_unlink_page(pPager, p);
+        }
+    }
 	/* If the file on disk is not the same size as the database image,
      * then use unqliteOsTruncate to grow or shrink the file here.
      */
