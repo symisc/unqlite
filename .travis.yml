@@ -1,0 +1,21 @@
+sudo: false
+os: linux
+dist: trusty
+
+# Language
+language: cpp
+
+matrix:
+  include:
+    # GCC 6
+    - env: UNIT_TESTS=true COMPILER=g++-6 BOOST_VERSION=default ENABLE_MEMCHECK=true
+      addons: { apt: { packages: ["g++-6", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
+
+    # GCC 7
+    - env: UNIT_TESTS=true COMPILER=g++-7 BOOST_VERSION=default ENABLE_MEMCHECK=true
+      addons: { apt: { packages: ["g++-7", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
+
+script:
+  - |
+    cmake CMakeLists.txt
+    make all
