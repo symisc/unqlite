@@ -15330,7 +15330,11 @@ static int jx9Builtin_ctype_upper(jx9_context *pCtx, int nArg, jx9_value **apArg
 #include <time.h>
 #ifdef __WINNT__
 /* GetSystemTime() */
-#include <Windows.h> 
+#ifdef __MINGW32__
+#include <windows.h>
+#elif
+#include <Windows.h>
+#endif
 #ifdef _WIN32_WCE
 /*
 ** WindowsCE does not have a localtime() function.  So create a
@@ -20744,7 +20748,11 @@ static void JX9_VER_Const(jx9_value *pVal, void *pUnused)
 	jx9_value_string(pVal, jx9_lib_signature(), -1/*Compute length automatically*/);
 }
 #ifdef __WINNT__
+#ifdef __MINGW32__
+#include <windows.h>
+#elif
 #include <Windows.h>
+#endif
 #elif defined(__UNIXES__)
 #include <sys/utsname.h>
 #endif
@@ -26666,7 +26674,11 @@ JX9_PRIVATE sxi32 jx9Tokenize(const char *zInput,sxu32 nLen,SySet *pOut)
 #include "jx9Int.h"
 #endif
 #if defined(__WINNT__)
+#ifdef __MINGW32__
+#include <windows.h>
+#elif
 #include <Windows.h>
+#endif
 #else
 #include <stdlib.h>
 #endif
@@ -35587,7 +35599,11 @@ static int jx9Vfs_getmygid(jx9_context *pCtx, int nArg, jx9_value **apArg)
 	return JX9_OK;
 }
 #ifdef __WINNT__
+#ifdef __MINGW32__
+#include <windows.h>
+#elif
 #include <Windows.h>
+#endif
 #elif defined(__UNIXES__)
 #include <sys/utsname.h>
 #endif
@@ -39016,7 +39032,11 @@ static const jx9_vfs null_vfs = {
  *    Stable.
  */
 /* What follows here is code that is specific to windows systems. */
+#ifdef __MINGW32__
+#include <windows.h>
+#elif
 #include <Windows.h>
+#endif
 /*
 ** Convert a UTF-8 string to microsoft unicode (UTF-16?).
 **
@@ -54376,7 +54396,11 @@ UNQLITE_PRIVATE const unqlite_vfs * unqliteExportBuiltinVfs(void)
 /* Omit the whole layer from the build if compiling for platforms other than Windows */
 #ifdef __WINNT__
 /* This file contains code that is specific to windows. (Mostly SQLite3 source tree) */
+#ifdef __MINGW32__
+#include <windows.h>
+#elif
 #include <Windows.h>
+#endif
 /*
 ** Some microsoft compilers lack this definition.
 */
