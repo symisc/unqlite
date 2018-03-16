@@ -13,7 +13,7 @@ build:linux:i686:
   stage: build
   image: datacore/ubuntu-crosscompile
   script:
-    - cmake -E env CMAKE_C_FLAGS="-m32" cmake .
+    - CFLAGS=-m32 CXXFLAGS=-m32 cmake .
     - make all
 
 build:linux:x86_64:
@@ -26,14 +26,9 @@ build:linux:x86_64:
 build:windows:i686:
   stage: build
   image: datacore/ubuntu-crosscompile
-  before_script:
-    - export DEBIAN_FRONTEND=noninteractive
-    - apt-get update -y && apt-get install -y file
   script:
-    - cmake -E env CMAKE_C_FLAGS="-m32" cmake .
+    - CFLAGS=-m32 CXXFLAGS=-m32 cmake .
     - CC=i686-w64-mingw32-gcc make all
-    - file libunqlite.a
-
 
 build:windows:x86_64:
   stage: build
