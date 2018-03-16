@@ -1,0 +1,15 @@
+stages:
+  - build
+  - test
+
+build:linux:
+  stage: build
+  image: ubuntu:17.10
+  tags:
+    - docker
+  before_script:
+    - DEBIAN_FRONTEND=noninteractive apt-get update -y
+    - DEBIAN_FRONTEND=noninteractive apt-get install -y gcc-mingw-w64 build-essential cmake
+  script:
+    - cmake ./CMakeLists.txt
+    - make all
