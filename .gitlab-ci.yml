@@ -2,14 +2,43 @@ stages:
   - build
   - test
 
-build:linux:
+build:linux:i686:
   stage: build
   image: ubuntu:17.10
-  tags:
-    - docker
+  before_script:
+    - DEBIAN_FRONTEND=noninteractive apt-get update -y
+    - DEBIAN_FRONTEND=noninteractive apt-get install -y gcc-mingw-w64-i686 build-essential cmake
+  script:
+    - cmake ./CMakeLists.txt
+    - export CFLAGS=-m32
+    - make all
+
+build:linux:x86_64:
+  stage: build
+  image: ubuntu:17.10
   before_script:
     - DEBIAN_FRONTEND=noninteractive apt-get update -y
     - DEBIAN_FRONTEND=noninteractive apt-get install -y gcc-mingw-w64 build-essential cmake
   script:
     - cmake ./CMakeLists.txt
     - make all
+
+build:windows:i686:
+  stage: build
+  image: ubuntu:17.10
+  before_script:
+    - DEBIAN_FRONTEND=noninteractive apt-get update -y
+    - DEBIAN_FRONTEND=noninteractive apt-get install -y gcc-mingw-w64-i686 build-essential cmake
+  script:
+    - cmake ./CMakeLists.txt
+    - CC=i686-w64-mingw32-gcc make all
+
+build:windows:x86_64:
+  stage: build
+  image: ubuntu:17.10
+  before_script:
+    - DEBIAN_FRONTEND=noninteractive apt-get update -y
+    - DEBIAN_FRONTEND=noninteractive apt-get install -y gcc-mingw-w64 build-essential cmake
+  script:
+    - cmake ./CMakeLists.txt
+    - CC=x86_64-w64-mingw32-gcc make all
