@@ -8,24 +8,24 @@ language: cpp
 matrix:
   include:
     # GCC 6 :: i686
-    - env: UNIT_TESTS=true COMPILER=g++-6 BOOST_VERSION=default ENABLE_MEMCHECK=true CFLAGS=-m32 CXXFLAGS='-m32 -Wall -Wno-sign-compare' LINKFLAGS=-m32
-      addons: { apt: { packages: ["g++-6", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
+    - env: UNIT_TESTS=true COMPILER=g++-6 BOOST_VERSION=default ENABLE_MEMCHECK=true CFLAGS=-m32 CXXFLAGS=-m32
+      addons: { apt: { packages: ["g++-6", "gcc-multilib", "g++-multilib", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
 
     # GCC 6 :: x86_64
     - env: UNIT_TESTS=true COMPILER=g++-6 BOOST_VERSION=default ENABLE_MEMCHECK=true
       addons: { apt: { packages: ["g++-6", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
 
     # GCC 7 :: i686
-    - env: UNIT_TESTS=true COMPILER=g++-7 BOOST_VERSION=default ENABLE_MEMCHECK=true CFLAGS=-m32 CXXFLAGS='-m32 -Wall -Wno-sign-compare' LINKFLAGS=-m32
-      addons: { apt: { packages: ["g++-7", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
+    - env: UNIT_TESTS=true COMPILER=g++-7 BOOST_VERSION=default ENABLE_MEMCHECK=true CFLAGS=-m32 CXXFLAGS=-m32
+      addons: { apt: { packages: ["g++-7", "gcc-multilib", "g++-multilib", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
 
     # GCC 7 :: x86_64
     - env: UNIT_TESTS=true COMPILER=g++-7 BOOST_VERSION=default ENABLE_MEMCHECK=true
       addons: { apt: { packages: ["g++-7", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
 
     # Windows Cross-Compile :: i686
-    - env: UNIT_TESTS=true COMPILER=i686-w64-mingw32-gcc BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons: { apt: { packages: ["g++-7", "gcc-mingw-w64-i686", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
+    - env: UNIT_TESTS=true COMPILER=i686-w64-mingw32-gcc BOOST_VERSION=default ENABLE_MEMCHECK=true CFLAGS=-m32 CXXFLAGS=-m32
+      addons: { apt: { packages: ["g++-7", "gcc-mingw-w64-i686", "gcc-multilib", "g++-multilib", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
 
     # Windows Cross-Compile :: x86_64
     - env: UNIT_TESTS=true COMPILER=x86_64-w64-mingw32-gcc BOOST_VERSION=default ENABLE_MEMCHECK=true
@@ -33,5 +33,5 @@ matrix:
 
 script:
   - |
-    cmake CMakeLists.txt
+    cmake .
     make all
