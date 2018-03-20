@@ -1,15 +1,38 @@
 stages:
+  - init
   - build
   - test
 
-build:linux:
-  stage: build
-  image: ubuntu:17.10
-  tags:
-    - docker
-  before_script:
-    - DEBIAN_FRONTEND=noninteractive apt-get update -y
-    - DEBIAN_FRONTEND=noninteractive apt-get install -y gcc-mingw-w64 build-essential cmake
+# Speed up parallel jobs of build stage be pre downloading image.
+download:image:
+  stage: init
   script:
-    - cmake ./CMakeLists.txt
+    - docker pull datacore/ubuntu-crosscompile
+
+build:linux:i686:
+  stage: build
+  image: datacore/ubuntu-crosscompile
+  script:
+    - CFLAGS=-m32 CXXFLAGS=-m32 cmake .
     - make all
+
+build:linux:x86_64:
+  stage: build
+  image: datacore/ubuntu-crosscompile
+  script:
+    - cmake .
+    - make all
+
+build:windows:i686:
+  stage: build
+  image: datacore/ubuntu-crosscompile
+  script:
+    - CFLAGS=-m32 CXXFLAGS=-m32 cmake .
+    - CC=i686-w64-mingw32-gcc make all
+
+build:windows:x86_64:
+  stage: build
+  image: datacore/ubuntu-crosscompile
+  script:
+    - cmake .
+    - CC=x86_64-w64-mingw32-gcc make all

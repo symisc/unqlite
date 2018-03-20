@@ -1,7 +1,7 @@
 /*
  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
  * Copyright (C) 2012-2018, Symisc Systems http://unqlite.org/
- * Version 1.1.8
+ * Version 1.1.9
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
@@ -36,7 +36,7 @@
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- * $SymiscID: unqlite.c v1.1.8 Win10 2108-01-21 00:02:12 stable <chm@symisc.net> $ 
+ * $SymiscID: unqlite.c v1.1.9 Win10 2108-01-21 00:02:12 stable <chm@symisc.net> $ 
  */
 /* This file is an amalgamation of many separate C source files from unqlite version 1.1.6
  * By combining all the individual C code files into this single large file, the entire code
@@ -75,7 +75,7 @@
 /*
  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
  * Copyright (C) 2012-2018, Symisc Systems http://unqlite.org/
- * Version 1.1.8
+ * Version 1.1.9
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
@@ -125,7 +125,7 @@
  * version number and Y is the minor version number and Z is the release
  * number.
  */
-#define UNQLITE_VERSION "1.1.8"
+#define UNQLITE_VERSION "1.1.9"
 /*
  * The UNQLITE_VERSION_NUMBER C preprocessor macro resolves to an integer
  * with the value (X*1000000 + Y*1000 + Z) where X, Y, and Z are the same
@@ -139,7 +139,7 @@
  * generated Server MIME header as follows:
  *   Server: YourWebServer/x.x unqlite/x.x.x \r\n
  */
-#define UNQLITE_SIG "unqlite/1.1.8"
+#define UNQLITE_SIG "unqlite/1.1.9"
 /*
  * UnQLite identification in the Symisc source tree:
  * Each particular check-in of a particular software released
@@ -15330,7 +15330,11 @@ static int jx9Builtin_ctype_upper(jx9_context *pCtx, int nArg, jx9_value **apArg
 #include <time.h>
 #ifdef __WINNT__
 /* GetSystemTime() */
-#include <Windows.h> 
+#ifdef __MINGW32__
+#include <windows.h>
+#elif
+#include <Windows.h>
+#endif
 #ifdef _WIN32_WCE
 /*
 ** WindowsCE does not have a localtime() function.  So create a
@@ -20744,7 +20748,11 @@ static void JX9_VER_Const(jx9_value *pVal, void *pUnused)
 	jx9_value_string(pVal, jx9_lib_signature(), -1/*Compute length automatically*/);
 }
 #ifdef __WINNT__
+#ifdef __MINGW32__
+#include <windows.h>
+#elif
 #include <Windows.h>
+#endif
 #elif defined(__UNIXES__)
 #include <sys/utsname.h>
 #endif
@@ -26666,7 +26674,11 @@ JX9_PRIVATE sxi32 jx9Tokenize(const char *zInput,sxu32 nLen,SySet *pOut)
 #include "jx9Int.h"
 #endif
 #if defined(__WINNT__)
+#ifdef __MINGW32__
+#include <windows.h>
+#elif
 #include <Windows.h>
+#endif
 #else
 #include <stdlib.h>
 #endif
@@ -35587,7 +35599,11 @@ static int jx9Vfs_getmygid(jx9_context *pCtx, int nArg, jx9_value **apArg)
 	return JX9_OK;
 }
 #ifdef __WINNT__
+#ifdef __MINGW32__
+#include <windows.h>
+#elif
 #include <Windows.h>
+#endif
 #elif defined(__UNIXES__)
 #include <sys/utsname.h>
 #endif
@@ -39016,7 +39032,11 @@ static const jx9_vfs null_vfs = {
  *    Stable.
  */
 /* What follows here is code that is specific to windows systems. */
+#ifdef __MINGW32__
+#include <windows.h>
+#elif
 #include <Windows.h>
+#endif
 /*
 ** Convert a UTF-8 string to microsoft unicode (UTF-16?).
 **
@@ -54376,7 +54396,11 @@ UNQLITE_PRIVATE const unqlite_vfs * unqliteExportBuiltinVfs(void)
 /* Omit the whole layer from the build if compiling for platforms other than Windows */
 #ifdef __WINNT__
 /* This file contains code that is specific to windows. (Mostly SQLite3 source tree) */
+#ifdef __MINGW32__
+#include <windows.h>
+#elif
 #include <Windows.h>
+#endif
 /*
 ** Some microsoft compilers lack this definition.
 */
@@ -60205,7 +60229,7 @@ UNQLITE_PRIVATE int unqliteRegisterJx9Functions(unqlite_vm *pVm)
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
  * Copyright (C) 2012-2018, Symisc Systems http://unqlite.org/
- * Version 1.1.8
+ * Version 1.1.9
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
