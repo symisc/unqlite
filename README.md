@@ -1,7 +1,9 @@
 ## UnQLite - Transactional Embedded Database Engine https://unqlite.org
 [![Build Status](https://travis-ci.org/symisc/unqlite.svg?branch=master)](https://travis-ci.org/symisc/unqlite) [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/symisc/unqlite/pulse) [![GitHub license](https://img.shields.io/pypi/l/Django.svg)](https://unqlite.org/licensing.html) 
 
-**Release 1.1.8**: As of January 2018 - Symisc Systems has decided to **revive the UnQLite project**. All known data corruption bugs have been fixed, and expect to see new features (LZ compression), performance improvements, etc to be pushed here.
+**Release 1.1.9** (April 2018): Fixed memory leak in _unqlite_commit()_ that caused data loss under some circumstances.
+
+As of January 2018 - Symisc Systems has decided to **revive the UnQLite project**. All known data corruption bugs have been fixed, and expect to see new features (LZ compression), performance improvements, etc to be pushed here.
 You should rely for your production build on the amalgamation file and its header file available here or to be downloaded directly from https://unqlite.org/downloads.html
 
 
