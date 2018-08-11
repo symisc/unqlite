@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
-PROJECT(unqlite)
+PROJECT(unqlite C)
 
 # If the user did not customize the install prefix,
 # set it to live under build so we don't inadvertently pollute /usr/local
