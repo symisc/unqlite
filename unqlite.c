@@ -1,6 +1,6 @@
 /*
  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2018, Symisc Systems http://unqlite.org/
+ * Copyright (C) 2012-2019, Symisc Systems http://unqlite.org/
  * Version 1.1.9
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -11,7 +11,7 @@
  *      http://unqlite.org/licensing.html
  */
 /*
- * Copyright (C) 2012, 2018 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
+ * Copyright (C) 2012, 2019 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,7 +72,7 @@
 #define _UNQLITE_H_
 /*
  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2018, Symisc Systems http://unqlite.org/
+ * Copyright (C) 2012-2019, Symisc Systems http://unqlite.org/
  * Version 1.1.9
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -83,7 +83,7 @@
  *      http://unqlite.org/licensing.html
  */
 /*
- * Copyright (C) 2012, 2018 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
+ * Copyright (C) 2012, 2019 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -144,7 +144,7 @@
  * by symisc systems have an unique identifier associated with it.
  * This macro hold the one associated with unqlite.
  */
-#define UNQLITE_IDENT "unqlite:b172a1e2c3f62fb35c8e1fb2795121f82356cad6"
+#define UNQLITE_IDENT "unqlite:29c173b1-ac2c-4b49-93ba-e600619e304e"
 /*
  * Copyright notice.
  * If you have any questions about the licensing situation, please
@@ -154,7 +154,7 @@
  *   licensing@symisc.net
  *   contact@symisc.net
  */
-#define UNQLITE_COPYRIGHT "Copyright (C) Symisc Systems, S.U.A.R.L [Mrad Chems Eddine <chm@symisc.net>] 2012-2018, http://unqlite.org/"
+#define UNQLITE_COPYRIGHT "Copyright (C) Symisc Systems, S.U.A.R.L [Mrad Chems Eddine <chm@symisc.net>] 2012-2019, http://unqlite.org/"
 /* Make sure we can call this stuff from C++ */
 #ifdef __cplusplus
 extern "C" { 
@@ -471,7 +471,7 @@ typedef sxi64 unqlite_int64;
  * Each options require a variable number of arguments.
  * The [unqlite_vm_config()] interface will return UNQLITE_OK on success, any other return
  * value indicates failure.
- * There are many options but the most importants are: UNQLITE_VM_CONFIG_OUTPUT which install
+ * There are many options but the most important are: UNQLITE_VM_CONFIG_OUTPUT which install
  * a VM output consumer callback, UNQLITE_VM_CONFIG_HTTP_REQUEST which parse and register
  * a HTTP request and UNQLITE_VM_CONFIG_ARGV_ENTRY which populate the $argv array.
  * For a full discussion on the configuration verbs and their expected parameters, please
@@ -4107,14 +4107,10 @@ static int unqliteInitDatabase(
 {
 	unqlite_db *pStorage = &pDB->sDB;
 	int rc;
-	/* Initialiaze the memory subsystem */
+	/* Initialize the memory subsystem */
 	SyMemBackendInitFromParent(&pDB->sMem,pParent);
-//#if defined(UNQLITE_ENABLE_THREADS)
-//	/* No need for internal mutexes */
-//	SyMemBackendDisbaleMutexing(&pDB->sMem);
-//#endif
 	SyBlobInit(&pDB->sErr,&pDB->sMem);
-	/* Sanityze flags */
+	/* Sanitize flags */
 	iFlags = unqliteSanityzeFlag(iFlags);
 	/* Init the pager and the transaction manager */
 	rc = unqlitePagerOpen(sUnqlMPGlobal.pVfs,pDB,zFilename,iFlags);
@@ -57779,7 +57775,7 @@ UNQLITE_PRIVATE int unqlitePagerOpen(
 	nLen = 0;
 	if( !is_mem ){
 		nLen = SyStrlen(zFilename);
-		nByte += pVfs->mxPathname + nLen + sizeof(char) /* null termniator */;
+		nByte += pVfs->mxPathname + nLen + sizeof(char) /* null terminator */;
 	}
 	/* Allocate */
 	pPager = (Pager *)SyMemBackendAlloc(&pDb->sMem,nByte);
@@ -57881,8 +57877,10 @@ UNQLITE_PRIVATE int unqlitePagerClose(Pager *pPager)
 			pVfs->xUnmap(pPager->pMmap,pPager->dbByteSize);
 		}
 	}
-	if( !pPager->is_mem && pPager->iState > PAGER_OPEN ){
-		/* Release all lock on this database handle */
+	if( !pPager->is_mem && pPager->iState >= PAGER_OPEN ){
+		/* Release all lock on this database handle. The issue is
+		 * discussed at https://github.com/symisc/unqlite/issues/74.
+		 */
 		pager_unlock_db(pPager,NO_LOCK);
 		/* Close the file  */
 		unqliteOsCloseFree(pPager->pAllocator,pPager->pfd);
@@ -60199,7 +60197,7 @@ UNQLITE_PRIVATE int unqliteRegisterJx9Functions(unqlite_vm *pVm)
 /* END-OF-IMPLEMENTATION: unqlite@embedded@symisc 34-09-46 */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2018, Symisc Systems http://unqlite.org/
+ * Copyright (C) 2012-2019, Symisc Systems http://unqlite.org/
  * Version 1.1.9
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -60210,7 +60208,7 @@ UNQLITE_PRIVATE int unqliteRegisterJx9Functions(unqlite_vm *pVm)
  *      http://unqlite.org/licensing.html
  */
 /*
- * Copyright (C) 2012, 2018 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
+ * Copyright (C) 2012, 2019 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
