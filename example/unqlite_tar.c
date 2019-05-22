@@ -63,7 +63,7 @@ static const char zBanner[] = {
 static void Help(void)
 {
 	puts(zBanner);
-	puts("unqlite_tar db_name (-r|-w|-i) file1 [filen...]");
+	puts("unqlite_tar db_name (-r|-w|-i) file1 [file2 ...]");
 	puts("\t-w: Store one or more files in the database");
 	puts("\t-r: Extract records from the database");
 	puts("\t-i: Iterate over the stored files");
