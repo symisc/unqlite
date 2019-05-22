@@ -7,7 +7,7 @@
 #endif 
 /*
  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2018, Symisc Systems http://unqlite.org/
+ * Copyright (C) 2012-2019, Symisc Systems http://unqlite.org/
  * Version 1.1.9
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -18,7 +18,7 @@
  *      http://unqlite.org/licensing.html
  */
 /*
- * Copyright (C) 2012, 2018 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
+ * Copyright (C) 2012, 2019 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,7 @@
  * [unqlite_lib_copyright()] for more information.
  */
 /*
- * The UNQLITE_VERSION C preprocessor macroevaluates to a string literal
+ * The UNQLITE_VERSION C preprocessor macro evaluates to a string literal
  * that is the unqlite version in the format "X.Y.Z" where X is the major
  * version number and Y is the minor version number and Z is the release
  * number.
@@ -79,7 +79,7 @@
  * by symisc systems have an unique identifier associated with it.
  * This macro hold the one associated with unqlite.
  */
-#define UNQLITE_IDENT "unqlite:b172a1e2c3f62fb35c8e1fb2795121f82356cad6"
+#define UNQLITE_IDENT "unqlite:29c173b1-ac2c-4b49-93ba-e600619e304e"
 /*
  * Copyright notice.
  * If you have any questions about the licensing situation, please
@@ -89,7 +89,7 @@
  *   licensing@symisc.net
  *   contact@symisc.net
  */
-#define UNQLITE_COPYRIGHT "Copyright (C) Symisc Systems, S.U.A.R.L [Mrad Chems Eddine <chm@symisc.net>] 2012-2018, http://unqlite.org/"
+#define UNQLITE_COPYRIGHT "Copyright (C) Symisc Systems, S.U.A.R.L [Mrad Chems Eddine <chm@symisc.net>] 2012-2019, http://unqlite.org/"
 
 /* Forward declaration to public objects */
 typedef struct unqlite_io_methods unqlite_io_methods;
@@ -403,7 +403,7 @@ typedef sxi64 unqlite_int64;
  * Each options require a variable number of arguments.
  * The [unqlite_vm_config()] interface will return UNQLITE_OK on success, any other return
  * value indicates failure.
- * There are many options but the most importants are: UNQLITE_VM_CONFIG_OUTPUT which install
+ * There are many options but the most important are: UNQLITE_VM_CONFIG_OUTPUT which install
  * a VM output consumer callback, UNQLITE_VM_CONFIG_HTTP_REQUEST which parse and register
  * a HTTP request and UNQLITE_VM_CONFIG_ARGV_ENTRY which populate the $argv array.
  * For a full discussion on the configuration verbs and their expected parameters, please
@@ -655,7 +655,7 @@ struct unqlite_vfs {
 typedef sxu64 pgno;
 /*
  * A database disk page is represented by an instance
- * of the follwoing structure.
+ * of the following structure.
  */
 typedef struct unqlite_page unqlite_page;
 struct unqlite_page
@@ -787,9 +787,9 @@ struct unqlite_kv_methods
 #define UNQLITE_JOURNAL_FILE_SUFFIX "_unqlite_journal"
 #endif
 /*
- * Call Context - Error Message Serverity Level.
+ * Call Context - Error Message Severity Level.
  *
- * The following constans are the allowed severity level that can
+ * The following constants are the allowed severity level that can
  * passed as the second argument to the [unqlite_context_throw_error()] or
  * [unqlite_context_throw_error_format()] interfaces.
  * Refer to the official documentation for additional information.
