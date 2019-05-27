@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### [v1.1.8] - May 2019
 
 ### Fixed
-- Minor file handle leak fixed described in issue 74.
+- Minor file handle leak fixed described in [issue 74](https://github.com/symisc/unqlite/issues/74).
 ### State
 - No data corruption bug found since December 2017.
 ## [1.1.8] - January 2018
