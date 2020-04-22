@@ -96,6 +96,10 @@
  */
 #define JX9_COPYRIGHT "Copyright (C) Symisc Systems 2012-2013, http://jx9.symisc.net/"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Forward declaration to public objects */
 typedef struct jx9_io_stream jx9_io_stream;
 typedef struct jx9_context jx9_context;
@@ -104,7 +108,19 @@ typedef struct jx9_vfs jx9_vfs;
 typedef struct jx9_vm jx9_vm;
 typedef struct jx9 jx9;
 
+#ifdef __cplusplus
+}
+#endif
+
 #include "unqlite.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef JX9_PRIVATE
+#define JX9_PRIVATE
+#endif
 
 #if !defined( UNQLITE_ENABLE_JX9_HASH_FUNC )
 #define JX9_DISABLE_HASH_FUNC
@@ -458,5 +474,9 @@ JX9_PRIVATE int jx9_lib_shutdown(void);
 JX9_PRIVATE const char * jx9_lib_signature(void);
 /*JX9_PRIVATE const char * jx9_lib_ident(void);*/
 /*JX9_PRIVATE const char * jx9_lib_copyright(void);*/
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _JX9H_ */
