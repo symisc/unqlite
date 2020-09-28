@@ -54093,7 +54093,9 @@ static int unixOpen(
   ** a file-descriptor on the directory too. The first time unixSync()
   ** is called the directory file descriptor will be fsync()ed and close()d.
   */
+#ifndef UNQLITE_DISABLE_DIRSYNC
   int isOpenDirectory = isCreate;
+#endif
   const char *zName = zPath;
 
   SyZero(p,sizeof(unixFile));
@@ -54141,6 +54143,7 @@ static int unixOpen(
     unlink(zName);
   }
 
+#ifndef UNQLITE_DISABLE_DIRSYNC
   if( isOpenDirectory ){
     rc = openDirectory(zPath, &dirfd);
     if( rc!=UNQLITE_OK ){
@@ -54152,6 +54155,7 @@ static int unixOpen(
       goto open_finished;
     }
   }
+#endif
 
 #ifdef FD_CLOEXEC
   fcntl(fd, F_SETFD, fcntl(fd, F_GETFD, 0) | FD_CLOEXEC);
