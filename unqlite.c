@@ -1716,8 +1716,12 @@ struct SyBlob
 #define SyBlobDataAt(BLOB, OFFT)	 ((void *)(&((char *)(BLOB)->pBlob)[OFFT]))
 #define SyBlobGetAllocator(BLOB) ((BLOB)->pAllocator)
 
+#ifndef SXMEM_POOL_INCR
 #define SXMEM_POOL_INCR			3
+#endif
+#ifndef SXMEM_POOL_NBUCKETS
 #define SXMEM_POOL_NBUCKETS		12
+#endif
 #define SXMEM_BACKEND_MAGIC	0xBAC3E67D
 #define SXMEM_BACKEND_CORRUPT(BACKEND)	(BACKEND == 0 || BACKEND->nMagic != SXMEM_BACKEND_MAGIC)
 
