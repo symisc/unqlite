@@ -80,7 +80,7 @@ static void Fatal(unqlite *pDb,const char *zMsg)
 		unqlite_config(pDb,UNQLITE_CONFIG_ERR_LOG,&zErr,&iLen);
 		if( iLen > 0 ){
 			/* Output the DB error log */
-			puts(zErr); /* Always null termniated */
+			puts(zErr); /* Always null terminated */
 		}
 	}else{
 		if( zMsg ){
