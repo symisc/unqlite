@@ -25476,7 +25476,8 @@ static sxi32 VmJsonTokenize(SyStream *pStream, SyToken *pToken, void *pUserData,
 			pToken->nType = JSON_TK_STR;
 			pStream->zText++; /* Jump the closing double quotes */
 		}
-	}else if( pStream->zText[0] < 0xc0 && SyisDigit(pStream->zText[0]) ){
+	}else if( (pStream->zText[0] < 0xc0 && SyisDigit(pStream->zText[0]))
+	        || pStream->zText[0] == '-' || pStream->zText[0] == '+' ){
 		/* Number */
 		pStream->zText++;
 		pToken->nType = JSON_TK_NUM;
