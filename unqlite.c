@@ -55432,6 +55432,9 @@ UNQLITE_PRIVATE const unqlite_vfs * unqliteExportBuiltinVfs(void)
 **  
 **
 */
+#ifndef NULL
+#define NULL 0
+#endif
 #define PAGER_OPEN                  0
 #define PAGER_READER                1
 #define PAGER_WRITER_LOCKED         2
