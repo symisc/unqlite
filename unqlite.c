@@ -730,7 +730,7 @@ struct unqlite_page
 {
   unsigned char *zData;       /* Content of this page */
   void *pUserData;            /* Extra content */
-  pgno pgno;                  /* Page number for this page */
+  pgno iPage;                 /* Page number for this page */
 };
 /*
  * UnQLite handle to the underlying Key/Value Storage Engine (See below).
@@ -49599,7 +49599,7 @@ static int lhash_read_header(lhash_kv_engine *pEngine,unqlite_page *pHeader)
 	/* Initialiaze the bucket map */
 	pMap = &pEngine->sPageMap;
 	/* Fill in the structure */
-	pMap->iNum = pHeader->pgno;
+	pMap->iNum = pHeader->iPage;
 	/* Next page in the bucket map */
 	SyBigEndianUnpack64(zRaw,&pMap->iNext);
 	zRaw += 8;
@@ -49748,7 +49748,7 @@ static int lhMapWriteRecord(lhash_kv_engine *pEngine,pgno iLogic,pgno iReal)
 		}
 		/* Reflect the change  */
 		pMap->iNext = 0;
-		pMap->iNum = pPage->pgno;
+		pMap->iNum = pPage->iPage;
 		pMap->nRec = 0;
 		pMap->iPtr = 8/* Next page number */+4/* Total records in the map*/;
 		/* Link this page */
@@ -49756,12 +49756,12 @@ static int lhMapWriteRecord(lhash_kv_engine *pEngine,pgno iLogic,pgno iReal)
 		if( rc != UNQLITE_OK ){
 			return rc;
 		}
-		if( pOld->pgno == pEngine->pHeader->pgno ){
+		if( pOld->iPage == pEngine->pHeader->iPage ){
 			/* First page (Hash header) */
-			SyBigEndianPack64(&pOld->zData[4/*magic*/+4/*hash*/+8/* Free page */+8/*current split bucket*/+8/*Maximum split bucket*/],pPage->pgno);
+			SyBigEndianPack64(&pOld->zData[4/*magic*/+4/*hash*/+8/* Free page */+8/*current split bucket*/+8/*Maximum split bucket*/],pPage->iPage);
 		}else{
 			/* Link the new page */
-			SyBigEndianPack64(pOld->zData,pPage->pgno);
+			SyBigEndianPack64(pOld->zData,pPage->iPage);
 			/* Unref */
 			pEngine->pIo->xPageUnref(pOld);
 		}
@@ -49794,7 +49794,7 @@ static int lhMapWriteRecord(lhash_kv_engine *pEngine,pgno iLogic,pgno iReal)
 	if( rc == UNQLITE_OK ){
 		/* Total number of records */
 		pMap->nRec++;
-		if( pPage->pgno == pEngine->pHeader->pgno ){
+		if( pPage->iPage == pEngine->pHeader->iPage ){
 			/* Page one: Always writable */
 			SyBigEndianPack32(
 				&pPage->zData[4/*magic*/+4/*hash*/+8/* Free page */+8/*current split bucket*/+8/*Maximum split bucket*/+8/*Next map page*/],
@@ -49832,7 +49832,7 @@ static int lhPageDefragment(lhpage *pPage)
 			/* No more cells */
 			break;
 		}
-		if( pCell->pPage->pRaw->pgno == pPage->pRaw->pgno ){
+		if( pCell->pPage->pRaw->iPage == pPage->pRaw->iPage ){
 			/* Cell payload if locally stored */
 			zPayload = 0;
 			if( pCell->iOvfl == 0 ){
@@ -50061,7 +50061,7 @@ static int lhCellWriteOvflPayload(lhcell *pCell,const void *pKey,sxu32 nKeylen,.
 	}
 	pFirst = pOvfl;
 	/* Link */
-	pCell->iOvfl = pOvfl->pgno;
+	pCell->iOvfl = pOvfl->iPage;
 	/* Update the cell header */
 	SyBigEndianPack64(&pPage->pRaw->zData[pCell->iStart + 4/*Hash*/ + 4/*Key*/ + 8/*Data*/ + 2 /*Next cell*/],pCell->iOvfl);
 	/* Start the write process */
@@ -50087,7 +50087,7 @@ static int lhCellWriteOvflPayload(lhcell *pCell,const void *pKey,sxu32 nKeylen,.
 				return rc;
 			}
 			/* Link */
-			SyBigEndianPack64(pOvfl->zData,pNew->pgno);
+			SyBigEndianPack64(pOvfl->zData,pNew->iPage);
 			pEngine->pIo->xPageUnref(pOvfl);
 			SyBigEndianPack64(pNew->zData,0); /* Next overflow page on the chain */
 			pOvfl = pNew;
@@ -50106,7 +50106,7 @@ static int lhCellWriteOvflPayload(lhcell *pCell,const void *pKey,sxu32 nKeylen,.
 	}
 	rc = UNQLITE_OK;
 	va_start(ap,nKeylen);
-	pCell->iDataPage = pNew->pgno;
+	pCell->iDataPage = pNew->iPage;
 	pCell->iDataOfft = (sxu16)(zRaw-pNew->zData);
 	/* Write the data page and its offset */
 	SyBigEndianPack64(&pFirst->zData[8/*Next ovfl*/],pCell->iDataPage);
@@ -50142,7 +50142,7 @@ static int lhCellWriteOvflPayload(lhcell *pCell,const void *pKey,sxu32 nKeylen,.
 					return rc;
 				}
 				/* Link */
-				SyBigEndianPack64(pOvfl->zData,pNew->pgno);
+				SyBigEndianPack64(pOvfl->zData,pNew->iPage);
 				pEngine->pIo->xPageUnref(pOvfl);
 				SyBigEndianPack64(pNew->zData,0); /* Next overflow page on the chain */
 				pOvfl = pNew;
@@ -50181,7 +50181,7 @@ static int lhRestorePage(lhash_kv_engine *pEngine,unqlite_page *pPage)
 	}
 	/* Link to the list of free page */
 	SyBigEndianPack64(pPage->zData,pEngine->nFreeList);
-	pEngine->nFreeList = pPage->pgno;
+	pEngine->nFreeList = pPage->iPage;
 	SyBigEndianPack64(&pEngine->pHeader->zData[4/*Magic*/+4/*Hash*/],pEngine->nFreeList);
 	/* All done */
 	return UNQLITE_OK;
@@ -50451,7 +50451,7 @@ static int lhRecordOverwrite(
 				return rc;
 			}
 			/* Link */
-			SyBigEndianPack64(pOvfl->zData,pNew->pgno);
+			SyBigEndianPack64(pOvfl->zData,pNew->iPage);
 			pEngine->pIo->xPageUnref(pOvfl);
 			SyBigEndianPack64(pNew->zData,0); /* Next overflow page on the chain */
 			pOvfl = pNew;
@@ -50612,7 +50612,7 @@ static int lhRecordAppend(
 				return rc;
 			}
 			/* Link */
-			SyBigEndianPack64(pOvfl->zData,pNew->pgno);
+			SyBigEndianPack64(pOvfl->zData,pNew->iPage);
 			pEngine->pIo->xPageUnref(pOvfl);
 			SyBigEndianPack64(pNew->zData,0); /* Next overflow page on the chain */
 			pOvfl = pNew;
@@ -50823,8 +50823,8 @@ static int lhFindSlavePage(lhpage *pPage,sxu64 nAmount,sxu16 *pOfft,lhpage **ppS
 		goto fail;
 	}
 	/* Reflect in the page header */
-	SyBigEndianPack64(&pSlave->pRaw->zData[2/*Cell offset*/+2/*Free block offset*/],pRaw->pgno);
-	pSlave->sHdr.iSlave = pRaw->pgno;
+	SyBigEndianPack64(&pSlave->pRaw->zData[2/*Cell offset*/+2/*Free block offset*/],pRaw->iPage);
+	pSlave->sHdr.iSlave = pRaw->iPage;
 	/* All done */
 	*ppSlave = pNew;
 	return UNQLITE_OK;
@@ -51003,12 +51003,12 @@ static int lhSplit(lhpage *pTarget,int *pRetry)
 	/* Install and write the logical map record */
 	rc = lhMapWriteRecord(pEngine,
 		pEngine->split_bucket + pEngine->max_split_bucket,
-		pRaw->pgno
+		pRaw->iPage
 		);
 	if( rc != UNQLITE_OK ){
 		goto fail;
 	}
-	if( pTarget->pRaw->pgno == pOld->pRaw->pgno ){
+	if( pTarget->pRaw->iPage == pOld->pRaw->iPage ){
 		*pRetry = 1;
 	}
 	/* Perform the split */
@@ -51131,7 +51131,7 @@ retry:
 		rc = lhStoreCell(pPage,pKey,nKeyLen,pData,nDataLen,nHash,1);
 		if( rc == UNQLITE_OK ){
 			/* Install and write the logical map record */
-			rc = lhMapWriteRecord(pEngine,iBucket,pRaw->pgno);
+			rc = lhMapWriteRecord(pEngine,iBucket,pRaw->iPage);
 		}
 		pEngine->pIo->xPageUnref(pRaw);
 		return rc;
@@ -51219,7 +51219,7 @@ static int lhash_write_header(lhash_kv_engine *pEngine,unqlite_page *pHeader)
 	/* Initialize the bucket map */
 	pMap = &pEngine->sPageMap;
 	/* Fill in the structure */
-	pMap->iNum = pHeader->pgno;
+	pMap->iNum = pHeader->iPage;
 	/* Next page in the bucket map */
 	SyBigEndianPack64(zRaw,0);
 	zRaw += 8;
@@ -55432,6 +55432,9 @@ UNQLITE_PRIVATE const unqlite_vfs * unqliteExportBuiltinVfs(void)
 **  
 **
 */
+#ifndef NULL
+#define NULL 0
+#endif
 #define PAGER_OPEN                  0
 #define PAGER_READER                1
 #define PAGER_WRITER_LOCKED         2
