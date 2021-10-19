@@ -30306,7 +30306,9 @@ static sxi32 SyOSUtilRandomSeed(void *pBuf, sxu32 nLen, void *pUnused)
 	pid = getpid();
 	SyMemcpy((const void *)&pid, zBuf, SXMIN(nLen, sizeof(pid_t)));
 	if( &zBuf[nLen] - &zBuf[sizeof(pid_t)] >= (int)sizeof(struct timeval)  ){
-		gettimeofday((struct timeval *)&zBuf[sizeof(pid_t)], 0);
+		struct timeval tm;
+		gettimeofday(&tm, 0);
+		SyMemcpy(&tm, &zBuf[sizeof(pid_t)], sizeof(struct timeval));
 	}
 #else
 	/* Fill with uninitialized data */
