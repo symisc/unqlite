@@ -1,6 +1,6 @@
 /*
  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2019, Symisc Systems http://unqlite.org/
+ * Copyright (C) 2012-2022, Symisc Systems http://unqlite.org/
  * Version 1.1.9
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -11,7 +11,7 @@
  *      http://unqlite.org/licensing.html
  */
 /*
- * Copyright (C) 2012, 2019 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
+ * Copyright (C) 2012, 2022 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- /* $SymiscID: unqlite.c v1.1.9 Win10 2108-04-27 02:35:11 stable <chm@symisc.net>  $ */
+ /* $SymiscID: unqlite.c v1.1.9 Win10 2022-04-25 03:34:11 stable <chm@symisc.net>  $ */
 /* This file is an amalgamation of many separate C source files from unqlite version 1.1.9
  * By combining all the individual C code files into this single large file, the entire code
  * can be compiled as a single translation unit. This allows many compilers to do optimization's
@@ -56968,6 +56968,10 @@ static int unqliteFinalizeJournal(Pager *pPager,int *pRetry,int close_jrnl)
 	if( pPager->no_jrnl ){
 		/* Journaling is omitted, return immediately */
 		return UNQLITE_OK;
+	}
+	if (pPager->pjfd == 0) {
+		/* BUGFIX: https://github.com/symisc/unqlite/issues/137 */
+		return UNQLITE_ABORT; /* Ongoing operation must be aborted */
 	}
 	/* Write the total number of database records */
 	rc = WriteInt32(pPager->pjfd,pPager->nRec,8 /* sizeof(aJournalRec) */);
