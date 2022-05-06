@@ -1666,6 +1666,10 @@ static int unqliteFinalizeJournal(Pager *pPager,int *pRetry,int close_jrnl)
 		/* Journaling is omitted, return immediately */
 		return UNQLITE_OK;
 	}
+	if (pPager->pjfd == 0) {
+		/* BUGFIX: https://github.com/symisc/unqlite/issues/137 */
+		return UNQLITE_ABORT; /* Ongoing operation must be aborted */
+	}
 	/* Write the total number of database records */
 	rc = WriteInt32(pPager->pjfd,pPager->nRec,8 /* sizeof(aJournalRec) */);
 	if( rc != UNQLITE_OK ){
