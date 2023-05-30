@@ -120,10 +120,20 @@ static void PI_Constant(
 static void TIME_Constant(unqlite_value *pValue, void *pUserData /* Unused */)
 {
 	struct tm *pLocal;
+#if defined(_MSC_VER) || defined(__MINGW32__)
+    /* errno_t err; */
+    __time64_t long_time;
+    struct tm newtime;
+    _time64( &long_time );
+    /* err = */ _localtime64_s(&newtime, &long_time);
+    /* if (err != 0) return UNQLITE_INVALID; */
+    pLocal = &newtime;
+#else
 	time_t tt;
 	/* Get the current local time */
 	time(&tt);
 	pLocal = localtime(&tt);
+#endif
 	/* Expand the current time now */
 	unqlite_value_string_format(pValue, "%02d:%02d:%02d", 
 		pLocal->tm_hour, 

@@ -1,0 +1,10 @@
+foreach (name "1" "2" "3" "4" "5" "6" "unqlite_huge" "unqlite_mp3" "unqlite_tar")
+    set(EXEC_NAME "${PROJECT_NAME}_test_example_${name}")
+    set(Source_Files "${name}.c")
+    source_group("${EXEC_NAME} Source Files" FILES "${Source_Files}")
+    add_executable("${EXEC_NAME}" "${Source_Files}")
+    target_link_libraries("${EXEC_NAME}" PUBLIC ${UNQLITE_STATIC_LIB})
+    add_test(NAME "${EXEC_NAME}" COMMAND "${EXEC_NAME}")
+endforeach ()
+
+add_subdirectory(demovfs)

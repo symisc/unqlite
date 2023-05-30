@@ -60,7 +60,7 @@
 **   in UNQLite itself for UNIXES systems (see os_unix.c)
 */
 
-#if !defined(UNQLITE_TEST) 
+#ifndef UNQLITE_TEST
 
 #include "unqlite.h"
 
@@ -68,16 +68,43 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/file.h>
-#include <sys/param.h>
-#include <unistd.h>
 #include <time.h>
 #include <errno.h>
 #include <fcntl.h>
 
-
 #include <stdio.h>  /* puts(), - see Fatal function and snprintf() in vfs;  */
 #include <stdlib.h> /* exit() */
+
+#if defined(_MSC_VER) || defined(__MINGW32__)
+
+#if defined(__amd64__) || defined(__amd64) || defined(__x86_64__) || defined(__x86_64) || defined(_M_X64) || defined(_M_AMD64)
+#define _AMD64_
+#elif defined(i386) || defined(__i386) || defined(__i386__) || defined(__i386__) || defined(_M_IX86)
+#define _X86_
+#elif defined(__arm__) || defined(_M_ARM) || defined(_M_ARMT)
+#define _ARM_
+#endif
+
+#include <fileapi.h>
+#include <io.h>
+#include <direct.h>
+#include <synchapi.h>
+#include <time.h>
+
+#define unlink _unlink
+#define open _open
+#define close _close
+#define read _read
+#define write _write
+#define lseek _lseeki64
+#define access _access
+#define getcwd _getcwd
+#define sleep(sec) Sleep ((sec)*1000)
+#else
+#include <sys/file.h>
+#include <sys/param.h>
+#include <unistd.h>
+#endif /* defined(_MSC_VER) || defined(__MINGW32__) */
 
 
 
@@ -130,7 +157,12 @@ static int demoDirectWrite(
   int iAmt,                       /* Size of data to write in bytes */
   unqlite_int64 iOfst             /* File offset to write to */
   ){
-  off_t ofst;                     /* Return value from lseek() */
+#if defined(_MSC_VER) || defined(__MINGW32__)
+  __int64
+#else
+  off_t
+#endif /* defined(_MSC_VER) || defined(__MINGW32__) */
+    ofst;                         /* Return value from lseek() */
   size_t nWrite;                  /* Return value from write() */
 
   ofst = lseek(p->fd, iOfst, SEEK_SET);
@@ -177,12 +209,21 @@ static int demoClose(unqlite_file *pFile){
 */
 static int demoRead(
   unqlite_file *pFile, 
-  void *zBuf, 
-  unqlite_int64 iAmt, 
+  void *zBuf,
+#if defined(_MSC_VER) || defined(__MINGW32__)
+  unsigned iAmt,
+#else
+  unqlite_int64 iAmt,
+#endif /* defined(_MSC_VER) || defined(__MINGW32__) */
   unqlite_int64 iOfst
 ){
   DemoFile *p = (DemoFile*)pFile;
-  off_t ofst;                     /* Return value from lseek() */
+#if defined(_MSC_VER) || defined(__MINGW32__)
+    __int64
+#else
+    off_t
+#endif /* defined(_MSC_VER) || defined(__MINGW32__) */
+        ofst;                     /* Return value from lseek() */
   int nRead;                      /* Return value from read() */
   int rc;                         /* Return code from demoFlushBuffer() */
 
@@ -213,15 +254,23 @@ static int demoRead(
 */
 static int demoWrite(
   unqlite_file *pFile, 
-  const void *zBuf, 
-  unqlite_int64 iAmt, 
+  const void *zBuf,
+#if defined(_MSC_VER) || defined(__MINGW32__)
+  int iAmt,
+#else
+  unqlite_int64 iAmt,
+#endif /* defined(_MSC_VER) || defined(__MINGW32__) */
   unqlite_int64 iOfst
 ){
   DemoFile *p = (DemoFile*)pFile;
   
   if( p->aBuffer ){
     char *z = (char *)zBuf;       /* Pointer to remaining data to write */
-    unqlite_int64 n = iAmt;                 /* Number of bytes at z */
+#if defined(_MSC_VER) || defined(__MINGW32__)
+    int n = iAmt;                  /* Number of bytes at z */
+#else
+    unqlite_int64 n = iAmt;       /* Number of bytes at z */
+#endif /* defined(_MSC_VER) || defined(__MINGW32__) */
     unqlite_int64 i = iOfst;      /* File offset to write to */
 
     while( n>0 ){
@@ -286,7 +335,11 @@ static int demoSync(unqlite_file *pFile, int flags){
     return rc;
   }
 
+#if defined(_MSC_VER) || defined(__MINGW32__)
+  rc = _commit(p->fd);
+#else
   rc = fsync(p->fd);
+#endif /* defined(_MSC_VER) || defined(__MINGW32__) */
   return (rc==0 ? UNQLITE_OK : UNQLITE_IOERR);
 }
 
@@ -355,8 +408,8 @@ static int demoOpen(
   static const unqlite_io_methods demoio = {
     1,                            /* iVersion */
     demoClose,                    /* xClose */
-    demoRead,                     /* xRead */
-    demoWrite,                    /* xWrite */
+    (int (*)(unqlite_file *, void *, unqlite_int64, unqlite_int64)) demoRead,                     /* xRead */
+    (int (*)(unqlite_file *, const void *, unqlite_int64, unqlite_int64)) demoWrite,                    /* xWrite */
     demoTruncate,                 /* xTruncate */
     demoSync,                     /* xSync */
     demoFileSize,                 /* xFileSize */
@@ -370,6 +423,9 @@ static int demoOpen(
   char *aBuf = 0;
 
   int fd = -1;                   /* File descriptor returned by open() */
+#if defined(_MSC_VER) || defined(__MINGW32__)
+  errno_t err;
+#endif  /* defined(_MSC_VER) || defined(__MINGW32__) */
   int openFlags = 0;             /* Flags to pass to open() */
   int rc = UNQLITE_OK;            /* Function Return Code */
   
@@ -398,11 +454,15 @@ static int demoOpen(
   if( isReadonly )  openFlags |= O_RDONLY;
   if( isReadWrite ) openFlags |= O_RDWR;
   if( isCreate )    openFlags |= O_CREAT;
-  
-  
+
   memset(p, 0, sizeof(DemoFile));
+#if defined(_MSC_VER) || defined(__MINGW32__)
+  err = _sopen_s(&p->fd, zName, openFlags, _SH_DENYNO, 0);
+  if(err == 0) {
+#else
   p->fd = open(zName, openFlags, 0600);
-  if( p->fd<0 ){
+  if(p->fd<0) {
+#endif  /* defined(_MSC_VER) || defined(__MINGW32__) */
     unqlite_free(aBuf);
 	return UNQLITE_CANTOPEN;
   }
@@ -430,21 +490,32 @@ static int demoDelete(unqlite_vfs *pVfs, const char *zPath, int dirSync){
 	  return UNQLITE_IOERR;
   }
   if( rc==0 && dirSync ){
-    int dfd;                      /* File descriptor open on directory */
-    int i;                        /* Iterator variable */
+    size_t i;                        /* Iterator variable */
     char zDir[MAXPATHNAME+1];     /* Name of directory containing file zPath */
-
+#if defined(_MSC_VER) || defined(__MINGW32__)
+    errno_t err;
+#endif  /* defined(_MSC_VER) || defined(__MINGW32__) */
+    int dfd;                      /* File descriptor open on directory */
     /* Figure out the directory name from the path of the file deleted. */
     zDir[MAXPATHNAME] = '\0';
     for(i=strlen(zDir); i>1 && zDir[i]!='/'; i++);
     zDir[i] = '\0';
 
     /* Open a file-descriptor on the directory. Sync. Close. */
+#if defined(_MSC_VER) || defined(__MINGW32__)
+    err = _sopen_s(&dfd, zDir, O_RDONLY, _SH_DENYWR, _S_IREAD);
+    if( err != 0 ){
+#else
     dfd = open(zDir, O_RDONLY, 0);
     if( dfd<0 ){
+#endif  /* defined(_MSC_VER) || defined(__MINGW32__) */
       rc = -1;
     }else{
+#if defined(_MSC_VER) || defined(__MINGW32__)
+      rc = _commit(dfd);
+#else
       rc = fsync(dfd);
+#endif  /* defined(_MSC_VER) || defined(__MINGW32__) */
       close(dfd);
     }
   }
@@ -471,7 +542,9 @@ static int demoAccess(
   int flags, 
   int *pResOut
 ){
+#if !defined(_MSC_VER) && !defined(__MINGW32__)
   int rc;                         /* access() return code */
+#endif  /* !defined(_MSC_VER) && !defined(__MINGW32__) */
   int eAccess = F_OK;             /* Second argument to access() */
 
   assert( flags==UNQLITE_ACCESS_EXISTS       /* access(zPath, F_OK) */
@@ -555,13 +628,25 @@ static int demoSleep(unqlite_vfs *pVfs, int nMicro){
 ** "year 2038" problem that afflicts systems that store time this way). 
 */
 static int demoCurrentTime(unqlite_vfs *pVfs, Sytm *pOut){
-	struct tm *pTm;
 	time_t tt;
+#if defined(_MSC_VER) || defined(__MINGW32__)
+    errno_t err;
+    struct tm pTm;
+#else
+    struct tm *pTm;
+#endif  /* defined(_MSC_VER) || defined(__MINGW32__) */
 	time(&tt);
+#if defined(_MSC_VER) || defined(__MINGW32__)
+    err = gmtime_s(&pTm, &tt);
+    if ( !err ) {
+        STRUCT_TM_TO_SYTM(&pTm,pOut);
+    }
+#else
 	pTm = gmtime(&tt);
 	if( pTm ){ /* Yes, it can fail */
 		STRUCT_TM_TO_SYTM(pTm,pOut);
 	}
+#endif  /* defined(_MSC_VER) || defined(__MINGW32__) */
 	return UNQLITE_OK;
 }
 
@@ -595,7 +680,7 @@ const unqlite_vfs *unqliteExportDemoVfs(void){
   return &demovfs;
 }
 
-#endif /*  !defined(UNQLITE_TEST) */
+#endif /* !UNQLITE_TEST */
 
 
 
