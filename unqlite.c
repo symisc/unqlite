@@ -20031,8 +20031,8 @@ static sxi32 GenStateCompileFuncBody(
 	/* Restore the default container */
 	jx9VmSetByteCodeContainer(pGen->pVm, pInstrContainer);
 	/* Leave function block */
-	GenStateLeaveBlock(&(*pGen), 0);
-	if( rc == SXERR_ABORT ){
+	rc = GenStateLeaveBlock(&(*pGen), 0);
+	if( rc != SXRET_OK ){
 		/* Don't worry about freeing memory, everything will be released shortly */
 		return SXERR_ABORT;
 	}
@@ -26081,11 +26081,11 @@ static sxi32 jx9TokenizeInput(SyStream *pStream,SyToken *pToken,void *pUserData,
 				SyToken *pTmp;
 				/* Peek the last recongnized token */
 				pTmp = (SyToken *)SySetPeek(pTokSet);
-				if( pTmp->nType & JX9_TK_KEYWORD ){
+				if( !pTmp && ( pTmp->nType & JX9_TK_KEYWORD ) ){
 					sxi32 nID = SX_PTR_TO_INT(pTmp->pUserData);
 					if( (sxu32)nID & (JX9_TKWRD_INT|JX9_TKWRD_FLOAT|JX9_TKWRD_STRING|JX9_TKWRD_BOOL) ){
 						pTmp = (SyToken *)SySetAt(pTokSet, pTokSet->nUsed - 2);
-						if( pTmp->nType & JX9_TK_LPAREN ){
+						if( !pTmp && ( pTmp->nType & JX9_TK_LPAREN ) ){
 							/* Merge the three tokens '(' 'TYPE' ')' into a single one */
 							const char * zTypeCast = "(int)";
 							if( nID & JX9_TKWRD_FLOAT ){
