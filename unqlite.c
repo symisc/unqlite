@@ -985,6 +985,7 @@ UNQLITE_APIEXPORT int unqlite_value_is_empty(unqlite_value *pVal);
 
 /* JSON Array/Object Management Interfaces */
 UNQLITE_APIEXPORT unqlite_value * unqlite_array_fetch(unqlite_value *pArray, const char *zKey, int nByte);
+UNQLITE_APIEXPORT unqlite_value * unqlite_array_fetch_by_index(unqlite_value *pArray, unqlite_int64 iIndex);
 UNQLITE_APIEXPORT int unqlite_array_walk(unqlite_value *pArray, int (*xWalk)(unqlite_value *, unqlite_value *, void *), void *pUserData);
 UNQLITE_APIEXPORT int unqlite_array_add_elem(unqlite_value *pArray, unqlite_value *pKey, unqlite_value *pValue);
 UNQLITE_APIEXPORT int unqlite_array_add_strkey_elem(unqlite_value *pArray, const char *zKey, unqlite_value *pValue);
@@ -1461,6 +1462,7 @@ JX9_PRIVATE int jx9_value_resource(jx9_value *pVal, void *pUserData);
 JX9_PRIVATE int jx9_value_release(jx9_value *pVal);
 /* JSON Array/Object Management Interfaces */
 JX9_PRIVATE jx9_value * jx9_array_fetch(jx9_value *pArray, const char *zKey, int nByte);
+JX9_PRIVATE jx9_value * jx9_array_fetch_by_index(jx9_value *pArray, jx9_int64 iIndex);
 JX9_PRIVATE int jx9_array_walk(jx9_value *pArray, int (*xWalk)(jx9_value *, jx9_value *, void *), void *pUserData);
 JX9_PRIVATE int jx9_array_add_elem(jx9_value *pArray, jx9_value *pKey, jx9_value *pValue);
 JX9_PRIVATE int jx9_array_add_strkey_elem(jx9_value *pArray, const char *zKey, jx9_value *pValue);
@@ -3043,6 +3045,7 @@ JX9_PRIVATE sxi32 jx9HashmapLoadBuiltin(jx9_vm *pVm);
 JX9_PRIVATE sxi32 jx9HashmapRelease(jx9_hashmap *pMap, int FreeDS);
 JX9_PRIVATE void  jx9HashmapUnref(jx9_hashmap *pMap);
 JX9_PRIVATE sxi32 jx9HashmapLookup(jx9_hashmap *pMap, jx9_value *pKey, jx9_hashmap_node **ppNode);
+JX9_PRIVATE sxi32 jx9HashmapLookupIntKey(jx9_hashmap *pMap, sxi64 iKey, jx9_hashmap_node **ppNode);
 JX9_PRIVATE sxi32 jx9HashmapInsert(jx9_hashmap *pMap, jx9_value *pKey, jx9_value *pVal);
 JX9_PRIVATE sxi32 jx9HashmapUnion(jx9_hashmap *pLeft, jx9_hashmap *pRight);
 JX9_PRIVATE sxi32 jx9HashmapDup(jx9_hashmap *pSrc, jx9_hashmap *pDest);
@@ -5162,6 +5165,14 @@ int unqlite_value_is_empty(unqlite_value *pVal)
 unqlite_value * unqlite_array_fetch(unqlite_value *pArray, const char *zKey, int nByte)
 {
 	return jx9_array_fetch(pArray,zKey,nByte);
+}
+/*
+ * [CAPIREF: unqlite_array_fetch_by_index()]
+ * Please refer to the official documentation for function purpose and expected parameters.
+ */
+unqlite_value * unqlite_array_fetch_by_index(unqlite_value *pArray, unqlite_int64 iIndex)
+{
+	return jx9_array_fetch_by_index(pArray, iIndex);
 }
 /*
  * [CAPIREF: unqlite_array_walk()]
@@ -8262,6 +8273,29 @@ JX9_PRIVATE jx9_value * jx9_array_fetch(jx9_value *pArray, const char *zKey, int
 	/* Perform the lookup */
 	rc = jx9HashmapLookup((jx9_hashmap *)pArray->x.pOther, &skey, &pNode);
 	jx9MemObjRelease(&skey);
+	if( rc != JX9_OK ){
+		/* No such entry */
+		return 0;
+	}
+	/* Extract the target value */
+	pValue = (jx9_value *)SySetAt(&pArray->pVm->aMemObj, pNode->nValIdx);
+	return pValue;
+}
+/*
+ * [CAPIREF: jx9_array_fetch_by_index()]
+ * Please refer to the official documentation for function purpose and expected parameters.
+ */
+JX9_PRIVATE jx9_value * jx9_array_fetch_by_index(jx9_value *pArray, jx9_int64 iIndex)
+{
+	jx9_hashmap_node *pNode;
+	jx9_value *pValue;
+	int rc;
+	/* Make sure we are dealing with a valid hashmap */
+	if( (pArray->iFlags & MEMOBJ_HASHMAP) == 0 ){
+		return 0;
+	}
+	/* Perform the lookup */
+	rc = jx9HashmapLookupIntKey((jx9_hashmap *)pArray->x.pOther, iIndex, &pNode);
 	if( rc != JX9_OK ){
 		/* No such entry */
 		return 0;
@@ -23322,6 +23356,26 @@ JX9_PRIVATE sxi32 jx9HashmapLookup(
 		return SXERR_NOTFOUND;
 	}
 	rc = HashmapLookup(&(*pMap), &(*pKey), ppNode);
+	return rc;
+}
+/*
+ * Check if a given key exists in the given hashmap.
+ * Write a pointer to the target node on success.
+ * Otherwise SXERR_NOTFOUND is returned on failure.
+ */
+JX9_PRIVATE sxi32 jx9HashmapLookupIntKey(
+	jx9_hashmap *pMap,        /* Target hashmap */
+	sxi64 iKey,               /* Lookup key */
+	jx9_hashmap_node **ppNode /* OUT: Target node on success */
+	)
+{
+	sxi32 rc;
+	if( pMap->nEntry < 1 ){
+		/* TICKET 1433-25: Don't bother hashing, the hashmap is empty anyway.
+		 */
+		return SXERR_NOTFOUND;
+	}
+	rc = HashmapLookupIntKey(&(*pMap), iKey, ppNode);
 	return rc;
 }
 /*

@@ -432,6 +432,7 @@ JX9_PRIVATE int jx9_value_resource(jx9_value *pVal, void *pUserData);
 JX9_PRIVATE int jx9_value_release(jx9_value *pVal);
 /* JSON Array/Object Management Interfaces */
 JX9_PRIVATE jx9_value * jx9_array_fetch(jx9_value *pArray, const char *zKey, int nByte);
+JX9_PRIVATE jx9_value * jx9_array_fetch_by_index(jx9_value *pArray, jx9_int64 iIndex);
 JX9_PRIVATE int jx9_array_walk(jx9_value *pArray, int (*xWalk)(jx9_value *, jx9_value *, void *), void *pUserData);
 JX9_PRIVATE int jx9_array_add_elem(jx9_value *pArray, jx9_value *pKey, jx9_value *pValue);
 JX9_PRIVATE int jx9_array_add_strkey_elem(jx9_value *pArray, const char *zKey, jx9_value *pValue);
