@@ -1541,6 +1541,7 @@ JX9_PRIVATE sxi32 jx9HashmapLoadBuiltin(jx9_vm *pVm);
 JX9_PRIVATE sxi32 jx9HashmapRelease(jx9_hashmap *pMap, int FreeDS);
 JX9_PRIVATE void  jx9HashmapUnref(jx9_hashmap *pMap);
 JX9_PRIVATE sxi32 jx9HashmapLookup(jx9_hashmap *pMap, jx9_value *pKey, jx9_hashmap_node **ppNode);
+JX9_PRIVATE sxi32 jx9HashmapLookupIntKey(jx9_hashmap *pMap, sxi64 iKey, jx9_hashmap_node **ppNode);
 JX9_PRIVATE sxi32 jx9HashmapInsert(jx9_hashmap *pMap, jx9_value *pKey, jx9_value *pVal);
 JX9_PRIVATE sxi32 jx9HashmapUnion(jx9_hashmap *pLeft, jx9_hashmap *pRight);
 JX9_PRIVATE sxi32 jx9HashmapDup(jx9_hashmap *pSrc, jx9_hashmap *pDest);

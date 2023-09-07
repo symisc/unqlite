@@ -1310,6 +1310,29 @@ JX9_PRIVATE jx9_value * jx9_array_fetch(jx9_value *pArray, const char *zKey, int
 	return pValue;
 }
 /*
+ * [CAPIREF: jx9_array_fetch_by_index()]
+ * Please refer to the official documentation for function purpose and expected parameters.
+ */
+JX9_PRIVATE jx9_value * jx9_array_fetch_by_index(jx9_value *pArray, jx9_int64 iIndex)
+{
+	jx9_hashmap_node *pNode;
+	jx9_value *pValue;
+	int rc;
+	/* Make sure we are dealing with a valid hashmap */
+	if( (pArray->iFlags & MEMOBJ_HASHMAP) == 0 ){
+		return 0;
+	}
+	/* Perform the lookup */
+	rc = jx9HashmapLookupIntKey((jx9_hashmap *)pArray->x.pOther, iIndex, &pNode);
+	if( rc != JX9_OK ){
+		/* No such entry */
+		return 0;
+	}
+	/* Extract the target value */
+	pValue = (jx9_value *)SySetAt(&pArray->pVm->aMemObj, pNode->nValIdx);
+	return pValue;
+}
+/*
  * [CAPIREF: jx9_array_walk()]
  * Please refer to the official documentation for function purpose and expected parameters.
  */
