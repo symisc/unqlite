@@ -49006,6 +49006,12 @@ static void lhCellDiscard(lhcell *pCell)
 		pPage->pFirst = pCell->pPrev;
 	}
 	pPage->nCell--;
+	/* Free the cell table when no cell exist in this page */
+	if( pPage->nCell == 0 ){
+		SyMemBackendFree(&pPage->pHash->sAllocator,(void *)pPage->apCell);
+		pPage->apCell = NULL;
+		pPage->nCellSize = 0;
+	}
 	/* Release the cell */
 	SyBlobRelease(&pCell->sKey);
 	SyMemBackendPoolFree(&pPage->pHash->sAllocator,pCell);
