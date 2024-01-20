@@ -52627,6 +52627,11 @@ UNQLITE_PRIVATE int unqliteOsAccess(
 #if defined(__APPLE__) 
 # include <sys/mount.h>
 #endif
+
+#ifdef __NuttX__
+# include <nuttx/fs/ioctl.h>
+# include <sys/ioctl.h>
+#endif
 /*
 ** Allowed values of unixFile.fsFlags
 */
@@ -52881,6 +52886,9 @@ static int unqliteErrorFromPosixError(int posixError, int unqliteIOErr) {
 struct unixFileId {
   dev_t dev;                  /* Device number */
   ino_t ino;                  /* Inode number */
+#ifdef __NuttX__
+  char path[PATH_MAX];
+#endif
 };
 /*
 ** An instance of the following structure is allocated for each open
@@ -53033,6 +53041,13 @@ static int findInodeInfo(
   SyZero(&fileId,sizeof(fileId));
   fileId.dev = statbuf.st_dev;
   fileId.ino = statbuf.st_ino;
+#ifdef __NuttX__
+    rc = ioctl(fd, FIOC_FILEPATH, &fileId.path);
+    if(rc){
+      return UNQLITE_IOERR;
+    }
+#endif
+
   pInode = inodeList;
   while( pInode && SyMemcmp((const void *)&fileId,(const void *)&pInode->fileId, sizeof(fileId)) ){
     pInode = pInode->pNext;
