@@ -30294,7 +30294,7 @@ static sxi32 SyOSUtilRandomSeed(void *pBuf, sxu32 nLen, void *pUnused)
 		GetSystemTime((LPSYSTEMTIME)&zBuf[sizeof(DWORD)]);
 	}
 #elif defined(__UNIXES__)
-	fd = open("/dev/urandom", O_RDONLY);
+	fd = open("/dev/urandom", O_RDONLY | O_CLOEXEC);
 	if (fd >= 0 ){
 		if( read(fd, zBuf, nLen) > 0 ){
 			close(fd);
