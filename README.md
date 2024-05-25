@@ -1,10 +1,12 @@
-## UnQLite - Transactional Embedded Database Engine https://unqlite.org
-[![Build Status](https://travis-ci.org/symisc/unqlite.svg?branch=master)](https://travis-ci.org/symisc/unqlite) [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/symisc/unqlite/pulse) [![GitHub license](https://img.shields.io/pypi/l/Django.svg)](https://unqlite.org/licensing.html) 
+### UnQLite - An Embedded Transactional Database (Key/Value & Document Store) Engine - https://unqlite.symisc.net
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/symisc/unqlite/pulse) [![GitHub license](https://img.shields.io/pypi/l/Django.svg)](https://unqlite.symisc.net/licensing.html) 
+
+**Release 1.1.9** (May 2024): New Homepage - https://unqlite.symisc.net
 
 **Release 1.1.9** (April 2022): Shared database (between one legit & one corrupt process) bug fix: https://github.com/symisc/unqlite/issues/137
 
 As of January 2018 - Symisc Systems has decided to **revive the UnQLite project**. All known data corruption bugs have been fixed, and expect to see new features (LZ compression), performance improvements, etc to be pushed here.
-You should rely for your production build on the amalgamation file and its header file available here or to be downloaded directly from https://unqlite.org/downloads.html
+You should rely for your production build on the amalgamation file and its header file available here or to be downloaded directly from https://unqlite.symisc.net/downloads.html
 
 
 UnQLite is a in-process software library which implements a self-contained, serverless, zero-configuration, transactional NoSQL database engine. UnQLite is a document store database similar to MongoDB, Redis, CouchDB etc. as well a standard Key/Value store similar to BerkeleyDB, LevelDB, etc.
@@ -38,4 +40,4 @@ UnQLite is a self-contained C library without dependency. It requires very minim
 UnQLite is written in ANSI C, Thread-safe, Full reentrant, compiles unmodified and should run in most platforms including restricted embedded devices with a C compiler. UnQLite is extensively tested on Windows and UNIX systems especially Linux, FreeBSD, Oracle Solaris and Mac OS X.
 
 
-http://unqlite.org
+https://unqlite.symisc.net
