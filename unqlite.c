@@ -20031,8 +20031,8 @@ static sxi32 GenStateCompileFuncBody(
 	/* Restore the default container */
 	jx9VmSetByteCodeContainer(pGen->pVm, pInstrContainer);
 	/* Leave function block */
-	GenStateLeaveBlock(&(*pGen), 0);
-	if( rc == SXERR_ABORT ){
+	rc = GenStateLeaveBlock(&(*pGen), 0);
+	if( rc != SXRET_OK ){
 		/* Don't worry about freeing memory, everything will be released shortly */
 		return SXERR_ABORT;
 	}
