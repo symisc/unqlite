@@ -1,6 +1,9 @@
 /* This file was automatically generated.  Do not edit (Except for compile time directives)! */ 
 #ifndef _UNQLITE_H_
 #define _UNQLITE_H_
+
+#include "./config.h"
+
 /*
  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
  * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
