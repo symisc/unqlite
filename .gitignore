@@ -10,6 +10,7 @@ libunqlite.a
 # IDEs
 .idea
 .vscode
+.vs
 
 # Build
 *build*

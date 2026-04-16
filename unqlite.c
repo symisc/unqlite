@@ -25387,11 +25387,6 @@ static sxi32 VmJsonTokenize(SyStream *pStream, SyToken *pToken, void *pUserData,
 	pToken->pUserData = 0;
 	pStr = &pToken->sData;
 	SyStringInitFromBuf(pStr, pStream->zText, 0);
-	/* Bounds check: prevent 1-byte heap OOB read when input
-	 * buffer ends at a token boundary. */
-	if( pStream->zText >= pStream->zEnd ){
-		break;
-	}
 	if( pStream->zText[0] >= 0xc0 || SyisAlpha(pStream->zText[0]) || pStream->zText[0] == '_' ){
 		/* The following code fragment is taken verbatim from the xPP source tree.
 		 * xPP is a modern embeddable macro processor with advanced features useful for
