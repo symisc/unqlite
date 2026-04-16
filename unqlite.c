@@ -26442,7 +26442,7 @@ static sxu32 keywordCode(const char *z, int n)
   };
   int h, i;
   if( n<2 ) return JX9_TK_ID;
-  h = (((unsigned)(unsigned char)z[0]*4) ^ ((unsigned)(unsigned char)z[n-1]*3) ^ (unsigned)n) % 59;
+  h = (((int)z[0]*4) ^ ((int)z[n-1]*3) ^ n) % 59;
   for(i=((int)aHash[h])-1; i>=0; i=((int)aNext[i])-1){
     if( (int)aLen[i]==n && SyMemcmp(&zText[aOffset[i]],z,n)==0 ){
        /* JX9_TKWRD_PRINT */
