@@ -3,7 +3,7 @@
 #define _JX9H_
 /*
  * Symisc Jx9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -11,10 +11,10 @@
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
 /*
- * Copyright (C) 2012, 2013 Symisc Systems. All rights reserved.
+ * Copyright (C) 2012, 2026 Symisc Systems. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -88,13 +88,13 @@
 /*
  * Copyright notice.
  * If you have any questions about the licensing situation, please
- * visit http://jx9.symisc.net/licensing.html
+ * visit https://jx9.symisc.net/licensing.html
  * or contact Symisc Systems via:
  *   legal@symisc.net
  *   licensing@symisc.net
  *   contact@symisc.net
  */
-#define JX9_COPYRIGHT "Copyright (C) Symisc Systems 2012-2013, http://jx9.symisc.net/"
+#define JX9_COPYRIGHT "Copyright (C) Symisc Systems 2012-2026, https://jx9.symisc.net/"
 
 /* Forward declaration to public objects */
 typedef struct jx9_io_stream jx9_io_stream;
@@ -145,7 +145,7 @@ typedef sxi64 jx9_int64;
  * return value indicates failure.
  * For a full discussion on the configuration verbs and their expected 
  * parameters, please refer to this page:
- *      http://jx9.symisc.net/c_api_func.html#jx9_config
+ *      https://jx9.symisc.net/c_api_func.html#jx9_config
  */
 #define JX9_CONFIG_ERR_ABORT     1  /* RESERVED FOR FUTURE USE */
 #define JX9_CONFIG_ERR_LOG       2  /* TWO ARGUMENTS: const char **pzBuf, int *pLen */
@@ -164,7 +164,7 @@ typedef sxi64 jx9_int64;
  * a HTTP request and JX9_VM_CONFIG_ARGV_ENTRY which populate the $argv array.
  * For a full discussion on the configuration verbs and their expected parameters, please
  * refer to this page:
- *      http://jx9.symisc.net/c_api_func.html#jx9_vm_config
+ *      https://jx9.symisc.net/c_api_func.html#jx9_vm_config
  */
 #define JX9_VM_CONFIG_OUTPUT           UNQLITE_VM_CONFIG_OUTPUT  /* TWO ARGUMENTS: int (*xConsumer)(const void *pOut, unsigned int nLen, void *pUserData), void *pUserData */
 #define JX9_VM_CONFIG_IMPORT_PATH      UNQLITE_VM_CONFIG_IMPORT_PATH  /* ONE ARGUMENT: const char *zIncludePath */
@@ -201,7 +201,7 @@ typedef sxi64 jx9_int64;
  * or [jx9_init()] and before [jx9_lib_shutdown()] then it will return jx9LOCKED.
  * For a full discussion on the configuration verbs and their expected parameters, please
  * refer to this page:
- *      http://jx9.symisc.net/c_api_func.html#Global_Library_Management_Interfaces
+ *      https://jx9.symisc.net/c_api_func.html#Global_Library_Management_Interfaces
  */
 #define JX9_LIB_CONFIG_USER_MALLOC            1 /* ONE ARGUMENT: const SyMemMethods *pMemMethods */ 
 #define JX9_LIB_CONFIG_MEM_ERR_CALLBACK       2 /* TWO ARGUMENTS: int (*xMemError)(void *), void *pUserData */
@@ -293,7 +293,7 @@ struct jx9_vfs
 /* 
  * Possible open mode flags that can be passed to the xOpen() routine
  * of the underlying IO stream device .
- * Refer to the JX9 IO Stream C/C++ specification manual (http://jx9.symisc.net/io_stream_spec.html)
+ * Refer to the JX9 IO Stream C/C++ specification manual (https://jx9.symisc.net/io_stream_spec.html)
  * for additional information.
  */
 #define JX9_IO_OPEN_RDONLY   0x001  /* Read-only open */
@@ -330,10 +330,10 @@ struct jx9_vfs
  * with a path appended. 
  * IO stream devices are registered using a call to jx9_vm_config() with a configuration verb
  * set to JX9_VM_CONFIG_IO_STREAM.
- * Currently the JX9 development team is working on the implementation of the http:// and ftp://
+ * Currently the JX9 development team is working on the implementation of the https:// and ftp://
  * IO stream protocols. These devices will be available in the next major release of the JX9 engine.
  * Developers wishing to implement their own IO stream devices must understand and follow
- * The JX9 IO Stream C/C++ specification manual (http://jx9.symisc.net/io_stream_spec.html).
+ * The JX9 IO Stream C/C++ specification manual (https://jx9.symisc.net/io_stream_spec.html).
  */
 struct jx9_io_stream
 {

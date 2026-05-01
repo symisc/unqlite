@@ -1,6 +1,6 @@
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -8,7 +8,7 @@
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: vfs.c v2.1 Ubuntu 2012-12-13 00:013 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -1433,7 +1433,7 @@ static int jx9Vfs_touch(jx9_context *pCtx, int nArg, jx9_value **apArg)
  * Path processing functions that do not need access to the VFS layer
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -1744,7 +1744,7 @@ static int jx9Builtin_pathinfo(jx9_context *pCtx, int nArg, jx9_value **apArg)
 }
 /*
  * Globbing implementation extracted from the sqlite3 source tree.
- * Original author: D. Richard Hipp (http://www.sqlite.org)
+ * Original author: D. Richard Hipp (https://www.sqlite.org)
  * Status: Public Domain
  */
 typedef unsigned char u8;
@@ -2405,7 +2405,7 @@ static int jx9Vfs_uname(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *    IO stream implementation.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -4894,7 +4894,7 @@ static int vfsHashConsumer(const void *pData, unsigned int nLen, void *pUserData
  *  Calculates the md5 hash of a given file.
  * Parameters
  *  $uri
- *   Target URI (file(/path/to/something) or URL(http://www.symisc.net/))
+ *   Target URI (file(/path/to/something) or URL(https://www.symisc.net/))
  *  $raw_output
  *   When TRUE, returns the digest in raw binary format with a length of 16.
  * Return
@@ -4965,7 +4965,7 @@ static int jx9Builtin_md5_file(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *  Calculates the SHA1 hash of a given file.
  * Parameters
  *  $uri
- *   Target URI (file(/path/to/something) or URL(http://www.symisc.net/))
+ *   Target URI (file(/path/to/something) or URL(https://www.symisc.net/))
  *  $raw_output
  *   When TRUE, returns the digest in raw binary format with a length of 20.
  * Return
@@ -5100,7 +5100,7 @@ static int jx9Builtin_parse_ini_file(jx9_context *pCtx, int nArg, jx9_value **ap
  *    ZIP archive processing.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -5699,7 +5699,7 @@ static const jx9_vfs null_vfs = {
  * Windows VFS implementation for the JX9 engine.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -6848,7 +6848,7 @@ static const jx9_io_stream sWinFileStream = {
  * UNIX VFS implementation for the JX9 engine.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -7820,7 +7820,7 @@ static jx9_stream_data * JX9StreamDataInit(jx9_vm *pVm, int iType)
  * Implementation of the jx9:// IO streams routines
  * Authors:
  *  Symisc Systems, devel@symisc.net.
- *  Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *  Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *   Stable.
  */

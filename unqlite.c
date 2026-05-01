@@ -1,17 +1,17 @@
 /*
  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2022, Symisc Systems http://unqlite.org/
- * Version 1.1.9
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
 /*
- * Copyright (C) 2012, 2022 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
+ * Copyright (C) 2012, 2026 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,8 +35,8 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- /* $SymiscID: unqlite.c v1.1.9 Win10 2022-04-25 03:34:11 stable <chm@symisc.net>  $ */
-/* This file is an amalgamation of many separate C source files from unqlite version 1.1.9
+ /* $SymiscID: unqlite.c v1.2.1 Win10 2022-04-25 03:34:11 stable <chm@symisc.net>  $ */
+/* This file is an amalgamation of many separate C source files from unqlite version 1.2.1
  * By combining all the individual C code files into this single large file, the entire code
  * can be compiled as a single translation unit. This allows many compilers to do optimization's
  * that would not be possible if the files were compiled separately. Performance improvements
@@ -48,7 +48,7 @@
  * a copy embedded within the text of this file.Search for "Header file: <unqlite.h>" to find
  * the start of the embedded unqlite.h header file.) Additional code files may be needed if
  * you want a wrapper to interface unqlite with your choice of programming language.
- * To get the official documentation, please visit http://unqlite.org/
+ * To get the official documentation, please visit https://unqlite.symisc.net/
  */
  /*
   * Make the sure the following directive is defined in the amalgamation build.
@@ -72,18 +72,18 @@
 #define _UNQLITE_H_
 /*
  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2019, Symisc Systems http://unqlite.org/
- * Version 1.1.9
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
 /*
- * Copyright (C) 2012, 2019 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
+ * Copyright (C) 2012, 2026 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -123,13 +123,13 @@
  * version number and Y is the minor version number and Z is the release
  * number.
  */
-#define UNQLITE_VERSION "1.1.9"
+#define UNQLITE_VERSION "1.2.1"
 /*
  * The UNQLITE_VERSION_NUMBER C preprocessor macro resolves to an integer
  * with the value (X*1000000 + Y*1000 + Z) where X, Y, and Z are the same
  * numbers used in [UNQLITE_VERSION].
  */
-#define UNQLITE_VERSION_NUMBER 1001009
+#define UNQLITE_VERSION_NUMBER 1002001
 /*
  * The UNQLITE_SIG C preprocessor macro evaluates to a string
  * literal which is the public signature of the unqlite engine.
@@ -137,7 +137,7 @@
  * generated Server MIME header as follows:
  *   Server: YourWebServer/x.x unqlite/x.x.x \r\n
  */
-#define UNQLITE_SIG "unqlite/1.1.9"
+#define UNQLITE_SIG "unqlite/1.2.1"
 /*
  * UnQLite identification in the Symisc source tree:
  * Each particular check-in of a particular software released
@@ -148,13 +148,13 @@
 /*
  * Copyright notice.
  * If you have any questions about the licensing situation, please
- * visit http://unqlite.org/licensing.html
+ * visit https://unqlite.symisc.net/licensing.html
  * or contact Symisc Systems via:
  *   legal@symisc.net
  *   licensing@symisc.net
  *   contact@symisc.net
  */
-#define UNQLITE_COPYRIGHT "Copyright (C) Symisc Systems, S.U.A.R.L [Mrad Chems Eddine <chm@symisc.net>] 2012-2019, http://unqlite.org/"
+#define UNQLITE_COPYRIGHT "Copyright (C) Symisc Systems, S.U.A.R.L [Mrad Chems Eddine <chm@symisc.net>] 2012-2026, https://unqlite.symisc.net/"
 /* Make sure we can call this stuff from C++ */
 #ifdef __cplusplus
 extern "C" { 
@@ -453,7 +453,7 @@ typedef sxi64 unqlite_int64;
  * return value indicates failure.
  * For a full discussion on the configuration verbs and their expected 
  * parameters, please refer to this page:
- *      http://unqlite.org/c_api/unqlite_config.html
+ *      https://unqlite.symisc.net/c_api/unqlite_config.html
  */
 #define UNQLITE_CONFIG_JX9_ERR_LOG         1  /* TWO ARGUMENTS: const char **pzBuf, int *pLen */
 #define UNQLITE_CONFIG_MAX_PAGE_CACHE      2  /* ONE ARGUMENT: int nMaxPage */
@@ -476,7 +476,7 @@ typedef sxi64 unqlite_int64;
  * a HTTP request and UNQLITE_VM_CONFIG_ARGV_ENTRY which populate the $argv array.
  * For a full discussion on the configuration verbs and their expected parameters, please
  * refer to this page:
- *      http://unqlite.org/c_api/unqlite_vm_config.html
+ *      https://unqlite.symisc.net/c_api/unqlite_vm_config.html
  */
 #define UNQLITE_VM_CONFIG_OUTPUT           1  /* TWO ARGUMENTS: int (*xConsumer)(const void *pOut, unsigned int nLen, void *pUserData), void *pUserData */
 #define UNQLITE_VM_CONFIG_IMPORT_PATH      2  /* ONE ARGUMENT: const char *zIncludePath */
@@ -502,7 +502,7 @@ typedef sxi64 unqlite_int64;
  * value indicates failure.
  * For a full discussion on the configuration verbs and their expected parameters, please
  * refer to this page:
- *      http://unqlite.org/c_api/unqlite_kv_config.html
+ *      https://unqlite.symisc.net/c_api/unqlite_kv_config.html
  */
 #define UNQLITE_KV_CONFIG_HASH_FUNC  1 /* ONE ARGUMENT: unsigned int (*xHash)(const void *,unsigned int) */
 #define UNQLITE_KV_CONFIG_CMP_FUNC   2 /* ONE ARGUMENT: int (*xCmp)(const void *,const void *,unsigned int) */
@@ -528,7 +528,7 @@ typedef sxi64 unqlite_int64;
  * or [unqlite_init()] and before [unqlite_lib_shutdown()] then it will return UNQLITE_LOCKED.
  * For a full discussion on the configuration verbs and their expected parameters, please
  * refer to this page:
- *      http://unqlite.org/c_api/unqlite_lib.html
+ *      https://unqlite.symisc.net/c_api/unqlite_lib.html
  */
 #define UNQLITE_LIB_CONFIG_USER_MALLOC            1 /* ONE ARGUMENT: const SyMemMethods *pMemMethods */ 
 #define UNQLITE_LIB_CONFIG_MEM_ERR_CALLBACK       2 /* TWO ARGUMENTS: int (*xMemError)(void *), void *pUserData */
@@ -1032,7 +1032,7 @@ UNQLITE_APIEXPORT const char * unqlite_lib_copyright(void);
 #define _JX9H_
 /*
  * Symisc Jx9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -1040,10 +1040,10 @@ UNQLITE_APIEXPORT const char * unqlite_lib_copyright(void);
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
 /*
- * Copyright (C) 2012, 2013 Symisc Systems. All rights reserved.
+ * Copyright (C) 2012, 2026 Symisc Systems. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -1117,13 +1117,13 @@ UNQLITE_APIEXPORT const char * unqlite_lib_copyright(void);
 /*
  * Copyright notice.
  * If you have any questions about the licensing situation, please
- * visit http://jx9.symisc.net/licensing.html
+ * visit https://jx9.symisc.net/licensing.html
  * or contact Symisc Systems via:
  *   legal@symisc.net
  *   licensing@symisc.net
  *   contact@symisc.net
  */
-#define JX9_COPYRIGHT "Copyright (C) Symisc Systems 2012-2013, http://jx9.symisc.net/"
+#define JX9_COPYRIGHT "Copyright (C) Symisc Systems 2012-2026, https://jx9.symisc.net/"
 
 /* Forward declaration to public objects */
 typedef struct jx9_io_stream jx9_io_stream;
@@ -1174,7 +1174,7 @@ typedef sxi64 jx9_int64;
  * return value indicates failure.
  * For a full discussion on the configuration verbs and their expected 
  * parameters, please refer to this page:
- *      http://jx9.symisc.net/c_api_func.html#jx9_config
+ *      https://jx9.symisc.net/c_api_func.html#jx9_config
  */
 #define JX9_CONFIG_ERR_ABORT     1  /* RESERVED FOR FUTURE USE */
 #define JX9_CONFIG_ERR_LOG       2  /* TWO ARGUMENTS: const char **pzBuf, int *pLen */
@@ -1193,7 +1193,7 @@ typedef sxi64 jx9_int64;
  * a HTTP request and JX9_VM_CONFIG_ARGV_ENTRY which populate the $argv array.
  * For a full discussion on the configuration verbs and their expected parameters, please
  * refer to this page:
- *      http://jx9.symisc.net/c_api_func.html#jx9_vm_config
+ *      https://jx9.symisc.net/c_api_func.html#jx9_vm_config
  */
 #define JX9_VM_CONFIG_OUTPUT           UNQLITE_VM_CONFIG_OUTPUT  /* TWO ARGUMENTS: int (*xConsumer)(const void *pOut, unsigned int nLen, void *pUserData), void *pUserData */
 #define JX9_VM_CONFIG_IMPORT_PATH      UNQLITE_VM_CONFIG_IMPORT_PATH  /* ONE ARGUMENT: const char *zIncludePath */
@@ -1230,7 +1230,7 @@ typedef sxi64 jx9_int64;
  * or [jx9_init()] and before [jx9_lib_shutdown()] then it will return jx9LOCKED.
  * For a full discussion on the configuration verbs and their expected parameters, please
  * refer to this page:
- *      http://jx9.symisc.net/c_api_func.html#Global_Library_Management_Interfaces
+ *      https://jx9.symisc.net/c_api_func.html#Global_Library_Management_Interfaces
  */
 #define JX9_LIB_CONFIG_USER_MALLOC            1 /* ONE ARGUMENT: const SyMemMethods *pMemMethods */ 
 #define JX9_LIB_CONFIG_MEM_ERR_CALLBACK       2 /* TWO ARGUMENTS: int (*xMemError)(void *), void *pUserData */
@@ -1322,7 +1322,7 @@ struct jx9_vfs
 /* 
  * Possible open mode flags that can be passed to the xOpen() routine
  * of the underlying IO stream device .
- * Refer to the JX9 IO Stream C/C++ specification manual (http://jx9.symisc.net/io_stream_spec.html)
+ * Refer to the JX9 IO Stream C/C++ specification manual (https://jx9.symisc.net/io_stream_spec.html)
  * for additional information.
  */
 #define JX9_IO_OPEN_RDONLY   0x001  /* Read-only open */
@@ -1359,10 +1359,10 @@ struct jx9_vfs
  * with a path appended. 
  * IO stream devices are registered using a call to jx9_vm_config() with a configuration verb
  * set to JX9_VM_CONFIG_IO_STREAM.
- * Currently the JX9 development team is working on the implementation of the http:// and ftp://
+ * Currently the JX9 development team is working on the implementation of the https:// and ftp://
  * IO stream protocols. These devices will be available in the next major release of the JX9 engine.
  * Developers wishing to implement their own IO stream devices must understand and follow
- * The JX9 IO Stream C/C++ specification manual (http://jx9.symisc.net/io_stream_spec.html).
+ * The JX9 IO Stream C/C++ specification manual (https://jx9.symisc.net/io_stream_spec.html).
  */
 struct jx9_io_stream
 {
@@ -1498,7 +1498,7 @@ JX9_PRIVATE const char * jx9_lib_signature(void);
  */
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -1506,7 +1506,7 @@ JX9_PRIVATE const char * jx9_lib_signature(void);
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: jx9Int.h v1.9 FreeBSD 2012-08-13 23:25 devel <chm@symisc.net> $ */
 #ifndef __JX9INT_H__
@@ -1716,18 +1716,11 @@ struct SyBlob
 #define SyBlobDataAt(BLOB, OFFT)	 ((void *)(&((char *)(BLOB)->pBlob)[OFFT]))
 #define SyBlobGetAllocator(BLOB) ((BLOB)->pAllocator)
 
-#ifndef SXMEM_POOL_INCR
-#define SXMEM_POOL_INCR			3
-#endif
-#ifndef SXMEM_POOL_NBUCKETS
-#define SXMEM_POOL_NBUCKETS		12
-#endif
 #define SXMEM_BACKEND_MAGIC	0xBAC3E67D
 #define SXMEM_BACKEND_CORRUPT(BACKEND)	(BACKEND == 0 || BACKEND->nMagic != SXMEM_BACKEND_MAGIC)
 
 #define SXMEM_BACKEND_RETRY	3
 /* A memory backend subsystem is defined by an instance of the following structures */
-typedef union SyMemHeader SyMemHeader;
 typedef struct SyMemBlock SyMemBlock;
 struct SyMemBlock
 {
@@ -1737,14 +1730,6 @@ struct SyMemBlock
 							   * can detect misuse.
 							   */
 #endif
-};
-/*
- * Header associated with each valid memory pool block.
- */
-union SyMemHeader
-{
-	SyMemHeader *pNext; /* Next chunk of size 1 << (nBucket + SXMEM_POOL_INCR) in the list */
-	sxu32 nBucket;      /* Bucket index in aPool[] */
 };
 struct SyMemBackend
 {
@@ -1756,7 +1741,6 @@ struct SyMemBackend
 	void *pUserData;               /* First arg to xMemError() */
 	SyMutex *pMutex;               /* Per instance mutex */
 	sxu32 nMagic;                  /* Sanity check against misuse */
-	SyMemHeader *apPool[SXMEM_POOL_NBUCKETS+SXMEM_POOL_INCR]; /* Pool of memory chunks */
 };
 /* Mutex types */
 #define SXMUTEX_TYPE_FAST	1
@@ -3166,10 +3150,6 @@ JX9_PRIVATE sxi32 SyMemBackendRelease(SyMemBackend *pBackend);
 JX9_PRIVATE sxi32 SyMemBackendInitFromOthers(SyMemBackend *pBackend, const SyMemMethods *pMethods, ProcMemError xMemErr, void *pUserData);
 JX9_PRIVATE sxi32 SyMemBackendInit(SyMemBackend *pBackend, ProcMemError xMemErr, void *pUserData);
 JX9_PRIVATE sxi32 SyMemBackendInitFromParent(SyMemBackend *pBackend,const SyMemBackend *pParent);
-#if 0
-/* Not used in the current release of the JX9 engine */
-JX9_PRIVATE void *SyMemBackendPoolRealloc(SyMemBackend *pBackend, void *pOld, sxu32 nByte);
-#endif
 JX9_PRIVATE sxi32 SyMemBackendPoolFree(SyMemBackend *pBackend, void *pChunk);
 JX9_PRIVATE void *SyMemBackendPoolAlloc(SyMemBackend *pBackend, sxu32 nByte);
 JX9_PRIVATE sxi32 SyMemBackendFree(SyMemBackend *pBackend, void *pChunk);
@@ -3215,15 +3195,15 @@ JX9_PRIVATE void SyDosTimeFormat(sxu32 nDosDate, Sytm *pOut);
  */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
  /* $SymiscID: unqliteInt.h v1.7 FreeBSD 2012-11-02 11:25 devel <chm@symisc.net> $ */
 #ifndef __UNQLITEINT_H__
@@ -3541,15 +3521,15 @@ UNQLITE_PRIVATE sxu32 unqlitePagerRandomNum(Pager *pPager);
  */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
  /* $SymiscID: api.c v2.0 FreeBSD 2012-11-08 23:07 stable <chm@symisc.net> $ */
 #ifndef UNQLITE_AMALGAMATION
@@ -3593,7 +3573,7 @@ static struct unqlGlobal_Data
 	unqlite *pDB;                          /* List of active DB handles */
 	sxu32 nMagic;                          /* Sanity check against library misuse */
 }sUnqlMPGlobal = {
-	{0, 0, 0, 0, 0, 0, 0, 0, {0}}, 
+	{0, 0, 0, 0, 0, 0, 0, 0}, 
 #if defined(UNQLITE_ENABLE_THREADS)
 	0, 
 	0, 
@@ -6334,17 +6314,17 @@ UNQLITE_APIEXPORT unsigned int unqlite_util_random_num(unqlite *pDb)
  */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
- /* $SymiscID: bitvec.c v1.0 Win7 2013-02-27 15:16 stable <chm@symisc.net> $ */
+ /* $SymiscID: bitvec.c v1.0 Win7 2026-02-27 15:16 stable <chm@symisc.net> $ */
 #ifndef UNQLITE_AMALGAMATION
 #include "unqliteInt.h"
 #endif
@@ -6562,15 +6542,15 @@ UNQLITE_PRIVATE void unqliteBitvecDestroy(Bitvec *p)
  */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
  /* $SymiscID: fastjson.c v1.1 FreeBSD 2012-12-05 22:52 stable <chm@symisc.net> $ */
 #ifndef UNQLITE_AMALGAMATION
@@ -6961,7 +6941,7 @@ UNQLITE_PRIVATE sxi32 FastJsonDecode(
  */
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -6969,7 +6949,7 @@ UNQLITE_PRIVATE sxi32 FastJsonDecode(
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: api.c v1.7 FreeBSD 2012-12-18 06:54 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -7013,7 +6993,7 @@ static struct Jx9Global_Data
 	jx9 *pEngines;                          /* List of active engine */
 	sxu32 nMagic;                           /* Sanity check against library misuse */
 }sJx9MPGlobal = {
-	{0, 0, 0, 0, 0, 0, 0, 0, {0}}, 
+	{0, 0, 0, 0, 0, 0, 0, 0}, 
 #if defined(JX9_ENABLE_THREADS)
 	0, 
 	0, 
@@ -8713,7 +8693,7 @@ JX9_PRIVATE int jx9_value_is_empty(jx9_value *pVal)
  */
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -8721,7 +8701,7 @@ JX9_PRIVATE int jx9_value_is_empty(jx9_value *pVal)
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: builtin.c v1.7 Win7 2012-12-13 00:01 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -8733,7 +8713,7 @@ JX9_PRIVATE int jx9_value_is_empty(jx9_value *pVal)
  *    Variable handling Functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -9009,7 +8989,7 @@ static int jx9Builtin_empty(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *    Math Functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -9851,7 +9831,7 @@ static int jx9Builtin_base_convert(jx9_context *pCtx, int nArg, jx9_value **apAr
  *    String handling Functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -14805,7 +14785,7 @@ static int jx9Builtin_parse_ini_string(jx9_context *pCtx, int nArg, jx9_value **
  * Ctype Functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -15321,7 +15301,7 @@ static int jx9Builtin_ctype_upper(jx9_context *pCtx, int nArg, jx9_value **apArg
  * Date/Time functions
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Devel.
  */
@@ -16700,7 +16680,7 @@ static int jx9Builtin_mktime(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *    URL handling Functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -17017,7 +16997,7 @@ JX9_PRIVATE void jx9RegisterBuiltInFunction(jx9_vm *pVm)
  */
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -17025,7 +17005,7 @@ JX9_PRIVATE void jx9RegisterBuiltInFunction(jx9_vm *pVm)
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: compile.c v1.7 FreeBSD 2012-12-11 21:46 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -20716,7 +20696,7 @@ JX9_PRIVATE sxi32 jx9GenCompileError(jx9_gen_state *pGen,sxi32 nErrType,sxu32 nL
  */
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -20724,7 +20704,7 @@ JX9_PRIVATE sxi32 jx9GenCompileError(jx9_gen_state *pGen,sxi32 nErrType,sxu32 nL
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: const.c v1.7 Win7 2012-12-13 00:01 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -22145,7 +22125,7 @@ JX9_PRIVATE void jx9RegisterBuiltInConstant(jx9_vm *pVm)
  */
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -22153,7 +22133,7 @@ JX9_PRIVATE void jx9RegisterBuiltInConstant(jx9_vm *pVm)
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: hashmap.c v2.6 Win7 2012-12-11 00:50 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -23683,7 +23663,7 @@ static void HashmapSortRehash(jx9_hashmap *pMap)
  * Array functions implementation.
  * Authors:
  *  Symisc Systems, devel@symisc.net.
- *  Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *  Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *  Stable.
  */
@@ -25140,7 +25120,7 @@ JX9_PRIVATE sxi32 jx9HashmapWalk(
  */
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -25148,7 +25128,7 @@ JX9_PRIVATE sxi32 jx9HashmapWalk(
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: json.c v1.0 FreeBSD 2012-12-16 00:28 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -25160,7 +25140,7 @@ JX9_PRIVATE sxi32 jx9HashmapWalk(
  *  JSON encoding/decoding routines.
  * Authors:
  *  Symisc Systems, devel@symisc.net.
- *  Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *  Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Devel.
  */
@@ -25393,7 +25373,7 @@ static sxi32 VmJsonTokenize(SyStream *pStream, SyToken *pToken, void *pUserData,
 		 * application seeking for a production quality, ready to use macro processor.
 		 * xPP is a widely used library developed and maintened by Symisc Systems.
 		 * You can reach the xPP home page by following this link:
-		 * http://xpp.symisc.net/
+		 * https://xpp.symisc.net/
 		 */
 		const unsigned char *zIn;
 		/* Isolate UTF-8 or alphanumeric stream */
@@ -25877,7 +25857,7 @@ JX9_PRIVATE int jx9JsonDecode(jx9_context *pCtx,const char *zJSON,int nByte)
  */
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -25885,7 +25865,7 @@ JX9_PRIVATE int jx9JsonDecode(jx9_context *pCtx,const char *zJSON,int nByte)
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: lex.c v1.0 FreeBSD 2012-12-09 00:19 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -25928,7 +25908,7 @@ static sxi32 jx9TokenizeInput(SyStream *pStream,SyToken *pToken,void *pUserData,
 		 * application seeking for a production quality, ready to use macro processor.
 		 * xPP is a widely used library developed and maintened by Symisc Systems.
 		 * You can reach the xPP home page by following this link:
-		 * http://xpp.symisc.net/
+		 * https://xpp.symisc.net/
 		 */
 		const unsigned char *zIn;
 		sxu32 nKeyword;
@@ -26642,7 +26622,7 @@ JX9_PRIVATE sxi32 jx9Tokenize(const char *zInput,sxu32 nLen,SySet *pOut)
  */
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -26650,12 +26630,12 @@ JX9_PRIVATE sxi32 jx9Tokenize(const char *zInput,sxu32 nLen,SySet *pOut)
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: lib.c v5.1 Win7 2012-08-08 04:19 stable <chm@symisc.net> $ */
 /*
  * Symisc Run-Time API: A modern thread safe replacement of the standard libc
- * Copyright (C) Symisc Systems 2007-2012, http://www.symisc.net/
+ * Copyright (C) Symisc Systems 2007-2012, https://www.symisc.net/
  *
  * The Symisc Run-Time API is an independent project developed by symisc systems
  * internally as a secure replacement of the standard libc.
@@ -27324,191 +27304,14 @@ JX9_PRIVATE sxi32 SyMemBackendDisbaleMutexing(SyMemBackend *pBackend)
 	return SXRET_OK;
 }
 #endif
-/*
- * Memory pool allocator
- */
-#define SXMEM_POOL_MAGIC		0xDEADu
-#define SXMEM_POOL_MAXALLOC		(1<<(SXMEM_POOL_NBUCKETS+SXMEM_POOL_INCR)) 
-#define SXMEM_POOL_MINALLOC		(1<<(SXMEM_POOL_INCR))
-static sxi32 MemPoolBucketAlloc(SyMemBackend *pBackend, sxu32 nBucket)
-{
-	char *zBucket, *zBucketEnd;
-	SyMemHeader *pHeader;
-	sxu32 nBucketSize;
-	
-	/* Allocate one big block first */
-	zBucket = (char *)MemBackendAlloc(&(*pBackend), SXMEM_POOL_MAXALLOC);
-	if( zBucket == 0 ){
-		return SXERR_MEM;
-	}
-	zBucketEnd = &zBucket[SXMEM_POOL_MAXALLOC];
-	/* Divide the big block into mini bucket pool */
-	nBucketSize = 1 << (nBucket + SXMEM_POOL_INCR);
-	pBackend->apPool[nBucket] = pHeader = (SyMemHeader *)zBucket;
-	for(;;){
-		if( &zBucket[nBucketSize] >= zBucketEnd ){
-			break;
-		}
-		pHeader->pNext = (SyMemHeader *)&zBucket[nBucketSize];
-		/* Advance the cursor to the next available chunk */
-		pHeader = pHeader->pNext;
-		zBucket += nBucketSize;	
-	}
-	pHeader->pNext = 0;
-	
-	return SXRET_OK;
-}
-static void * MemBackendPoolAlloc(SyMemBackend *pBackend, sxu32 nByte)
-{
-	SyMemHeader *pBucket, *pNext;
-	sxu32 nBucketSize;
-	sxu32 nBucket;
-
-	if( nByte + sizeof(SyMemHeader) >= SXMEM_POOL_MAXALLOC ){
-		/* Allocate a big chunk directly */
-		pBucket = (SyMemHeader *)MemBackendAlloc(&(*pBackend), nByte+sizeof(SyMemHeader));
-		if( pBucket == 0 ){
-			return 0;
-		}
-		/* Record as big block */
-		pBucket->nBucket = (sxu32)(SXMEM_POOL_MAGIC << 16) | SXU16_HIGH;
-		return (void *)(pBucket+1);
-	}
-	/* Locate the appropriate bucket */
-	nBucket = 0;
-	nBucketSize = SXMEM_POOL_MINALLOC;
-	while( nByte + sizeof(SyMemHeader) > nBucketSize  ){
-		nBucketSize <<= 1;
-		nBucket++;
-	}
-	pBucket = pBackend->apPool[nBucket];
-	if( pBucket == 0 ){
-		sxi32 rc;
-		rc = MemPoolBucketAlloc(&(*pBackend), nBucket);
-		if( rc != SXRET_OK ){
-			return 0;
-		}
-		pBucket = pBackend->apPool[nBucket];
-	}
-	/* Remove from the free list */
-	pNext = pBucket->pNext;
-	pBackend->apPool[nBucket] = pNext;
-	/* Record bucket&magic number */
-	pBucket->nBucket = (SXMEM_POOL_MAGIC << 16) | nBucket;
-	return (void *)&pBucket[1];
-}
 JX9_PRIVATE void * SyMemBackendPoolAlloc(SyMemBackend *pBackend, sxu32 nByte)
 {
-	void *pChunk;
-#if defined(UNTRUST)
-	if( SXMEM_BACKEND_CORRUPT(pBackend) ){
-		return 0;
-	}
-#endif
-	if( pBackend->pMutexMethods ){
-		SyMutexEnter(pBackend->pMutexMethods, pBackend->pMutex);
-	}
-	pChunk = MemBackendPoolAlloc(&(*pBackend), nByte);
-	if( pBackend->pMutexMethods ){
-		SyMutexLeave(pBackend->pMutexMethods, pBackend->pMutex);
-	}
-	return pChunk;
-}
-static sxi32 MemBackendPoolFree(SyMemBackend *pBackend, void * pChunk)
-{
-	SyMemHeader *pHeader;
-	sxu32 nBucket;
-	/* Get the corresponding bucket */
-	pHeader = (SyMemHeader *)(((char *)pChunk) - sizeof(SyMemHeader));
-	/* Sanity check to avoid misuse */
-	if( (pHeader->nBucket >> 16) != SXMEM_POOL_MAGIC ){
-		return SXERR_CORRUPT;
-	}
-	nBucket = pHeader->nBucket & 0xFFFF;
-	if( nBucket == SXU16_HIGH ){
-		/* Free the big block */
-		MemBackendFree(&(*pBackend), pHeader);
-	}else{
-		/* Return to the free list */
-		pHeader->pNext = pBackend->apPool[nBucket & 0x0f];
-		pBackend->apPool[nBucket & 0x0f] = pHeader;
-	}
-	return SXRET_OK;
+	return SyMemBackendAlloc(pBackend, nByte);
 }
 JX9_PRIVATE sxi32 SyMemBackendPoolFree(SyMemBackend *pBackend, void * pChunk)
 {
-	sxi32 rc;
-#if defined(UNTRUST)
-	if( SXMEM_BACKEND_CORRUPT(pBackend) || pChunk == 0 ){
-		return SXERR_CORRUPT;
-	}
-#endif
-	if( pBackend->pMutexMethods ){
-		SyMutexEnter(pBackend->pMutexMethods, pBackend->pMutex);
-	}
-	rc = MemBackendPoolFree(&(*pBackend), pChunk);
-	if( pBackend->pMutexMethods ){
-		SyMutexLeave(pBackend->pMutexMethods, pBackend->pMutex);
-	}
-	return rc;
+	return SyMemBackendFree(pBackend, pChunk);
 }
-#if 0
-static void * MemBackendPoolRealloc(SyMemBackend *pBackend, void * pOld, sxu32 nByte)
-{
-	sxu32 nBucket, nBucketSize;
-	SyMemHeader *pHeader;
-	void * pNew;
-
-	if( pOld == 0 ){
-		/* Allocate a new pool */
-		pNew = MemBackendPoolAlloc(&(*pBackend), nByte);
-		return pNew;
-	}
-	/* Get the corresponding bucket */
-	pHeader = (SyMemHeader *)(((char *)pOld) - sizeof(SyMemHeader));
-	/* Sanity check to avoid misuse */
-	if( (pHeader->nBucket >> 16) != SXMEM_POOL_MAGIC ){
-		return 0;
-	}
-	nBucket = pHeader->nBucket & 0xFFFF;
-	if( nBucket == SXU16_HIGH ){
-		/* Big block */
-		return MemBackendRealloc(&(*pBackend), pHeader, nByte);
-	}
-	nBucketSize = 1 << (nBucket + SXMEM_POOL_INCR);
-	if( nBucketSize >= nByte + sizeof(SyMemHeader) ){
-		/* The old bucket can honor the requested size */
-		return pOld;
-	}
-	/* Allocate a new pool */
-	pNew = MemBackendPoolAlloc(&(*pBackend), nByte);
-	if( pNew == 0 ){
-		return 0;
-	}
-	/* Copy the old data into the new block */
-	SyMemcpy(pOld, pNew, nBucketSize);
-	/* Free the stale block */
-	MemBackendPoolFree(&(*pBackend), pOld);
-	return pNew;
-}
-JX9_PRIVATE void * SyMemBackendPoolRealloc(SyMemBackend *pBackend, void * pOld, sxu32 nByte)
-{
-	void *pChunk;
-#if defined(UNTRUST)
-	if( SXMEM_BACKEND_CORRUPT(pBackend) ){
-		return 0;
-	}
-#endif
-	if( pBackend->pMutexMethods ){
-		SyMutexEnter(pBackend->pMutexMethods, pBackend->pMutex);
-	}
-	pChunk = MemBackendPoolRealloc(&(*pBackend), pOld, nByte);
-	if( pBackend->pMutexMethods ){
-		SyMutexLeave(pBackend->pMutexMethods, pBackend->pMutex);
-	}
-	return pChunk;
-}
-#endif
 JX9_PRIVATE sxi32 SyMemBackendInit(SyMemBackend *pBackend, ProcMemError xMemErr, void * pUserData)
 {
 #if defined(UNTRUST)
@@ -30256,7 +30059,7 @@ JX9_PRIVATE sxi32 SyArchiveRelease(SyArchive *pArch)
 #endif /* JX9_DISABLE_BUILTIN_FUNC */
 /*
  * Psuedo Random Number Generator (PRNG)
- * @authors: SQLite authors <http://www.sqlite.org/>
+ * @authors: SQLite authors <https://www.sqlite.org/>
  * @status: Public Domain
  * NOTE:
  *  Nothing in this file or anywhere else in the library does any kind of
@@ -31037,7 +30840,7 @@ JX9_PRIVATE void SyDosTimeFormat(sxu32 nDosDate, Sytm *pOut)
  */
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -31045,7 +30848,7 @@ JX9_PRIVATE void SyDosTimeFormat(sxu32 nDosDate, Sytm *pOut)
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: memobj.c v2.7 FreeBSD 2012-08-09 03:40 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -32128,7 +31931,7 @@ JX9_PRIVATE sxi32 jx9MemObjDump(
  */
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -32136,7 +31939,7 @@ JX9_PRIVATE sxi32 jx9MemObjDump(
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: parse.c v1.2 FreeBSD 2012-12-11 00:46 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -32156,7 +31959,7 @@ JX9_PRIVATE sxi32 jx9MemObjDump(
  * amazing things now such as array dereferencing, on the fly function call, anonymous function
  * as array values, object member access on instantiation and so on.
  * Refer to the following page for a full discussion on these improvements:
- * http://jx9.symisc.net/features.html
+ * https://jx9.symisc.net/features.html
  */
 static const jx9_expr_op aOpTable[] = {
 	                              /* Postfix operators */
@@ -33311,7 +33114,7 @@ JX9_PRIVATE sxi32 jx9ExprMakeTree(jx9_gen_state *pGen, SySet *pExprNode, jx9_exp
  */
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -33319,7 +33122,7 @@ JX9_PRIVATE sxi32 jx9ExprMakeTree(jx9_gen_state *pGen, SySet *pExprNode, jx9_exp
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: vfs.c v2.1 Ubuntu 2012-12-13 00:013 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -34744,7 +34547,7 @@ static int jx9Vfs_touch(jx9_context *pCtx, int nArg, jx9_value **apArg)
  * Path processing functions that do not need access to the VFS layer
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -35055,7 +34858,7 @@ static int jx9Builtin_pathinfo(jx9_context *pCtx, int nArg, jx9_value **apArg)
 }
 /*
  * Globbing implementation extracted from the sqlite3 source tree.
- * Original author: D. Richard Hipp (http://www.sqlite.org)
+ * Original author: D. Richard Hipp (https://www.sqlite.org)
  * Status: Public Domain
  */
 typedef unsigned char u8;
@@ -35716,7 +35519,7 @@ static int jx9Vfs_uname(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *    IO stream implementation.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -38205,7 +38008,7 @@ static int vfsHashConsumer(const void *pData, unsigned int nLen, void *pUserData
  *  Calculates the md5 hash of a given file.
  * Parameters
  *  $uri
- *   Target URI (file(/path/to/something) or URL(http://www.symisc.net/))
+ *   Target URI (file(/path/to/something) or URL(https://www.symisc.net/))
  *  $raw_output
  *   When TRUE, returns the digest in raw binary format with a length of 16.
  * Return
@@ -38276,7 +38079,7 @@ static int jx9Builtin_md5_file(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *  Calculates the SHA1 hash of a given file.
  * Parameters
  *  $uri
- *   Target URI (file(/path/to/something) or URL(http://www.symisc.net/))
+ *   Target URI (file(/path/to/something) or URL(https://www.symisc.net/))
  *  $raw_output
  *   When TRUE, returns the digest in raw binary format with a length of 20.
  * Return
@@ -38411,7 +38214,7 @@ static int jx9Builtin_parse_ini_file(jx9_context *pCtx, int nArg, jx9_value **ap
  *    ZIP archive processing.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -39010,7 +38813,7 @@ static const jx9_vfs null_vfs = {
  * Windows VFS implementation for the JX9 engine.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -40159,7 +39962,7 @@ static const jx9_io_stream sWinFileStream = {
  * UNIX VFS implementation for the JX9 engine.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -41131,7 +40934,7 @@ static jx9_stream_data * JX9StreamDataInit(jx9_vm *pVm, int iType)
  * Implementation of the jx9:// IO streams routines
  * Authors:
  *  Symisc Systems, devel@symisc.net.
- *  Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *  Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *   Stable.
  */
@@ -41540,7 +41343,7 @@ JX9_PRIVATE void * jx9ExportStderr(jx9_vm *pVm)
  */
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -41548,7 +41351,7 @@ JX9_PRIVATE void * jx9ExportStderr(jx9_vm *pVm)
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: jx9_vm.c v1.0 FreeBSD 2012-12-09 00:19 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -43113,8 +42916,8 @@ static sxi32 VmByteCodeDump(
 {
 	static const char zDump[] = {
 		"====================================================\n"
-		"JX9 VM Dump   Copyright (C) 2012-2013 Symisc Systems\n"
-		"                              http://jx9.symisc.net/\n"
+		"JX9 VM Dump   Copyright (C) 2012-2026 Symisc Systems\n"
+		"                              https://jx9.symisc.net/\n"
 		"====================================================\n"
 	};
 	VmInstr *pInstr, *pEnd;
@@ -45811,7 +45614,7 @@ JX9_PRIVATE void jx9VmExpandConstantValue(jx9_value *pVal, void *pUserData)
  *  Function handling functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -46248,7 +46051,7 @@ static int vm_builtin_get_defined_constants(jx9_context *pCtx, int nArg, jx9_val
  *  Random numbers/string generators.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -46369,7 +46172,7 @@ static int vm_builtin_rand_str(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *  Language construct implementation as foreign functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -46531,7 +46334,7 @@ static int vm_builtin_dump(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *  Version, Credits and Copyright related functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  *    Stable.
  */
 /*
@@ -46556,7 +46359,7 @@ static int vm_builtin_jx9_version(jx9_context *pCtx, int nArg, jx9_value **apArg
  *    URL related routines.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -46785,7 +46588,7 @@ static int vm_builtin_parse_url(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *   Array related routines.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  * Note 2012-5-21 01:04:15:
@@ -47112,7 +46915,7 @@ static sxi32 VmExecIncludedFile(
 	/* Extract the associated stream */
 	pStream = jx9VmGetStreamDevice(pVm, &pPath->zString, pPath->nByte);
 	/*
-	 * Open the file or the URL [i.e: http://jx9.symisc.net/example/hello.jx9.txt"] 
+	 * Open the file or the URL [i.e: https://jx9.symisc.net/example/hello.jx9.txt"] 
 	 * in a read-only mode.
 	 */
 	pHandle = jx9StreamOpenHandle(pVm, pStream,pPath->zString, JX9_IO_OPEN_RDONLY, TRUE, 0, TRUE, &isNew);
@@ -47235,7 +47038,7 @@ static int vm_builtin_import(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *  Command line arguments processing.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -47636,7 +47439,7 @@ static int vm_builtin_utf8_encode(jx9_context *pCtx, int nArg, jx9_value **apArg
 }
 /*
  * UTF-8 decoding routine extracted from the sqlite3 source tree.
- * Original author: D. Richard Hipp (http://www.sqlite.org)
+ * Original author: D. Richard Hipp (https://www.sqlite.org)
  * Status: Public Domain
  */
 /*
@@ -47881,7 +47684,7 @@ JX9_PRIVATE const jx9_io_stream * jx9VmGetStreamDevice(
 	SyString sDev, sCur;
 	sxu32 n, nEntry;
 	int rc;
-	/* Check if a scheme [i.e: file://, http://, zip://...] is available */
+	/* Check if a scheme [i.e: file://, https://, zip://...] is available */
 	zNext = zCur = zIn = *pzDevice;
 	zEnd = &zIn[nByte];
 	while( zIn < zEnd ){
@@ -47923,7 +47726,7 @@ JX9_PRIVATE const jx9_io_stream * jx9VmGetStreamDevice(
  *    HTTP/URI related routines.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */ 
@@ -48517,7 +48320,7 @@ static sxi32 VmGetNextLine(SyString *pCursor, SyString *pCurrent)
 	  * 'ORIG_PATH_INFO' 
       * Contains any client-provided pathname information trailing the actual script filename but preceding
 	  * the query string, if available. For instance, if the current script was accessed via the URL
-	  * http://www.example.com/jx9/path_info.jx9/some/stuff?foo=bar, then $_SERVER['PATH_INFO'] would contain
+	  * https://www.example.com/jx9/path_info.jx9/some/stuff?foo=bar, then $_SERVER['PATH_INFO'] would contain
 	  * /some/stuff. 
 	  */
 	 pValue = &sUri.sPath;
@@ -48688,17 +48491,17 @@ static sxi32 VmGetNextLine(SyString *pCursor, SyString *pCurrent)
  */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
- /* $SymiscID: lhash_kv.c v1.7 Solaris 2013-01-14 12:56 stable <chm@symisc.net> $ */
+ /* $SymiscID: lhash_kv.c v1.7 Solaris 2026-01-14 12:56 stable <chm@symisc.net> $ */
 #ifndef UNQLITE_AMALGAMATION
 #include "unqliteInt.h"
 #endif
@@ -51771,15 +51574,15 @@ UNQLITE_PRIVATE const unqlite_kv_methods * unqliteExportDiskKvStorage(void)
  */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
  /* $SymiscID: mem_kv.c v1.7 Win7 2012-11-28 01:41 stable <chm@symisc.net> $ */
 #ifndef UNQLITE_AMALGAMATION
@@ -52455,15 +52258,15 @@ UNQLITE_PRIVATE const unqlite_kv_methods * unqliteExportMemKvStorage(void)
  */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
  /* $SymiscID: os.c v1.0 FreeBSD 2012-11-12 21:27 devel <chm@symisc.net> $ */
 #ifndef UNQLITE_AMALGAMATION
@@ -52578,17 +52381,17 @@ UNQLITE_PRIVATE int unqliteOsAccess(
  */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
- /* $SymiscID: os_unix.c v1.3 FreeBSD 2013-04-05 01:10 devel <chm@symisc.net> $ */
+ /* $SymiscID: os_unix.c v1.3 FreeBSD 2026-04-05 01:10 devel <chm@symisc.net> $ */
 #ifndef UNQLITE_AMALGAMATION
 #include "unqliteInt.h"
 #endif
@@ -54373,15 +54176,15 @@ UNQLITE_PRIVATE const unqlite_vfs * unqliteExportBuiltinVfs(void)
  */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
  /* $SymiscID: os_win.c v1.2 Win7 2012-11-10 12:10 devel <chm@symisc.net> $ */
 #ifndef UNQLITE_AMALGAMATION
@@ -55329,15 +55132,15 @@ void unqlite_free(void *p)
  */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
  /* $SymiscID: pager.c v1.1 Win7 2012-11-29 03:46 stable <chm@symisc.net> $ */
 #ifndef UNQLITE_AMALGAMATION
@@ -55909,7 +55712,7 @@ static void pager_page_to_dirty_list(Pager *pPager,Page *pPage)
 /*
  * Merge sort.
  * The merge sort implementation is based on the one used by
- * the PH7 Embeddable PHP Engine (http://ph7.symisc.net/).
+ * the PH7 Embeddable PHP Engine (https://ph7.symisc.net/).
  */
 /*
 ** Inputs:
@@ -57446,7 +57249,7 @@ UNQLITE_PRIVATE int unqlitePagerRollback(Pager *pPager,int bResetKvEngine)
 		return UNQLITE_OK;
 	}
 	if( pPager->is_mem ){
-		/* As of this release 1.1.6: Transactions are not supported for in-memory databases */
+		/* As of this release 1.2.1: Transactions are not supported for in-memory databases */
 		return UNQLITE_OK;
 	}
 	if( pPager->is_rdonly ){
@@ -58177,17 +57980,17 @@ static int pager_kv_io_init(Pager *pPager,unqlite_kv_methods *pMethods,unqlite_k
  */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
- /* $SymiscID: unqlite_vm.c v1.0 Win7 2013-01-29 23:37 stable <chm@symisc.net> $ */
+ /* $SymiscID: unqlite_vm.c v1.0 Win7 2026-01-29 23:37 stable <chm@symisc.net> $ */
 #ifndef UNQLITE_AMALGAMATION
 #include "unqliteInt.h"
 #endif
@@ -59206,17 +59009,17 @@ UNQLITE_PRIVATE int unqliteDropCollection(unqlite_col *pCol)
  */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
- /* $SymiscID: unql_jx9.c v1.2 FreeBSD 2013-01-24 22:45 stable <chm@symisc.net> $ */
+ /* $SymiscID: unql_jx9.c v1.2 FreeBSD 2026-01-24 22:45 stable <chm@symisc.net> $ */
 #ifndef UNQLITE_AMALGAMATION
 #include "unqliteInt.h"
 #endif
@@ -60238,18 +60041,18 @@ UNQLITE_PRIVATE int unqliteRegisterJx9Functions(unqlite_vm *pVm)
 /* END-OF-IMPLEMENTATION: unqlite@embedded@symisc 34-09-46 */
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2019, Symisc Systems http://unqlite.org/
- * Version 1.1.9
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
 /*
- * Copyright (C) 2012, 2019 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
+ * Copyright (C) 2012, 2026 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

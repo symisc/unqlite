@@ -1,15 +1,15 @@
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
  * Copyright (C) 2014, Yuras Shumovich <shumovichy@gmail.com>
- * Version 1.1.6
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
  /* $SymiscID: pager.c v1.1 Win7 2012-11-29 03:46 stable <chm@symisc.net> $ */
 #ifndef UNQLITE_AMALGAMATION
@@ -581,7 +581,7 @@ static void pager_page_to_dirty_list(Pager *pPager,Page *pPage)
 /*
  * Merge sort.
  * The merge sort implementation is based on the one used by
- * the PH7 Embeddable PHP Engine (http://ph7.symisc.net/).
+ * the PH7 Embeddable PHP Engine (https://ph7.symisc.net/).
  */
 /*
 ** Inputs:
@@ -2117,7 +2117,7 @@ UNQLITE_PRIVATE int unqlitePagerRollback(Pager *pPager,int bResetKvEngine)
 		return UNQLITE_OK;
 	}
 	if( pPager->is_mem ){
-		/* As of this release 1.1.6: Transactions are not supported for in-memory databases */
+		/* As of this release 1.2.1: Transactions are not supported for in-memory databases */
 		return UNQLITE_OK;
 	}
 	if( pPager->is_rdonly ){

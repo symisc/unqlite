@@ -1,7 +1,7 @@
 /*
 ** 2015 June 12
 ** Author: Luca Sturaro 
-** Based and "heavily inspired" by test_demovfs.c for SQLite3 (http://www.sqlite.org/vfs.html)
+** Based and "heavily inspired" by test_demovfs.c for SQLite3 (https://www.sqlite.org/vfs.html)
 ** 
 **
 *************************************************************************
@@ -620,7 +620,7 @@ static int demoSleep(unqlite_vfs *pVfs, int nMicro){
 ** Set *pTime to the current UTC time expressed as a Julian day. Return
 ** UNQLITE_OK if successful, or an error code otherwise.
 **
-**   http://en.wikipedia.org/wiki/Julian_day
+**   https://en.wikipedia.org/wiki/Julian_day
 **
 ** This implementation is not very good. The current time is rounded to
 ** an integer number of seconds. Also, assuming time_t is a signed 32-bit 
@@ -742,7 +742,7 @@ static void unqlite_start(void) {
 static const char zBanner[] = {
 	"============================================================\n"
 	"UnQLite VFS DemoFile Functions                              \n"
-	"                                         http://unqlite.org/\n"
+	"                                         https://unqlite.symisc.net/\n"
 	"============================================================\n"
 };
 /*

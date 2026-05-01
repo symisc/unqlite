@@ -1,16 +1,39 @@
-# CMake / Make / Build
+# CMake / Ninja / Make
 /CMakeFiles/
-cmake_install.cmake
+/Testing/
 CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+CTestTestfile.cmake
 Makefile
+build.ninja
+.ninja_deps
+.ninja_log
 
-# Binary
-libunqlite.a
+# Build directories
+/build/
+/build-*/
+/cmake-build-*/
+/vs2026-*/
+/vs2026-build/
+/out/
+/install/
+
+# Compiled binaries and libraries
+*.a
+*.dll
+*.dylib
+*.exe
+*.exp
+*.idb
+*.ilk
+*.lib
+*.o
+*.obj
+*.pdb
+*.so
 
 # IDEs
-.idea
-.vscode
-.vs
-
-# Build
-*build*
+.idea/
+.vscode/
+.vs/

@@ -3,18 +3,18 @@
 #define _UNQLITE_H_
 /*
  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
 /*
- * Copyright (C) 2012, 2013 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
+ * Copyright (C) 2012, 2026 Symisc Systems, S.U.A.R.L [M.I.A.G Mrad Chems Eddine <chm@symisc.net>].
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,13 +54,13 @@
  * version number and Y is the minor version number and Z is the release
  * number.
  */
-#define UNQLITE_VERSION "1.1.6"
+#define UNQLITE_VERSION "1.2.1"
 /*
  * The UNQLITE_VERSION_NUMBER C preprocessor macro resolves to an integer
  * with the value (X*1000000 + Y*1000 + Z) where X, Y, and Z are the same
  * numbers used in [UNQLITE_VERSION].
  */
-#define UNQLITE_VERSION_NUMBER 1001006
+#define UNQLITE_VERSION_NUMBER 1002001
 /*
  * The UNQLITE_SIG C preprocessor macro evaluates to a string
  * literal which is the public signature of the unqlite engine.
@@ -68,7 +68,7 @@
  * generated Server MIME header as follows:
  *   Server: YourWebServer/x.x unqlite/x.x.x \r\n
  */
-#define UNQLITE_SIG "unqlite/1.1.6"
+#define UNQLITE_SIG "unqlite/1.2.1"
 /*
  * UnQLite identification in the Symisc source tree:
  * Each particular check-in of a particular software released
@@ -79,13 +79,13 @@
 /*
  * Copyright notice.
  * If you have any questions about the licensing situation, please
- * visit http://unqlite.org/licensing.html
+ * visit https://unqlite.symisc.net/licensing.html
  * or contact Symisc Systems via:
  *   legal@symisc.net
  *   licensing@symisc.net
  *   contact@symisc.net
  */
-#define UNQLITE_COPYRIGHT "Copyright (C) Symisc Systems, S.U.A.R.L [Mrad Chems Eddine <chm@symisc.net>] 2012-2013, http://unqlite.org/"
+#define UNQLITE_COPYRIGHT "Copyright (C) Symisc Systems, S.U.A.R.L [Mrad Chems Eddine <chm@symisc.net>] 2012-2026, https://unqlite.symisc.net/"
 /* Make sure we can call this stuff from C++ */
 #ifdef __cplusplus
 extern "C" { 
@@ -384,7 +384,7 @@ typedef sxi64 unqlite_int64;
  * return value indicates failure.
  * For a full discussion on the configuration verbs and their expected 
  * parameters, please refer to this page:
- *      http://unqlite.org/c_api/unqlite_config.html
+ *      https://unqlite.symisc.net/c_api/unqlite_config.html
  */
 #define UNQLITE_CONFIG_JX9_ERR_LOG         1  /* TWO ARGUMENTS: const char **pzBuf, int *pLen */
 #define UNQLITE_CONFIG_MAX_PAGE_CACHE      2  /* ONE ARGUMENT: int nMaxPage */
@@ -407,7 +407,7 @@ typedef sxi64 unqlite_int64;
  * a HTTP request and UNQLITE_VM_CONFIG_ARGV_ENTRY which populate the $argv array.
  * For a full discussion on the configuration verbs and their expected parameters, please
  * refer to this page:
- *      http://unqlite.org/c_api/unqlite_vm_config.html
+ *      https://unqlite.symisc.net/c_api/unqlite_vm_config.html
  */
 #define UNQLITE_VM_CONFIG_OUTPUT           1  /* TWO ARGUMENTS: int (*xConsumer)(const void *pOut, unsigned int nLen, void *pUserData), void *pUserData */
 #define UNQLITE_VM_CONFIG_IMPORT_PATH      2  /* ONE ARGUMENT: const char *zIncludePath */
@@ -433,7 +433,7 @@ typedef sxi64 unqlite_int64;
  * value indicates failure.
  * For a full discussion on the configuration verbs and their expected parameters, please
  * refer to this page:
- *      http://unqlite.org/c_api/unqlite_kv_config.html
+ *      https://unqlite.symisc.net/c_api/unqlite_kv_config.html
  */
 #define UNQLITE_KV_CONFIG_HASH_FUNC  1 /* ONE ARGUMENT: unsigned int (*xHash)(const void *,unsigned int) */
 #define UNQLITE_KV_CONFIG_CMP_FUNC   2 /* ONE ARGUMENT: int (*xCmp)(const void *,const void *,unsigned int) */
@@ -459,7 +459,7 @@ typedef sxi64 unqlite_int64;
  * or [unqlite_init()] and before [unqlite_lib_shutdown()] then it will return UNQLITE_LOCKED.
  * For a full discussion on the configuration verbs and their expected parameters, please
  * refer to this page:
- *      http://unqlite.org/c_api/unqlite_lib.html
+ *      https://unqlite.symisc.net/c_api/unqlite_lib.html
  */
 #define UNQLITE_LIB_CONFIG_USER_MALLOC            1 /* ONE ARGUMENT: const SyMemMethods *pMemMethods */ 
 #define UNQLITE_LIB_CONFIG_MEM_ERR_CALLBACK       2 /* TWO ARGUMENTS: int (*xMemError)(void *), void *pUserData */

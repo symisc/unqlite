@@ -1,6 +1,6 @@
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -8,7 +8,7 @@
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: memobj.c v2.7 FreeBSD 2012-08-09 03:40 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION

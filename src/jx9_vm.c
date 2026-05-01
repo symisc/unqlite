@@ -1,6 +1,6 @@
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -8,7 +8,7 @@
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: jx9_vm.c v1.0 FreeBSD 2012-12-09 00:19 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -1573,8 +1573,8 @@ static sxi32 VmByteCodeDump(
 {
 	static const char zDump[] = {
 		"====================================================\n"
-		"JX9 VM Dump   Copyright (C) 2012-2013 Symisc Systems\n"
-		"                              http://jx9.symisc.net/\n"
+		"JX9 VM Dump   Copyright (C) 2012-2026 Symisc Systems\n"
+		"                              https://jx9.symisc.net/\n"
 		"====================================================\n"
 	};
 	VmInstr *pInstr, *pEnd;
@@ -4271,7 +4271,7 @@ JX9_PRIVATE void jx9VmExpandConstantValue(jx9_value *pVal, void *pUserData)
  *  Function handling functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -4709,7 +4709,7 @@ static int vm_builtin_get_defined_constants(jx9_context *pCtx, int nArg, jx9_val
  *  Random numbers/string generators.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -4830,7 +4830,7 @@ static int vm_builtin_rand_str(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *  Language construct implementation as foreign functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -4992,7 +4992,7 @@ static int vm_builtin_dump(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *  Version, Credits and Copyright related functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  *    Stable.
  */
 /*
@@ -5017,7 +5017,7 @@ static int vm_builtin_jx9_version(jx9_context *pCtx, int nArg, jx9_value **apArg
  *    URL related routines.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -5246,7 +5246,7 @@ static int vm_builtin_parse_url(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *   Array related routines.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  * Note 2012-5-21 01:04:15:
@@ -5573,7 +5573,7 @@ static sxi32 VmExecIncludedFile(
 	/* Extract the associated stream */
 	pStream = jx9VmGetStreamDevice(pVm, &pPath->zString, pPath->nByte);
 	/*
-	 * Open the file or the URL [i.e: http://jx9.symisc.net/example/hello.jx9.txt"] 
+	 * Open the file or the URL [i.e: https://jx9.symisc.net/example/hello.jx9.txt"] 
 	 * in a read-only mode.
 	 */
 	pHandle = jx9StreamOpenHandle(pVm, pStream,pPath->zString, JX9_IO_OPEN_RDONLY, TRUE, 0, TRUE, &isNew);
@@ -5696,7 +5696,7 @@ static int vm_builtin_import(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *  Command line arguments processing.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -6097,7 +6097,7 @@ static int vm_builtin_utf8_encode(jx9_context *pCtx, int nArg, jx9_value **apArg
 }
 /*
  * UTF-8 decoding routine extracted from the sqlite3 source tree.
- * Original author: D. Richard Hipp (http://www.sqlite.org)
+ * Original author: D. Richard Hipp (https://www.sqlite.org)
  * Status: Public Domain
  */
 /*
@@ -6342,7 +6342,7 @@ JX9_PRIVATE const jx9_io_stream * jx9VmGetStreamDevice(
 	SyString sDev, sCur;
 	sxu32 n, nEntry;
 	int rc;
-	/* Check if a scheme [i.e: file://, http://, zip://...] is available */
+	/* Check if a scheme [i.e: file://, https://, zip://...] is available */
 	zNext = zCur = zIn = *pzDevice;
 	zEnd = &zIn[nByte];
 	while( zIn < zEnd ){
@@ -6384,7 +6384,7 @@ JX9_PRIVATE const jx9_io_stream * jx9VmGetStreamDevice(
  *    HTTP/URI related routines.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */ 
@@ -6978,7 +6978,7 @@ static sxi32 VmGetNextLine(SyString *pCursor, SyString *pCurrent)
 	  * 'ORIG_PATH_INFO' 
       * Contains any client-provided pathname information trailing the actual script filename but preceding
 	  * the query string, if available. For instance, if the current script was accessed via the URL
-	  * http://www.example.com/jx9/path_info.jx9/some/stuff?foo=bar, then $_SERVER['PATH_INFO'] would contain
+	  * https://www.example.com/jx9/path_info.jx9/some/stuff?foo=bar, then $_SERVER['PATH_INFO'] would contain
 	  * /some/stuff. 
 	  */
 	 pValue = &sUri.sPath;

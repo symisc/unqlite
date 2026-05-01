@@ -1,6 +1,6 @@
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -8,7 +8,7 @@
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: lex.c v1.0 FreeBSD 2012-12-09 00:19 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -51,7 +51,7 @@ static sxi32 jx9TokenizeInput(SyStream *pStream,SyToken *pToken,void *pUserData,
 		 * application seeking for a production quality, ready to use macro processor.
 		 * xPP is a widely used library developed and maintened by Symisc Systems.
 		 * You can reach the xPP home page by following this link:
-		 * http://xpp.symisc.net/
+		 * https://xpp.symisc.net/
 		 */
 		const unsigned char *zIn;
 		sxu32 nKeyword;

@@ -1,6 +1,6 @@
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -8,12 +8,12 @@
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: lib.c v5.1 Win7 2012-08-08 04:19 stable <chm@symisc.net> $ */
 /*
  * Symisc Run-Time API: A modern thread safe replacement of the standard libc
- * Copyright (C) Symisc Systems 2007-2012, http://www.symisc.net/
+ * Copyright (C) Symisc Systems 2007-2012, https://www.symisc.net/
  *
  * The Symisc Run-Time API is an independent project developed by symisc systems
  * internally as a secure replacement of the standard libc.
@@ -682,191 +682,14 @@ JX9_PRIVATE sxi32 SyMemBackendDisbaleMutexing(SyMemBackend *pBackend)
 	return SXRET_OK;
 }
 #endif
-/*
- * Memory pool allocator
- */
-#define SXMEM_POOL_MAGIC		0xDEAD
-#define SXMEM_POOL_MAXALLOC		(1<<(SXMEM_POOL_NBUCKETS+SXMEM_POOL_INCR)) 
-#define SXMEM_POOL_MINALLOC		(1<<(SXMEM_POOL_INCR))
-static sxi32 MemPoolBucketAlloc(SyMemBackend *pBackend, sxu32 nBucket)
-{
-	char *zBucket, *zBucketEnd;
-	SyMemHeader *pHeader;
-	sxu32 nBucketSize;
-	
-	/* Allocate one big block first */
-	zBucket = (char *)MemBackendAlloc(&(*pBackend), SXMEM_POOL_MAXALLOC);
-	if( zBucket == 0 ){
-		return SXERR_MEM;
-	}
-	zBucketEnd = &zBucket[SXMEM_POOL_MAXALLOC];
-	/* Divide the big block into mini bucket pool */
-	nBucketSize = 1 << (nBucket + SXMEM_POOL_INCR);
-	pBackend->apPool[nBucket] = pHeader = (SyMemHeader *)zBucket;
-	for(;;){
-		if( &zBucket[nBucketSize] >= zBucketEnd ){
-			break;
-		}
-		pHeader->pNext = (SyMemHeader *)&zBucket[nBucketSize];
-		/* Advance the cursor to the next available chunk */
-		pHeader = pHeader->pNext;
-		zBucket += nBucketSize;	
-	}
-	pHeader->pNext = 0;
-	
-	return SXRET_OK;
-}
-static void * MemBackendPoolAlloc(SyMemBackend *pBackend, sxu32 nByte)
-{
-	SyMemHeader *pBucket, *pNext;
-	sxu32 nBucketSize;
-	sxu32 nBucket;
-
-	if( nByte + sizeof(SyMemHeader) >= SXMEM_POOL_MAXALLOC ){
-		/* Allocate a big chunk directly */
-		pBucket = (SyMemHeader *)MemBackendAlloc(&(*pBackend), nByte+sizeof(SyMemHeader));
-		if( pBucket == 0 ){
-			return 0;
-		}
-		/* Record as big block */
-		pBucket->nBucket = (sxu32)(SXMEM_POOL_MAGIC << 16) | SXU16_HIGH;
-		return (void *)(pBucket+1);
-	}
-	/* Locate the appropriate bucket */
-	nBucket = 0;
-	nBucketSize = SXMEM_POOL_MINALLOC;
-	while( nByte + sizeof(SyMemHeader) > nBucketSize  ){
-		nBucketSize <<= 1;
-		nBucket++;
-	}
-	pBucket = pBackend->apPool[nBucket];
-	if( pBucket == 0 ){
-		sxi32 rc;
-		rc = MemPoolBucketAlloc(&(*pBackend), nBucket);
-		if( rc != SXRET_OK ){
-			return 0;
-		}
-		pBucket = pBackend->apPool[nBucket];
-	}
-	/* Remove from the free list */
-	pNext = pBucket->pNext;
-	pBackend->apPool[nBucket] = pNext;
-	/* Record bucket&magic number */
-	pBucket->nBucket = (SXMEM_POOL_MAGIC << 16) | nBucket;
-	return (void *)&pBucket[1];
-}
 JX9_PRIVATE void * SyMemBackendPoolAlloc(SyMemBackend *pBackend, sxu32 nByte)
 {
-	void *pChunk;
-#if defined(UNTRUST)
-	if( SXMEM_BACKEND_CORRUPT(pBackend) ){
-		return 0;
-	}
-#endif
-	if( pBackend->pMutexMethods ){
-		SyMutexEnter(pBackend->pMutexMethods, pBackend->pMutex);
-	}
-	pChunk = MemBackendPoolAlloc(&(*pBackend), nByte);
-	if( pBackend->pMutexMethods ){
-		SyMutexLeave(pBackend->pMutexMethods, pBackend->pMutex);
-	}
-	return pChunk;
-}
-static sxi32 MemBackendPoolFree(SyMemBackend *pBackend, void * pChunk)
-{
-	SyMemHeader *pHeader;
-	sxu32 nBucket;
-	/* Get the corresponding bucket */
-	pHeader = (SyMemHeader *)(((char *)pChunk) - sizeof(SyMemHeader));
-	/* Sanity check to avoid misuse */
-	if( (pHeader->nBucket >> 16) != SXMEM_POOL_MAGIC ){
-		return SXERR_CORRUPT;
-	}
-	nBucket = pHeader->nBucket & 0xFFFF;
-	if( nBucket == SXU16_HIGH ){
-		/* Free the big block */
-		MemBackendFree(&(*pBackend), pHeader);
-	}else{
-		/* Return to the free list */
-		pHeader->pNext = pBackend->apPool[nBucket & 0x0f];
-		pBackend->apPool[nBucket & 0x0f] = pHeader;
-	}
-	return SXRET_OK;
+	return SyMemBackendAlloc(pBackend, nByte);
 }
 JX9_PRIVATE sxi32 SyMemBackendPoolFree(SyMemBackend *pBackend, void * pChunk)
 {
-	sxi32 rc;
-#if defined(UNTRUST)
-	if( SXMEM_BACKEND_CORRUPT(pBackend) || pChunk == 0 ){
-		return SXERR_CORRUPT;
-	}
-#endif
-	if( pBackend->pMutexMethods ){
-		SyMutexEnter(pBackend->pMutexMethods, pBackend->pMutex);
-	}
-	rc = MemBackendPoolFree(&(*pBackend), pChunk);
-	if( pBackend->pMutexMethods ){
-		SyMutexLeave(pBackend->pMutexMethods, pBackend->pMutex);
-	}
-	return rc;
+	return SyMemBackendFree(pBackend, pChunk);
 }
-#if 0
-static void * MemBackendPoolRealloc(SyMemBackend *pBackend, void * pOld, sxu32 nByte)
-{
-	sxu32 nBucket, nBucketSize;
-	SyMemHeader *pHeader;
-	void * pNew;
-
-	if( pOld == 0 ){
-		/* Allocate a new pool */
-		pNew = MemBackendPoolAlloc(&(*pBackend), nByte);
-		return pNew;
-	}
-	/* Get the corresponding bucket */
-	pHeader = (SyMemHeader *)(((char *)pOld) - sizeof(SyMemHeader));
-	/* Sanity check to avoid misuse */
-	if( (pHeader->nBucket >> 16) != SXMEM_POOL_MAGIC ){
-		return 0;
-	}
-	nBucket = pHeader->nBucket & 0xFFFF;
-	if( nBucket == SXU16_HIGH ){
-		/* Big block */
-		return MemBackendRealloc(&(*pBackend), pHeader, nByte);
-	}
-	nBucketSize = 1 << (nBucket + SXMEM_POOL_INCR);
-	if( nBucketSize >= nByte + sizeof(SyMemHeader) ){
-		/* The old bucket can honor the requested size */
-		return pOld;
-	}
-	/* Allocate a new pool */
-	pNew = MemBackendPoolAlloc(&(*pBackend), nByte);
-	if( pNew == 0 ){
-		return 0;
-	}
-	/* Copy the old data into the new block */
-	SyMemcpy(pOld, pNew, nBucketSize);
-	/* Free the stale block */
-	MemBackendPoolFree(&(*pBackend), pOld);
-	return pNew;
-}
-JX9_PRIVATE void * SyMemBackendPoolRealloc(SyMemBackend *pBackend, void * pOld, sxu32 nByte)
-{
-	void *pChunk;
-#if defined(UNTRUST)
-	if( SXMEM_BACKEND_CORRUPT(pBackend) ){
-		return 0;
-	}
-#endif
-	if( pBackend->pMutexMethods ){
-		SyMutexEnter(pBackend->pMutexMethods, pBackend->pMutex);
-	}
-	pChunk = MemBackendPoolRealloc(&(*pBackend), pOld, nByte);
-	if( pBackend->pMutexMethods ){
-		SyMutexLeave(pBackend->pMutexMethods, pBackend->pMutex);
-	}
-	return pChunk;
-}
-#endif
 JX9_PRIVATE sxi32 SyMemBackendInit(SyMemBackend *pBackend, ProcMemError xMemErr, void * pUserData)
 {
 #if defined(UNTRUST)
@@ -3614,7 +3437,7 @@ JX9_PRIVATE sxi32 SyArchiveRelease(SyArchive *pArch)
 #endif /* JX9_DISABLE_BUILTIN_FUNC */
 /*
  * Psuedo Random Number Generator (PRNG)
- * @authors: SQLite authors <http://www.sqlite.org/>
+ * @authors: SQLite authors <https://www.sqlite.org/>
  * @status: Public Domain
  * NOTE:
  *  Nothing in this file or anywhere else in the library does any kind of

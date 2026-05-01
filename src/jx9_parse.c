@@ -1,6 +1,6 @@
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -8,7 +8,7 @@
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: parse.c v1.2 FreeBSD 2012-12-11 00:46 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -28,7 +28,7 @@
  * amazing things now such as array dereferencing, on the fly function call, anonymous function
  * as array values, object member access on instantiation and so on.
  * Refer to the following page for a full discussion on these improvements:
- * http://jx9.symisc.net/features.html
+ * https://jx9.symisc.net/features.html
  */
 static const jx9_expr_op aOpTable[] = {
 	                              /* Postfix operators */

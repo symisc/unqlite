@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding:utf-8 -*-
 #  
-#  Copyright 2013 buaa.byl@gmail.com
+#  Copyright 2026 buaa.byl@gmail.com
 #
 #
 #  This program is free software; you can redistribute it and/or modify

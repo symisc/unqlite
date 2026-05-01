@@ -1,14 +1,14 @@
 /*
  * Symisc unQLite: An Embeddable NoSQL (Post Modern) Database Engine.
- * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
- * Version 1.1.6
+ * Copyright (C) 2012-2026, Symisc Systems https://unqlite.symisc.net/
+ * Version 1.2.1
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
  *       legal@symisc.net
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://unqlite.org/licensing.html
+ *      https://unqlite.symisc.net/licensing.html
  */
  /* $SymiscID: api.c v2.0 FreeBSD 2012-11-08 23:07 stable <chm@symisc.net> $ */
 #ifndef UNQLITE_AMALGAMATION
@@ -52,7 +52,7 @@ static struct unqlGlobal_Data
 	unqlite *pDB;                          /* List of active DB handles */
 	sxu32 nMagic;                          /* Sanity check against library misuse */
 }sUnqlMPGlobal = {
-	{0, 0, 0, 0, 0, 0, 0, 0, {0}}, 
+	{0, 0, 0, 0, 0, 0, 0, 0}, 
 #if defined(UNQLITE_ENABLE_THREADS)
 	0, 
 	0, 

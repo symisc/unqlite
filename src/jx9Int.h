@@ -1,6 +1,6 @@
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -8,7 +8,7 @@
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: jx9Int.h v1.9 FreeBSD 2012-08-13 23:25 devel <chm@symisc.net> $ */
 #ifndef __JX9INT_H__
@@ -218,14 +218,11 @@ struct SyBlob
 #define SyBlobDataAt(BLOB, OFFT)	 ((void *)(&((char *)(BLOB)->pBlob)[OFFT]))
 #define SyBlobGetAllocator(BLOB) ((BLOB)->pAllocator)
 
-#define SXMEM_POOL_INCR			3
-#define SXMEM_POOL_NBUCKETS		12
 #define SXMEM_BACKEND_MAGIC	0xBAC3E67D
 #define SXMEM_BACKEND_CORRUPT(BACKEND)	(BACKEND == 0 || BACKEND->nMagic != SXMEM_BACKEND_MAGIC)
 
 #define SXMEM_BACKEND_RETRY	3
 /* A memory backend subsystem is defined by an instance of the following structures */
-typedef union SyMemHeader SyMemHeader;
 typedef struct SyMemBlock SyMemBlock;
 struct SyMemBlock
 {
@@ -235,14 +232,6 @@ struct SyMemBlock
 							   * can detect misuse.
 							   */
 #endif
-};
-/*
- * Header associated with each valid memory pool block.
- */
-union SyMemHeader
-{
-	SyMemHeader *pNext; /* Next chunk of size 1 << (nBucket + SXMEM_POOL_INCR) in the list */
-	sxu32 nBucket;      /* Bucket index in aPool[] */
 };
 struct SyMemBackend
 {
@@ -254,7 +243,6 @@ struct SyMemBackend
 	void *pUserData;               /* First arg to xMemError() */
 	SyMutex *pMutex;               /* Per instance mutex */
 	sxu32 nMagic;                  /* Sanity check against misuse */
-	SyMemHeader *apPool[SXMEM_POOL_NBUCKETS+SXMEM_POOL_INCR]; /* Pool of memory chunks */
 };
 /* Mutex types */
 #define SXMUTEX_TYPE_FAST	1
@@ -1664,10 +1652,6 @@ JX9_PRIVATE sxi32 SyMemBackendRelease(SyMemBackend *pBackend);
 JX9_PRIVATE sxi32 SyMemBackendInitFromOthers(SyMemBackend *pBackend, const SyMemMethods *pMethods, ProcMemError xMemErr, void *pUserData);
 JX9_PRIVATE sxi32 SyMemBackendInit(SyMemBackend *pBackend, ProcMemError xMemErr, void *pUserData);
 JX9_PRIVATE sxi32 SyMemBackendInitFromParent(SyMemBackend *pBackend,const SyMemBackend *pParent);
-#if 0
-/* Not used in the current release of the JX9 engine */
-JX9_PRIVATE void *SyMemBackendPoolRealloc(SyMemBackend *pBackend, void *pOld, sxu32 nByte);
-#endif
 JX9_PRIVATE sxi32 SyMemBackendPoolFree(SyMemBackend *pBackend, void *pChunk);
 JX9_PRIVATE void *SyMemBackendPoolAlloc(SyMemBackend *pBackend, sxu32 nByte);
 JX9_PRIVATE sxi32 SyMemBackendFree(SyMemBackend *pBackend, void *pChunk);

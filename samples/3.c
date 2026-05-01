@@ -1,41 +1,54 @@
 /*
  * Compile this file together with the UnQLite database engine source code
  * to generate the executable. For example: 
- *  gcc -W -Wall -O6 unqlite_kv_intro.c unqlite.c -o unqlite_kv
+ *  gcc -W -Wall -O6 unqlite_csr_intro.c unqlite.c -o unqlite_csr
 */
 /*
  * This simple program is a quick introduction on how to embed and start
  * experimenting with UnQLite without having to do a lot of tedious
  * reading and configuration.
  *
- * Introduction to the Key/Value Store Interfaces:
+ * Using Database Cursors:
  *
- * UnQLite is a standard key/value store similar to BerkeleyDB, Tokyo Cabinet, LevelDB, etc.
- * But, with a rich feature set including support for transactions (ACID), concurrent reader, etc.
- * Under the KV store, both keys and values are treated as simple arrays of bytes, so content
- * can be anything from ASCII strings, binary blob and even disk files.
- * The KV store layer is presented to host applications via a set of interfaces, these includes:
- * unqlite_kv_store(), unqlite_kv_append(), unqlite_kv_fetch_callback(), unqlite_kv_append_fmt(),
- * unqlite_kv_delete(), unqlite_kv_fetch(), etc.
+ * Cursors provide a mechanism by which you can iterate over the records
+ * in a database. Using cursors, you can seek, fetch, move, and delete
+ * database records.
  *
- * For an introduction to the UnQLite C/C++ interface, please refer to:
- *        http://unqlite.org/api_intro.html
- * For the full C/C++ API reference guide, please refer to:
- *        http://unqlite.org/c_api.html
- * UnQLite in 5 Minutes or Less:
- *        http://unqlite.org/intro.html
- * The Architecture of the UnQLite Database Engine:
- *        http://unqlite.org/arch.html
+ * Before playing with cursors, you must first allocate a new cursor
+ * handle using unqlite_kv_cursor_init().
+ * This is often the first UnQLite cursor API call that an application
+ * makes and is a prerequisite in order to use cursors. When done, you must
+ * call unqlite_kv_cursor_release() to release any allocated resource by
+ * the cursor and thus to avoid memory leaks.
+ *
+ * To iterate over database records, from the first record to the last, simply
+ * call unqlite_kv_cursor_first_entry() with successive call to unqlite_kv_cursor_next_entry()
+ * until it return a value other than UNQLITE_OK (See example below).
+ * Note that you can call unqlite_kv_cursor_valid_entry() to check if the cursor
+ * is pointing to a valid record (This will return 1 when valid. 0 otherwise).
+ *
+ * You can also use cursors to search for records and start the iteration process
+ * from there. To do that, simply call unqlite_kv_cursor_seek() with the target
+ * record key and the seek direction (Last argument)... 
+ *
  * For an introduction to the UnQLite cursor interface, please refer to:
- *        http://unqlite.org/c_api/unqlite_kv_cursor.html
+ *        https://unqlite.symisc.net/c_api/unqlite_kv_cursor.html
+ * For an introduction to the UnQLite C/C++ interface, please refer to:
+ *        https://unqlite.symisc.net/api_intro.html
+ * For the full C/C++ API reference guide, please refer to:
+ *        https://unqlite.symisc.net/c_api.html
+ * UnQLite in 5 Minutes or Less:
+ *        https://unqlite.symisc.net/intro.html
+ * The Architecture of the UnQLite Database Engine:
+ *        https://unqlite.symisc.net/arch.html
  * For an introduction to Jx9 which is the scripting language which power
  * the Document-Store interface to UnQLite, please refer to:
- *        http://unqlite.org/jx9.html
+ *        https://unqlite.symisc.net/jx9.html
  */
-/* $SymiscID: unqlite_kv_intro.c v1.0 FreeBSD 2013-05-14 10:17 stable <chm@symisc.net> $ */
+/* $SymiscID: unqlite_csr_intro.c v1.0 FreeBSD 2026-05-17 00:02 stable <chm@symisc.net> $ */
 /* 
  * Make sure you have the latest release of UnQLite from:
- *  http://unqlite.org/downloads.html
+ *  https://unqlite.symisc.net/downloads.html
  */
 #include <stdio.h>  /* puts() */
 #include <stdlib.h> /* exit() */
@@ -46,8 +59,8 @@
  */
 static const char zBanner[] = {
 	"============================================================\n"
-	"UnQLite Key/Value Store Intro                              \n"
-	"                                         http://unqlite.org/\n"
+	"UnQLite Cursors Intro                                       \n"
+	"                                         https://unqlite.symisc.net/\n"
 	"============================================================\n"
 };
 /*
@@ -77,11 +90,17 @@ static void Fatal(unqlite *pDb,const char *zMsg)
 }
 /* Forward declaration: Data consumer callback */
 static int DataConsumerCallback(const void *pData,unsigned int nDatalen,void *pUserData /* Unused */);
+/*
+ * Maximum random records to be inserted in our database.
+ */
+#define MAX_RECORDS 20
 
 int main(int argc,char *argv[])
 {
 	unqlite *pDb;               /* Database handle */
 	unqlite_kv_cursor *pCur;    /* Cursor handle */
+	char zKey[14];              /* Random generated key */
+	char zData[32];             /* Dummy data */
 	int i,rc;
 
 	puts(zBanner);
@@ -92,55 +111,25 @@ int main(int argc,char *argv[])
 		Fatal(0,"Out of memory");
 	}
 	
-	/* Store some records */
-	rc = unqlite_kv_store(pDb,"test",-1,"Hello World",11); /* test => 'Hello World' */
-	if( rc != UNQLITE_OK ){
-		/* Insertion fail, extract database error log and exit */
-		Fatal(pDb,0);
-	}
-	/* A small formatted string */
-	rc = unqlite_kv_store_fmt(pDb,"date",-1,"dummy date: %d:%d:%d",2013,06,07); /* Dummy date */
-	if( rc != UNQLITE_OK ){
-		/* Insertion fail, extract database error log and exit */
-		Fatal(pDb,0);
-	}
+	printf("Starting insertions of %d random records...\n",MAX_RECORDS);
 	
-	/* Switch to the append interface */
-	rc = unqlite_kv_append(pDb,"msg",-1,"Hello, ",7); //msg => 'Hello, '
-	if( rc == UNQLITE_OK ){
-		/* The second chunk */
-		rc = unqlite_kv_append(pDb,"msg",-1,"dummy time is: ",17); /* msg => 'Hello, Current time is: '*/
-		if( rc == UNQLITE_OK ){
-			/* The last formatted chunk */
-			rc = unqlite_kv_append_fmt(pDb,"msg",-1,"%d:%d:%d",10,16,53); /* msg => 'Hello, Current time is: 10:16:53' */
-		}
-	}
-	/* Store 20 random records.*/
-	for(i = 0 ; i < 20 ; ++i ){
-		char zKey[12]; /* Random generated key */
-		char zData[34]; /* Dummy data */
+	/* Start the random insertions */
+	for( i = 0 ; i < MAX_RECORDS; ++i ){
 		
-		/* Generate the random key */
+		/* Genearte the random key first */
 		unqlite_util_random_string(pDb,zKey,sizeof(zKey));
-		
+
 		/* Perform the insertion */
 		rc = unqlite_kv_store(pDb,zKey,sizeof(zKey),zData,sizeof(zData));
 		if( rc != UNQLITE_OK ){
+			/* Something goes wrong */
 			break;
 		}
 	}
 	if( rc != UNQLITE_OK ){
-		/* Insertion fail, rollback the transaction  */
-		rc = unqlite_rollback(pDb);
-		if( rc != UNQLITE_OK ){
-			/* Extract database error log and exit */
-			Fatal(pDb,0);
-		}
+		/* Something goes wrong, extract the database error log and exit */
+		Fatal(pDb,0);
 	}
-
-	/* Delete a record */
-	unqlite_kv_delete(pDb,"test",-1);
-
 	puts("Done...Starting the iteration process");
 
 	/* Allocate a new cursor instance */
@@ -150,12 +139,14 @@ int main(int argc,char *argv[])
 	}
 	/* Point to the first record */
 	unqlite_kv_cursor_first_entry(pCur);
+	/* To point to the last record instead of the first, simply call [unqlite_kv_cursor_last_entry()] as follows */
 	
+	/* unqlite_kv_cursor_last_entry(pCur); */
 		
 	/* Iterate over the entries */
 	while( unqlite_kv_cursor_valid_entry(pCur) ){
 		int nKeyLen;
-		/*unqlite_int64 nDataLen;*/
+		/* unqlite_int64 nDataLen; */
 		
 		/* Consume the key */
 		unqlite_kv_cursor_key(pCur,0,&nKeyLen); /* Extract key length */
@@ -163,16 +154,17 @@ int main(int argc,char *argv[])
 		unqlite_kv_cursor_key_callback(pCur,DataConsumerCallback,0);
 			
 		/* Consume the data */
-		
 		/*
 		unqlite_kv_cursor_data(pCur,0,&nDataLen);
 		printf("\nData ==> %lld\n\t",nDataLen);
 		unqlite_kv_cursor_data_callback(pCur,DataConsumerCallback,0);
 		*/
 
+
 		/* Point to the next entry */
 		unqlite_kv_cursor_next_entry(pCur);
 
+		/*unqlite_kv_cursor_prev_entry(pCur); //If [unqlite_kv_cursor_last_entry(pCur)] instead of [unqlite_kv_cursor_first_entry(pCur)] */
 	}
 	/* Finally, Release our cursor */
 	unqlite_kv_cursor_release(pDb,pCur);

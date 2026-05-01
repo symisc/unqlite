@@ -1,6 +1,6 @@
 --BEGIN --SYMISC PUBLIC LICENSE---
 /*
- * Copyright (C) 2012, 2013 Symisc Systems. All rights reserved.
+ * Copyright (C) 2012, 2026 Symisc Systems. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -41,4 +41,4 @@ of sale.
 For more information, please contact Symisc Systems at:
          licensing@symisc.net
  or visit:
-        http://jx9.symisc.net/licensing.html
+        https://jx9.symisc.net/licensing.html

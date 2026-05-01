@@ -1,6 +1,6 @@
 /*
  * Symisc JX9: A Highly Efficient Embeddable Scripting Engine Based on JSON.
- * Copyright (C) 2012-2013, Symisc Systems http://jx9.symisc.net/
+ * Copyright (C) 2012-2026, Symisc Systems https://jx9.symisc.net/
  * Version 1.7.2
  * For information on licensing, redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES
  * please contact Symisc Systems via:
@@ -8,7 +8,7 @@
  *       licensing@symisc.net
  *       contact@symisc.net
  * or visit:
- *      http://jx9.symisc.net/
+ *      https://jx9.symisc.net/
  */
  /* $SymiscID: builtin.c v1.7 Win7 2012-12-13 00:01 stable <chm@symisc.net> $ */
 #ifndef JX9_AMALGAMATION
@@ -20,7 +20,7 @@
  *    Variable handling Functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -296,7 +296,7 @@ static int jx9Builtin_empty(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *    Math Functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -1138,7 +1138,7 @@ static int jx9Builtin_base_convert(jx9_context *pCtx, int nArg, jx9_value **apAr
  *    String handling Functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -6092,7 +6092,7 @@ static int jx9Builtin_parse_ini_string(jx9_context *pCtx, int nArg, jx9_value **
  * Ctype Functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */
@@ -6608,7 +6608,7 @@ static int jx9Builtin_ctype_upper(jx9_context *pCtx, int nArg, jx9_value **apArg
  * Date/Time functions
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Devel.
  */
@@ -7987,7 +7987,7 @@ static int jx9Builtin_mktime(jx9_context *pCtx, int nArg, jx9_value **apArg)
  *    URL handling Functions.
  * Authors:
  *    Symisc Systems, devel@symisc.net.
- *    Copyright (C) Symisc Systems, http://jx9.symisc.net
+ *    Copyright (C) Symisc Systems, https://jx9.symisc.net
  * Status:
  *    Stable.
  */

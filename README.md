@@ -1,43 +1,174 @@
-### UnQLite - An Embedded Transactional Database (Key/Value & Document Store) Engine - https://unqlite.symisc.net
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/symisc/unqlite/pulse) [![GitHub license](https://img.shields.io/pypi/l/Django.svg)](https://unqlite.symisc.net/licensing.html) 
+<p align="center">
+  <a href="https://unqlite.symisc.net/">
+    <img src="https://unqlite.symisc.net/images/symisc-unqlite.png" alt="UnQLite" width="320">
+  </a>
+</p>
 
-**Release 1.1.9** (May 2024): New Homepage - https://unqlite.symisc.net
+# UnQLite
 
-**Release 1.1.9** (April 2022): Shared database (between one legit & one corrupt process) bug fix: https://github.com/symisc/unqlite/issues/137
+UnQLite is a self-contained, serverless, transactional database engine for C and C++ applications.
 
-As of January 2018 - Symisc Systems has decided to **revive the UnQLite project**. All known data corruption bugs have been fixed, and expect to see new features (LZ compression), performance improvements, etc to be pushed here.
-You should rely for your production build on the amalgamation file and its header file available here or to be downloaded directly from https://unqlite.symisc.net/downloads.html
+It runs in-process, stores data in a single portable file, and ships as a small embed-friendly codebase with no external runtime dependency. UnQLite exposes two layers:
 
+- a raw key/value store for binary-safe records
+- a document store powered by the Jx9 embedded scripting language
 
-UnQLite is a in-process software library which implements a self-contained, serverless, zero-configuration, transactional NoSQL database engine. UnQLite is a document store database similar to MongoDB, Redis, CouchDB etc. as well a standard Key/Value store similar to BerkeleyDB, LevelDB, etc.
+Official website: https://unqlite.symisc.net/
 
+Current public release: `1.2.1`
 
-UnQLite is an embedded NoSQL (Key/Value store and Document-store) database engine. Unlike most other NoSQL databases, UnQLite does not have a separate server process. UnQLite reads and writes directly to ordinary disk files. A complete database with multiple collections, is contained in a single disk file. The database file format is cross-platform, you can freely copy a database between 32-bit and 64-bit systems or between big-endian and little-endian architectures. UnQLite features includes:
+## Why UnQLite
 
+- Embedded: no separate daemon, no socket protocol, no service to deploy
+- Transactional: ACID semantics for local storage workloads
+- Simple distribution: a database is typically one file on disk
+- Portable: the file format is cross-platform
+- Flexible: use key/value APIs directly, or use the document store and Jx9 layer
+- Small integration surface: the recommended embed path is the amalgamation
+- Optional threading support: enable it at compile time with `UNQLITE_ENABLE_THREADS`
 
-    Serverless, NoSQL database engine.
-    Transactional (ACID) database.
-    Zero configuration.
-    Single database file, does not use temporary files.
-    Cross-platform file format.
-    UnQLite is a Self-Contained C library without dependency.
-    Standard Key/Value store.
-    Document store (JSON) database via Jx9.
-    Support cursors for linear records traversal.
-    Pluggable run-time interchangeable storage engine.
-    Support for on-disk as well in-memory databases.
-    Built with a powerful disk storage engine which support O(1) lookup.
-    Thread safe and full reentrant.
-    Simple, Clean and easy to use API.
-    Support Terabyte sized databases.
-    BSD licensed product.
-    Amalgamation: All C source code for UnQLite and Jx9 are combined into a single source file.
+## Recommended Integration Path
 
+If you want the simplest and most stable embed story, use the amalgamation files at the repository root:
 
+- `unqlite.c`
+- `unqlite.h`
 
-UnQLite is a self-contained C library without dependency. It requires very minimal support from external libraries or from the operating system. This makes it well suited for use in embedded devices that lack the support infrastructure of a desktop computer. This also makes UnQLite appropriate for use within applications that need to run without modification on a wide variety of computers of varying configurations.
+That is the intended drop-in path for production embedding.
 
-UnQLite is written in ANSI C, Thread-safe, Full reentrant, compiles unmodified and should run in most platforms including restricted embedded devices with a C compiler. UnQLite is extensively tested on Windows and UNIX systems especially Linux, FreeBSD, Oracle Solaris and Mac OS X.
+The `src/` directory contains the split source tree used to build and maintain the amalgamation.
 
+## Repository Layout
 
-https://unqlite.symisc.net
+- `unqlite.c`: amalgamated implementation
+- `unqlite.h`: public header for the amalgamation build
+- `src/`: split source tree and internal headers
+- `samples/`: small example programs
+- `CHANGELOG.md`: release notes
+- `LICENSE`: 2-Clause BSD license
+
+## Quick Start
+
+The fastest way to embed UnQLite is to compile your application together with `unqlite.c`.
+
+### GCC or Clang
+
+```sh
+cc -O2 -std=c99 -I. your_app.c unqlite.c -o your_app
+```
+
+Compile the bundled key/value intro sample:
+
+```sh
+cc -O2 -std=c99 -I. samples/1.c unqlite.c -o unqlite_kv_intro
+```
+
+### MSVC
+
+```bat
+cl /nologo /TC /I. your_app.c unqlite.c
+```
+
+Compile the bundled key/value intro sample:
+
+```bat
+cl /nologo /TC /I. samples\1.c unqlite.c /link /OUT:unqlite_kv_intro.exe
+```
+
+### Threading Support
+
+If your application needs UnQLite compiled with thread support, define `UNQLITE_ENABLE_THREADS` when building:
+
+```sh
+cc -O2 -std=c99 -DUNQLITE_ENABLE_THREADS -I. your_app.c unqlite.c -o your_app
+```
+
+```bat
+cl /nologo /TC /DUNQLITE_ENABLE_THREADS /I. your_app.c unqlite.c
+```
+
+## Minimal Example
+
+```c
+#include "unqlite.h"
+#include <stdio.h>
+
+static int print_value(const void *data, unsigned int len, void *user_data) {
+    (void)user_data;
+    fwrite(data, 1, len, stdout);
+    return UNQLITE_OK;
+}
+
+int main(void) {
+    unqlite *db = 0;
+
+    if (unqlite_open(&db, ":mem:", UNQLITE_OPEN_CREATE) != UNQLITE_OK) {
+        return 1;
+    }
+
+    if (unqlite_kv_store(db, "hello", -1, "world", 5) != UNQLITE_OK) {
+        unqlite_close(db);
+        return 1;
+    }
+
+    if (unqlite_kv_fetch_callback(db, "hello", -1, print_value, 0) != UNQLITE_OK) {
+        unqlite_close(db);
+        return 1;
+    }
+
+    putchar('\n');
+    return unqlite_close(db) == UNQLITE_OK ? 0 : 1;
+}
+```
+
+If you only need embedded key/value storage, you can stay entirely within the `unqlite_kv_*` API family and ignore the document-store layer.
+
+## What UnQLite Includes
+
+- On-disk and in-memory databases
+- Key/value CRUD APIs
+- Cursor APIs for linear traversal
+- A pluggable storage engine model
+- A document store built on Jx9
+- Foreign function and constant binding for Jx9 code
+- A virtual file system abstraction for portability
+
+## Samples
+
+The `samples/` directory contains small, focused examples for common integration paths.
+
+Useful starting points:
+
+- `samples/1.c`: key/value introduction
+- `samples/2.c` through `samples/6.c`: broader API usage
+- `samples/unqlite_huge.c`: large-value handling
+- `samples/unqlite_tar.c`: archive-oriented example
+- `samples/unqlite_mp3.c`: metadata-oriented example
+
+## Documentation
+
+The official documentation lives on the new site:
+
+- Homepage: https://unqlite.symisc.net/
+- Downloads: https://unqlite.symisc.net/downloads.html
+- UnQLite in 5 Minutes or Less: https://unqlite.symisc.net/intro.html
+- C/C++ API introduction: https://unqlite.symisc.net/api_intro.html
+- C/C++ API reference: https://unqlite.symisc.net/c_api.html
+- Cursor reference: https://unqlite.symisc.net/c_api/unqlite_kv_cursor.html
+- Architecture overview: https://unqlite.symisc.net/arch.html
+- Jx9 overview: https://unqlite.symisc.net/jx9.html
+- FAQ: https://unqlite.symisc.net/faq.html
+
+## Notes
+
+- UnQLite is not a client/server database.
+- The amalgamation is the easiest way to consume the library.
+- If you are evaluating the engine for a KV-only use case, start with `samples/1.c`.
+- If you need document-oriented scripting, move next to the Jx9 documentation and samples.
+
+## License
+
+UnQLite is distributed under the 2-Clause BSD license.
+
+- License text in this repository: [LICENSE](LICENSE)
+- Official licensing page: https://unqlite.symisc.net/licensing.html

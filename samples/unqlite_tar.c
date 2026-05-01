@@ -28,21 +28,21 @@
  * Only Key/Value store plus some utility interfaces are used in this example.
  *
  * For an introduction to the UnQLite C/C++ interface, please refer to:
- *        http://unqlite.org/api_intro.html
+ *        https://unqlite.symisc.net/api_intro.html
  * For the full C/C++ API reference guide, please refer to:
- *        http://unqlite.org/c_api.html
+ *        https://unqlite.symisc.net/c_api.html
  * UnQLite in 5 Minutes or Less:
- *        http://unqlite.org/intro.html
+ *        https://unqlite.symisc.net/intro.html
  * The Architecture of the UnQLite Database Engine:
- *        http://unqlite.org/arch.html
+ *        https://unqlite.symisc.net/arch.html
  * For an introduction to Jx9 which is the scripting language which power
  * the Document-Store interface to UnQLite, please refer to:
- *        http://unqlite.org/jx9.html
+ *        https://unqlite.symisc.net/jx9.html
  */
- /* $SymiscID: unqlite_huge_insert.c v1.0 Solaris 2013-05-15 20:17 stable <chm@symisc.net> $ */
+ /* $SymiscID: unqlite_huge_insert.c v1.0 Solaris 2026-05-15 20:17 stable <chm@symisc.net> $ */
  /*
   * Make sure you have the latest release of UnQLite from:
-  *  http://unqlite.org/downloads.html
+  *  https://unqlite.symisc.net/downloads.html
   */
 #include <stdio.h>  /* puts() */
 #include <stdlib.h> /* exit() */
@@ -61,7 +61,7 @@
 static const char zBanner[] = {
 	"============================================================\n"
 	"UnQLite TAR                                                 \n"
-	"                                         http://unqlite.org/\n"
+	"                                         https://unqlite.symisc.net/\n"
 	"============================================================\n"
 };
 /*
