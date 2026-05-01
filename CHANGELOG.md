@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2026-04-30
+## Release 1.2.1 - 2026-04-30
 
 ### Changed
 
@@ -30,7 +30,6 @@ This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - The recommended production embed path remains the amalgamation pair:
   `unqlite.c` and `unqlite.h`.
 
-## [1.2.1] - 2024-05
 
 ### Changed
 
