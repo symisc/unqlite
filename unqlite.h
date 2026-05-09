@@ -918,6 +918,7 @@ UNQLITE_APIEXPORT int unqlite_value_is_empty(unqlite_value *pVal);
 
 /* JSON Array/Object Management Interfaces */
 UNQLITE_APIEXPORT unqlite_value * unqlite_array_fetch(unqlite_value *pArray, const char *zKey, int nByte);
+UNQLITE_APIEXPORT unqlite_value * unqlite_array_fetch_by_index(unqlite_value *pArray, unqlite_int64 iIndex);
 UNQLITE_APIEXPORT int unqlite_array_walk(unqlite_value *pArray, int (*xWalk)(unqlite_value *, unqlite_value *, void *), void *pUserData);
 UNQLITE_APIEXPORT int unqlite_array_add_elem(unqlite_value *pArray, unqlite_value *pKey, unqlite_value *pValue);
 UNQLITE_APIEXPORT int unqlite_array_add_strkey_elem(unqlite_value *pArray, const char *zKey, unqlite_value *pValue);

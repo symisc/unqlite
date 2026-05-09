@@ -1180,6 +1180,26 @@ JX9_PRIVATE sxi32 jx9HashmapLookup(
 	return rc;
 }
 /*
+ * Check if a given key exists in the given hashmap.
+ * Write a pointer to the target node on success.
+ * Otherwise SXERR_NOTFOUND is returned on failure.
+ */
+JX9_PRIVATE sxi32 jx9HashmapLookupIntKey(
+	jx9_hashmap *pMap,        /* Target hashmap */
+	sxi64 iKey,               /* Lookup key */
+	jx9_hashmap_node **ppNode /* OUT: Target node on success */
+	)
+{
+	sxi32 rc;
+	if( pMap->nEntry < 1 ){
+		/* TICKET 1433-25: Don't bother hashing, the hashmap is empty anyway.
+		 */
+		return SXERR_NOTFOUND;
+	}
+	rc = HashmapLookupIntKey(&(*pMap), iKey, ppNode);
+	return rc;
+}
+/*
  * Insert a given key and it's associated value (if any) in the given
  * hashmap.
  * If a node with the given key already exists in the database

@@ -1627,6 +1627,14 @@ unqlite_value * unqlite_array_fetch(unqlite_value *pArray, const char *zKey, int
 	return jx9_array_fetch(pArray,zKey,nByte);
 }
 /*
+ * [CAPIREF: unqlite_array_fetch_by_index()]
+ * Please refer to the official documentation for function purpose and expected parameters.
+ */
+unqlite_value * unqlite_array_fetch_by_index(unqlite_value *pArray, unqlite_int64 iIndex)
+{
+	return jx9_array_fetch_by_index(pArray,iIndex);
+}
+/*
  * [CAPIREF: unqlite_array_walk()]
  * Please refer to the official documentation for function purpose and expected parameters.
  */
