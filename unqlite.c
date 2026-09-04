@@ -26417,7 +26417,13 @@ static sxu32 keywordCode(const char *z, int n)
   };
   int h, i;
   if( n<2 ) return JX9_TK_ID;
-  h = (((int)z[0]*4) ^ ((int)z[n-1]*3) ^ n) % 59;
+  /* z[0] and z[n-1] must go through unsigned char first: on platforms where
+  ** plain char is signed, a byte >= 0x80 (like a UTF-8 continuation byte
+  ** ending an identifier) sign-extends to a negative int, which can drive
+  ** the whole XOR expression negative and turn '% 59' into a negative
+  ** index a few lines below, reading out of bounds ahead of aHash[].
+  */
+  h = ((((int)(unsigned char)z[0])*4) ^ (((int)(unsigned char)z[n-1])*3) ^ n) % 59;
   for(i=((int)aHash[h])-1; i>=0; i=((int)aNext[i])-1){
     if( (int)aLen[i]==n && SyMemcmp(&zText[aOffset[i]],z,n)==0 ){
        /* JX9_TKWRD_PRINT */
