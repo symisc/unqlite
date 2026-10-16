@@ -651,6 +651,9 @@ static sxi32 ExprProcessFuncArguments(jx9_gen_state *pGen, jx9_expr_node *pOp, j
 			if( apNode[iNode] ){
 				/* Put a pointer to the root of the tree in the arguments set */
 				SySetPut(&pOp->aNodeArgs, (const void *)&apNode[iNode]);
+				/* The set owns the node now, so release the slot here: an error return
+				 * below would otherwise leave it reachable from both. */
+				apNode[iNode] = 0;
 			}else{
 				/* Empty function argument */
 				rc = jx9GenCompileError(&(*pGen), E_ERROR, pOp->pStart->nLine, "Empty function argument");
