@@ -1919,8 +1919,10 @@ static sxi32 jx9CompileForeach(jx9_gen_state *pGen)
 				/* Don't worry about freeing memory, everything will be released shortly */
 				return SXERR_ABORT;
 			}
+			/* jx9VmPopInstr() returns NULL when the container is empty, which it is if
+			 * the key expression compiled to no instruction at all. */
 			pInstr = jx9VmPopInstr(pGen->pVm);
-			if( pInstr->p3 ){
+			if( pInstr && pInstr->p3 ){
 				/* Record key name */
 				SyStringInitFromBuf(&pInfo->sKey, pInstr->p3, SyStrlen((const char *)pInstr->p3));
 			}
@@ -1943,8 +1945,9 @@ static sxi32 jx9CompileForeach(jx9_gen_state *pGen)
 		/* Don't worry about freeing memory, everything will be released shortly */
 		return SXERR_ABORT;
 	}
+	/* Same here: no instruction to pop means no value name to record. */
 	pInstr = jx9VmPopInstr(pGen->pVm);
-	if( pInstr->p3 ){
+	if( pInstr && pInstr->p3 ){
 		/* Record value name */
 		SyStringInitFromBuf(&pInfo->sValue, pInstr->p3, SyStrlen((const char *)pInstr->p3));
 	}
