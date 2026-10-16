@@ -18916,8 +18916,10 @@ static sxi32 jx9CompileForeach(jx9_gen_state *pGen)
 				/* Don't worry about freeing memory, everything will be released shortly */
 				return SXERR_ABORT;
 			}
+			/* jx9VmPopInstr() returns NULL when the container is empty, which it is if
+			 * the key expression compiled to no instruction at all. */
 			pInstr = jx9VmPopInstr(pGen->pVm);
-			if( pInstr->p3 ){
+			if( pInstr && pInstr->p3 ){
 				/* Record key name */
 				SyStringInitFromBuf(&pInfo->sKey, pInstr->p3, SyStrlen((const char *)pInstr->p3));
 			}
@@ -18940,8 +18942,9 @@ static sxi32 jx9CompileForeach(jx9_gen_state *pGen)
 		/* Don't worry about freeing memory, everything will be released shortly */
 		return SXERR_ABORT;
 	}
+	/* Same here: no instruction to pop means no value name to record. */
 	pInstr = jx9VmPopInstr(pGen->pVm);
-	if( pInstr->p3 ){
+	if( pInstr && pInstr->p3 ){
 		/* Record value name */
 		SyStringInitFromBuf(&pInfo->sValue, pInstr->p3, SyStrlen((const char *)pInstr->p3));
 	}
@@ -27080,42 +27083,50 @@ JX9_PRIVATE sxu32 SyMemcpy(const void *pSrc, void *pDest, sxu32 nLen)
 	SX_MACRO_FAST_MEMCPY(pSrc, pDest, nLen);
 	return nLen;
 }
+/*
+ * Header kept in front of every chunk.  A bare sxu32 made the returned pointer the
+ * allocator's result plus four; a union of the widest types keeps &pChunk[1] aligned.
+ */
+typedef union SyMemChunkHdr SyMemChunkHdr;
+union SyMemChunkHdr
+{
+	sxu32  nSize;    /* Size of the chunk that follows this header */
+	void  *pAlign;
+	sxi64  nAlign;
+	double rAlign;
+};
 static void * MemOSAlloc(sxu32 nBytes)
 {
-	sxu32 *pChunk;
-	pChunk = (sxu32 *)SyOSHeapAlloc(nBytes + sizeof(sxu32));
+	SyMemChunkHdr *pChunk;
+	pChunk = (SyMemChunkHdr *)SyOSHeapAlloc(nBytes + sizeof(SyMemChunkHdr));
 	if( pChunk == 0 ){
 		return 0;
 	}
-	pChunk[0] = nBytes;
+	pChunk->nSize = nBytes;
 	return (void *)&pChunk[1];
 }
 static void * MemOSRealloc(void *pOld, sxu32 nBytes)
 {
-	sxu32 *pOldChunk;
-	sxu32 *pChunk;
-	pOldChunk = (sxu32 *)(((char *)pOld)-sizeof(sxu32));
-	if( pOldChunk[0] >= nBytes ){
+	SyMemChunkHdr *pOldChunk;
+	SyMemChunkHdr *pChunk;
+	pOldChunk = ((SyMemChunkHdr *)pOld) - 1;
+	if( pOldChunk->nSize >= nBytes ){
 		return pOld;
 	}
-	pChunk = (sxu32 *)SyOSHeapRealloc(pOldChunk, nBytes + sizeof(sxu32));
+	pChunk = (SyMemChunkHdr *)SyOSHeapRealloc(pOldChunk, nBytes + sizeof(SyMemChunkHdr));
 	if( pChunk == 0 ){
 		return 0;
 	}
-	pChunk[0] = nBytes;
+	pChunk->nSize = nBytes;
 	return (void *)&pChunk[1];
 }
 static void MemOSFree(void *pBlock)
 {
-	void *pChunk;
-	pChunk = (void *)(((char *)pBlock)-sizeof(sxu32));
-	SyOSHeapFree(pChunk);
+	SyOSHeapFree((void *)(((SyMemChunkHdr *)pBlock) - 1));
 }
 static sxu32 MemOSChunkSize(void *pBlock)
 {
-	sxu32 *pChunk;
-	pChunk = (sxu32 *)(((char *)pBlock)-sizeof(sxu32));
-	return pChunk[0];
+	return (((SyMemChunkHdr *)pBlock) - 1)->nSize;
 }
 /* Export OS allocation methods */
 static const SyMemMethods sOSAllocMethods = {
@@ -32588,6 +32599,9 @@ static sxi32 ExprProcessFuncArguments(jx9_gen_state *pGen, jx9_expr_node *pOp, j
 			if( apNode[iNode] ){
 				/* Put a pointer to the root of the tree in the arguments set */
 				SySetPut(&pOp->aNodeArgs, (const void *)&apNode[iNode]);
+				/* The set owns the node now, so release the slot here: an error return
+				 * below would otherwise leave it reachable from both. */
+				apNode[iNode] = 0;
 			}else{
 				/* Empty function argument */
 				rc = jx9GenCompileError(&(*pGen), E_ERROR, pOp->pStart->nLine, "Empty function argument");
@@ -32780,9 +32794,9 @@ static sxi32 ExprProcessFuncArguments(jx9_gen_state *pGen, jx9_expr_node *pOp, j
 					 }
 					 return rc;
 				 }
-				 /* Link the node to the tree */
-				 pNode->pLeft = apNode[iLeft];
-				 if( pNode->pLeft->pOp == 0 && pNode->pLeft->xCode != jx9CompileVariable ){
+				 /* Validate before linking: a node linked here but not yet cleared from
+				  * apNode[] is reachable twice, and jx9ExprFreeTree() walks both. */
+				 if( apNode[iLeft]->pOp == 0 && apNode[iLeft]->xCode != jx9CompileVariable ){
 					 /* Syntax error */
 					 rc = jx9GenCompileError(pGen, E_ERROR, pNode->pStart->nLine, 
 						 "'%z': Expecting a variable as left operand", &pNode->pOp->sOp);
@@ -32791,6 +32805,8 @@ static sxi32 ExprProcessFuncArguments(jx9_gen_state *pGen, jx9_expr_node *pOp, j
 					 }
 					 return rc;
 				 }
+				 /* Link the node to the tree */
+				 pNode->pLeft = apNode[iLeft];
 				 pNode->pRight = apNode[iRight];
 				 apNode[iLeft] = apNode[iRight] = 0;
 			 }
@@ -43159,11 +43175,9 @@ static sxi32 VmByteCodeExec(
  */
 case JX9_OP_DONE:
 	if( pInstr->iP1 ){
-#ifdef UNTRUST
 		if( pTos < pStack ){
 			goto Abort;
 		}
-#endif
 		if( pResult ){
 			/* Execution result */
 			jx9MemObjStore(pTos, pResult);
@@ -43179,11 +43193,9 @@ case JX9_OP_DONE:
  */
 case JX9_OP_HALT:
 	if( pInstr->iP1 ){
-#ifdef UNTRUST
 		if( pTos < pStack ){
 			goto Abort;
 		}
-#endif
 		if( pTos->iFlags & MEMOBJ_STRING ){
 			if( SyBlobLength(&pTos->sBlob) > 0 ){
 				/* Output the exit message */
@@ -43215,11 +43227,9 @@ case JX9_OP_JMP:
  * entry in the stack if P1 is zero. 
  */
 case JX9_OP_JZ:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Get a boolean value */
 	if((pTos->iFlags & MEMOBJ_BOOL) == 0 ){
 		jx9MemObjToBool(pTos);
@@ -43239,11 +43249,9 @@ case JX9_OP_JZ:
  * entry in the stack if P1 is zero.
  */
 case JX9_OP_JNZ:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Get a boolean value */
 	if((pTos->iFlags & MEMOBJ_BOOL) == 0 ){
 		jx9MemObjToBool(pTos);
@@ -43284,11 +43292,9 @@ case JX9_OP_POP: {
  * Force the top of the stack to be an integer.
  */
 case JX9_OP_CVT_INT:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	if((pTos->iFlags & MEMOBJ_INT) == 0 ){
 		jx9MemObjToInteger(pTos);
 	}
@@ -43301,11 +43307,9 @@ case JX9_OP_CVT_INT:
  * Force the top of the stack to be a real.
  */
 case JX9_OP_CVT_REAL:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	if((pTos->iFlags & MEMOBJ_REAL) == 0 ){
 		jx9MemObjToReal(pTos);
 	}
@@ -43318,11 +43322,9 @@ case JX9_OP_CVT_REAL:
  * Force the top of the stack to be a string.
  */
 case JX9_OP_CVT_STR:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	if( (pTos->iFlags & MEMOBJ_STRING) == 0 ){
 		jx9MemObjToString(pTos);
 	}
@@ -43333,11 +43335,9 @@ case JX9_OP_CVT_STR:
  * Force the top of the stack to be a boolean.
  */
 case JX9_OP_CVT_BOOL:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	if( (pTos->iFlags & MEMOBJ_BOOL) == 0 ){
 		jx9MemObjToBool(pTos);
 	}
@@ -43348,11 +43348,9 @@ case JX9_OP_CVT_BOOL:
  * Nullify the top of the stack.
  */
 case JX9_OP_CVT_NULL:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	jx9MemObjRelease(pTos);
 	break;
 /*
@@ -43361,11 +43359,9 @@ case JX9_OP_CVT_NULL:
  * Force the top of the stack to be a numeric type (integer, real or both).
  */
 case JX9_OP_CVT_NUMC:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force a numeric cast */
 	jx9MemObjToNumeric(pTos);
 	break;
@@ -43375,11 +43371,9 @@ case JX9_OP_CVT_NUMC:
  * Force the top of the stack to be a hashmap aka 'array'.
  */
 case JX9_OP_CVT_ARRAY:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force a hashmap cast */
 	rc = jx9MemObjToHashmap(pTos);
 	if( rc != SXRET_OK ){
@@ -43437,11 +43431,9 @@ case JX9_OP_LOAD:{
 	SyString sName;
 	if( pInstr->p3 == 0 ){
 		/* Take the variable name from the top of the stack */
-#ifdef UNTRUST
 		if( pTos < pStack ){
 			goto Abort;
 		}
-#endif
 		/* Force a string cast */
 		if( (pTos->iFlags & MEMOBJ_STRING) == 0 ){
 			jx9MemObjToString(pTos);
@@ -43636,11 +43628,9 @@ case JX9_OP_LOAD_IDX: {
 case JX9_OP_STORE: {
 	jx9_value *pObj;
 	SyString sName;
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	if( pInstr->iP2 ){
 		sxu32 nIdx;
 		/* Member store operation */
@@ -43667,11 +43657,9 @@ case JX9_OP_STORE: {
 		}
 		SyStringInitFromBuf(&sName, SyBlobData(&pTos->sBlob), SyBlobLength(&pTos->sBlob));
 		pTos--;
-#ifdef UNTRUST
 		if( pTos < pStack  ){
 			goto Abort;
 		}
-#endif
 	}else{
 		SyStringInitFromBuf(&sName, pInstr->p3, SyStrlen((const char *)pInstr->p3));
 	}
@@ -43783,11 +43771,9 @@ case JX9_OP_STORE_IDX: {
  * the stack and increment after that.
  */
 case JX9_OP_INCR:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	if( (pTos->iFlags & (MEMOBJ_HASHMAP|MEMOBJ_RES)) == 0 ){
 		if( pTos->nIdx != SXU32_HIGH ){
 			jx9_value *pObj;
@@ -43832,11 +43818,9 @@ case JX9_OP_INCR:
  * and decrement after that.
  */
 case JX9_OP_DECR:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	if( (pTos->iFlags & (MEMOBJ_HASHMAP|MEMOBJ_RES|MEMOBJ_NULL)) == 0 ){
 		/* Force a numeric cast */
 		jx9MemObjToNumeric(pTos);
@@ -43879,11 +43863,9 @@ case JX9_OP_DECR:
  * Perform a unary minus operation.
  */
 case JX9_OP_UMINUS:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force a numeric (integer, real or both) cast */
 	jx9MemObjToNumeric(pTos);
 	if( pTos->iFlags & MEMOBJ_REAL ){
@@ -43899,11 +43881,9 @@ case JX9_OP_UMINUS:
  * Perform a unary plus operation.
  */
 case JX9_OP_UPLUS:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force a numeric (integer, real or both) cast */
 	jx9MemObjToNumeric(pTos);
 	if( pTos->iFlags & MEMOBJ_REAL ){
@@ -43920,11 +43900,9 @@ case JX9_OP_UPLUS:
  * with its complement.
  */
 case JX9_OP_LNOT:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force a boolean cast */
 	if( (pTos->iFlags & MEMOBJ_BOOL) == 0 ){
 		jx9MemObjToBool(pTos);
@@ -43938,11 +43916,9 @@ case JX9_OP_LNOT:
  * with its ones-complement.
  */
 case JX9_OP_BITNOT:
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force an integer cast */
 	if( (pTos->iFlags & MEMOBJ_INT) == 0 ){
 		jx9MemObjToInteger(pTos);
@@ -43959,11 +43935,9 @@ case JX9_OP_MUL:
 case JX9_OP_MUL_STORE: {
 	jx9_value *pNos = &pTos[-1];
 	/* Force the operand to be numeric */
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	jx9MemObjToNumeric(pTos);
 	jx9MemObjToNumeric(pNos);
 	/* Perform the requested operation */
@@ -44012,11 +43986,9 @@ case JX9_OP_MUL_STORE: {
  */
 case JX9_OP_ADD:{
 	jx9_value *pNos = &pTos[-1];
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Perform the addition */
 	jx9MemObjAdd(pNos, pTos, FALSE);
 	VmPopOperand(&pTos, 1);
@@ -44032,11 +44004,9 @@ case JX9_OP_ADD_STORE:{
 	jx9_value *pNos = &pTos[-1];
 	jx9_value *pObj;
 	sxu32 nIdx;
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Perform the addition */
 	nIdx = pTos->nIdx;
 	jx9MemObjAdd(pTos, pNos, TRUE);
@@ -44059,11 +44029,9 @@ case JX9_OP_ADD_STORE:{
  */
 case JX9_OP_SUB: {
 	jx9_value *pNos = &pTos[-1];
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	if( MEMOBJ_REAL & (pTos->iFlags|pNos->iFlags) ){
 		/* Floating point arithemic */
 		jx9_real a, b, r;
@@ -44103,11 +44071,9 @@ case JX9_OP_SUB: {
 case JX9_OP_SUB_STORE: {
 	jx9_value *pNos = &pTos[-1];
 	jx9_value *pObj;
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	if( MEMOBJ_REAL & (pTos->iFlags|pNos->iFlags) ){
 		/* Floating point arithemic */
 		jx9_real a, b, r;
@@ -44156,11 +44122,9 @@ case JX9_OP_SUB_STORE: {
 case JX9_OP_MOD:{
 	jx9_value *pNos = &pTos[-1];
 	sxi64 a, b, r;
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force the operands to be integer */
 	if( (pTos->iFlags & MEMOBJ_INT) == 0 ){
 		jx9MemObjToInteger(pTos);
@@ -44197,11 +44161,9 @@ case JX9_OP_MOD_STORE: {
 	jx9_value *pNos = &pTos[-1];
 	jx9_value *pObj;
 	sxi64 a, b, r;
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force the operands to be integer */
 	if( (pTos->iFlags & MEMOBJ_INT) == 0 ){
 		jx9MemObjToInteger(pTos);
@@ -44241,11 +44203,9 @@ case JX9_OP_MOD_STORE: {
 case JX9_OP_DIV:{
 	jx9_value *pNos = &pTos[-1];
 	jx9_real a, b, r;
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force the operands to be real */
 	if( (pTos->iFlags & MEMOBJ_REAL) == 0 ){
 		jx9MemObjToReal(pTos);
@@ -44284,11 +44244,9 @@ case JX9_OP_DIV_STORE:{
 	jx9_value *pNos = &pTos[-1];
 	jx9_value *pObj;
 	jx9_real a, b, r;
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force the operands to be real */
 	if( (pTos->iFlags & MEMOBJ_REAL) == 0 ){
 		jx9MemObjToReal(pTos);
@@ -44343,11 +44301,9 @@ case JX9_OP_BOR:
 case JX9_OP_BXOR:{
 	jx9_value *pNos = &pTos[-1];
 	sxi64 a, b, r;
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force the operands to be integer */
 	if( (pTos->iFlags & MEMOBJ_INT) == 0 ){
 		jx9MemObjToInteger(pTos);
@@ -44397,11 +44353,9 @@ case JX9_OP_BXOR_STORE:{
 	jx9_value *pNos = &pTos[-1];
 	jx9_value *pObj;
 	sxi64 a, b, r;
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force the operands to be integer */
 	if( (pTos->iFlags & MEMOBJ_INT) == 0 ){
 		jx9MemObjToInteger(pTos);
@@ -44451,11 +44405,9 @@ case JX9_OP_SHR: {
 	jx9_value *pNos = &pTos[-1];
 	sxi64 a, r;
 	sxi32 b;
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force the operands to be integer */
 	if( (pTos->iFlags & MEMOBJ_INT) == 0 ){
 		jx9MemObjToInteger(pTos);
@@ -44497,11 +44449,9 @@ case JX9_OP_SHR_STORE: {
 	jx9_value *pObj;
 	sxi64 a, r;
 	sxi32 b;
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force the operands to be integer */
 	if( (pTos->iFlags & MEMOBJ_INT) == 0 ){
 		jx9MemObjToInteger(pTos);
@@ -44540,11 +44490,9 @@ case JX9_OP_CAT:{
 	}else{
 		pNos = &pTos[-pInstr->iP1+1];
 	}
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force a string cast */
 	if( (pNos->iFlags & MEMOBJ_STRING) == 0 ){
 		jx9MemObjToString(pNos);
@@ -44572,11 +44520,9 @@ case JX9_OP_CAT:{
 case JX9_OP_CAT_STORE:{
 	jx9_value *pNos = &pTos[-1];
 	jx9_value *pObj;
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	if((pTos->iFlags & MEMOBJ_STRING) == 0 ){
 		/* Force a string cast */
 		jx9MemObjToString(pTos);
@@ -44615,11 +44561,9 @@ case JX9_OP_LAND:
 case JX9_OP_LOR: {
 	jx9_value *pNos = &pTos[-1];
 	sxi32 v1, v2;    /* 0==TRUE, 1==FALSE, 2==UNKNOWN or NULL */
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force a boolean cast */
 	if((pTos->iFlags & MEMOBJ_BOOL) == 0 ){
 		jx9MemObjToBool(pTos);
@@ -44656,11 +44600,9 @@ case JX9_OP_LOR: {
 case JX9_OP_LXOR:{
 	jx9_value *pNos = &pTos[-1];
 	sxi32 v = 0;
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Force a boolean cast */
 	if((pTos->iFlags & MEMOBJ_BOOL) == 0 ){
 		jx9MemObjToBool(pTos);
@@ -44694,11 +44636,9 @@ case JX9_OP_EQ:
 case JX9_OP_NEQ: {
 	jx9_value *pNos = &pTos[-1];
 	/* Perform the comparison and act accordingly */
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	rc = jx9MemObjCmp(pNos, pTos, FALSE, 0);
 	if( pInstr->iOp == JX9_OP_EQ ){
 		rc = rc == 0;
@@ -44731,11 +44671,9 @@ case JX9_OP_NEQ: {
 case JX9_OP_TEQ: {
 	jx9_value *pNos = &pTos[-1];
 	/* Perform the comparison and act accordingly */
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	rc = jx9MemObjCmp(pNos, pTos, TRUE, 0) == 0;
 	VmPopOperand(&pTos, 1);
 	if( !pInstr->iP2 ){
@@ -44765,11 +44703,9 @@ case JX9_OP_TEQ: {
 case JX9_OP_TNE: {
 	jx9_value *pNos = &pTos[-1];
 	/* Perform the comparison and act accordingly */
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	rc = jx9MemObjCmp(pNos, pTos, TRUE, 0) != 0;
 	VmPopOperand(&pTos, 1);
 	if( !pInstr->iP2 ){
@@ -44809,11 +44745,9 @@ case JX9_OP_LT:
 case JX9_OP_LE: {
 	jx9_value *pNos = &pTos[-1];
 	/* Perform the comparison and act accordingly */
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	rc = jx9MemObjCmp(pNos, pTos, FALSE, 0);
 	if( pInstr->iOp == JX9_OP_LE ){
 		rc = rc < 1;
@@ -44858,11 +44792,9 @@ case JX9_OP_GT:
 case JX9_OP_GE: {
 	jx9_value *pNos = &pTos[-1];
 	/* Perform the comparison and act accordingly */
-#ifdef UNTRUST
 	if( pNos < pStack ){
 		goto Abort;
 	}
-#endif
 	rc = jx9MemObjCmp(pNos, pTos, FALSE, 0);
 	if( pInstr->iOp == JX9_OP_GE ){
 		rc = rc >= 0;
@@ -44892,11 +44824,9 @@ case JX9_OP_GE: {
 case JX9_OP_FOREACH_INIT: {
 	jx9_foreach_info *pInfo = (jx9_foreach_info *)pInstr->p3;
 	void *pName;
-#ifdef UNTRUST
 	if( pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	if( SyStringLength(&pInfo->sValue) < 1 ){
 		/* Take the variable name from the top of the stack */
 		if( (pTos->iFlags & MEMOBJ_STRING) == 0 ){
@@ -45048,11 +44978,9 @@ case JX9_OP_SWITCH: {
 	jx9_case_expr *aCase, *pCase;
 	jx9_value sValue, sCaseValue; 
 	sxu32 n, nEntry;
-#ifdef UNTRUST
 	if( pSwitch == 0 || pTos < pStack ){
 		goto Abort;
 	}
-#endif
 	/* Point to the case table  */
 	aCase = (jx9_case_expr *)SySetBasePtr(&pSwitch->aCaseExpr);
 	nEntry = SySetUsed(&pSwitch->aCaseExpr);
