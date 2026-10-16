@@ -843,9 +843,9 @@ static sxi32 ExprProcessFuncArguments(jx9_gen_state *pGen, jx9_expr_node *pOp, j
 					 }
 					 return rc;
 				 }
-				 /* Link the node to the tree */
-				 pNode->pLeft = apNode[iLeft];
-				 if( pNode->pLeft->pOp == 0 && pNode->pLeft->xCode != jx9CompileVariable ){
+				 /* Validate before linking: a node linked here but not yet cleared from
+				  * apNode[] is reachable twice, and jx9ExprFreeTree() walks both. */
+				 if( apNode[iLeft]->pOp == 0 && apNode[iLeft]->xCode != jx9CompileVariable ){
 					 /* Syntax error */
 					 rc = jx9GenCompileError(pGen, E_ERROR, pNode->pStart->nLine, 
 						 "'%z': Expecting a variable as left operand", &pNode->pOp->sOp);
@@ -854,6 +854,8 @@ static sxi32 ExprProcessFuncArguments(jx9_gen_state *pGen, jx9_expr_node *pOp, j
 					 }
 					 return rc;
 				 }
+				 /* Link the node to the tree */
+				 pNode->pLeft = apNode[iLeft];
 				 pNode->pRight = apNode[iRight];
 				 apNode[iLeft] = apNode[iRight] = 0;
 			 }
