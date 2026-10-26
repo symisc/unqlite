@@ -452,42 +452,50 @@ JX9_PRIVATE sxu32 SyMemcpy(const void *pSrc, void *pDest, sxu32 nLen)
 	SX_MACRO_FAST_MEMCPY(pSrc, pDest, nLen);
 	return nLen;
 }
+/*
+ * Header kept in front of every chunk.  A bare sxu32 made the returned pointer the
+ * allocator's result plus four; a union of the widest types keeps &pChunk[1] aligned.
+ */
+typedef union SyMemChunkHdr SyMemChunkHdr;
+union SyMemChunkHdr
+{
+	sxu32  nSize;    /* Size of the chunk that follows this header */
+	void  *pAlign;
+	sxi64  nAlign;
+	double rAlign;
+};
 static void * MemOSAlloc(sxu32 nBytes)
 {
-	sxu32 *pChunk;
-	pChunk = (sxu32 *)SyOSHeapAlloc(nBytes + sizeof(sxu32));
+	SyMemChunkHdr *pChunk;
+	pChunk = (SyMemChunkHdr *)SyOSHeapAlloc(nBytes + sizeof(SyMemChunkHdr));
 	if( pChunk == 0 ){
 		return 0;
 	}
-	pChunk[0] = nBytes;
+	pChunk->nSize = nBytes;
 	return (void *)&pChunk[1];
 }
 static void * MemOSRealloc(void *pOld, sxu32 nBytes)
 {
-	sxu32 *pOldChunk;
-	sxu32 *pChunk;
-	pOldChunk = (sxu32 *)(((char *)pOld)-sizeof(sxu32));
-	if( pOldChunk[0] >= nBytes ){
+	SyMemChunkHdr *pOldChunk;
+	SyMemChunkHdr *pChunk;
+	pOldChunk = ((SyMemChunkHdr *)pOld) - 1;
+	if( pOldChunk->nSize >= nBytes ){
 		return pOld;
 	}
-	pChunk = (sxu32 *)SyOSHeapRealloc(pOldChunk, nBytes + sizeof(sxu32));
+	pChunk = (SyMemChunkHdr *)SyOSHeapRealloc(pOldChunk, nBytes + sizeof(SyMemChunkHdr));
 	if( pChunk == 0 ){
 		return 0;
 	}
-	pChunk[0] = nBytes;
+	pChunk->nSize = nBytes;
 	return (void *)&pChunk[1];
 }
 static void MemOSFree(void *pBlock)
 {
-	void *pChunk;
-	pChunk = (void *)(((char *)pBlock)-sizeof(sxu32));
-	SyOSHeapFree(pChunk);
+	SyOSHeapFree((void *)(((SyMemChunkHdr *)pBlock) - 1));
 }
 static sxu32 MemOSChunkSize(void *pBlock)
 {
-	sxu32 *pChunk;
-	pChunk = (sxu32 *)(((char *)pBlock)-sizeof(sxu32));
-	return pChunk[0];
+	return (((SyMemChunkHdr *)pBlock) - 1)->nSize;
 }
 /* Export OS allocation methods */
 static const SyMemMethods sOSAllocMethods = {
