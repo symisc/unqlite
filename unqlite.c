@@ -49014,6 +49014,14 @@ static int lhParseOneCell(lhpage *pPage,const unsigned char *zRaw,const unsigned
 	zRaw += 8;
 	/* Cell offset */
 	pCell->iStart = iOfft;
+	/* Validate that local payload fits within the page */
+	if( pCell->iOvfl == 0 ){
+		sxu64 nNeeded = (sxu64)iOfft + L_HASH_CELL_SZ + nKey + nData;
+		if( nNeeded > (sxu64)pPage->pHash->iPageSize ){
+			SyMemBackendPoolFree(&pPage->pHash->sAllocator,pCell);
+			return UNQLITE_CORRUPT;
+		}
+	}
 	/* Consume the key */
 	rc = lhConsumeCellkey(pCell,unqliteDataConsumer,&pCell->sKey,pCell->nKey > 262144 /* 256 KB */? 1 : 0);
 	if( rc != UNQLITE_OK ){
@@ -56483,7 +56491,7 @@ static int pager_extract_header(Pager *pPager,const unsigned char *zRaw,sxu32 nB
     */
     if( pPager->iPageSize<UNQLITE_MIN_PAGE_SIZE || pPager->iSectorSize<32
      || pPager->iPageSize>UNQLITE_MAX_PAGE_SIZE || pPager->iSectorSize>MAX_SECTOR_SIZE
-     || ((pPager->iPageSize<-1)&pPager->iPageSize)!=0    || ((pPager->iSectorSize-1)&pPager->iSectorSize)!=0 
+     || ((pPager->iPageSize-1)&pPager->iPageSize)!=0    || ((pPager->iSectorSize-1)&pPager->iSectorSize)!=0
     ){
       return UNQLITE_CORRUPT;
 	}
