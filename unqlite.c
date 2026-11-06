@@ -30095,9 +30095,9 @@ static sxi32 SyOSUtilRandomSeed(void *pBuf, sxu32 nLen, void *pUnused)
 #endif
 	SXUNUSED(pUnused);
 #ifdef __WINNT__
-#ifndef __MINGW32__
-	nProcessID = GetProcessId(GetCurrentProcess());
-#endif
+	/* GetCurrentProcessId() is available on every Win32 toolchain (MSVC, MinGW, TinyCC),
+	 * unlike GetProcessId() which is missing from the MinGW32 and TinyCC import libraries. */
+	nProcessID = GetCurrentProcessId();
 	SyMemcpy((const void *)&nProcessID, zBuf, SXMIN(nLen, sizeof(DWORD)));
 	if( (sxu32)(&zBuf[nLen] - &zBuf[sizeof(DWORD)]) >= sizeof(SYSTEMTIME)  ){
 		GetSystemTime((LPSYSTEMTIME)&zBuf[sizeof(DWORD)]);
@@ -39538,9 +39538,8 @@ static void WinVfs_TempDir(jx9_context *pCtx)
 static unsigned int WinVfs_ProcessId(void)
 {
 	DWORD nID = 0;
-#ifndef __MINGW32__
-	nID = GetProcessId(GetCurrentProcess());
-#endif /* __MINGW32__ */
+	/* See SyOSUtilRandomSeed(): GetCurrentProcessId() is portable across Win32 toolchains */
+	nID = GetCurrentProcessId();
 	return (unsigned int)nID;
 }
 

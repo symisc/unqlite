@@ -6418,9 +6418,8 @@ static void WinVfs_TempDir(jx9_context *pCtx)
 static unsigned int WinVfs_ProcessId(void)
 {
 	DWORD nID = 0;
-#ifndef __MINGW32__
-	nID = GetProcessId(GetCurrentProcess());
-#endif /* __MINGW32__ */
+	/* See SyOSUtilRandomSeed(): GetCurrentProcessId() is portable across Win32 toolchains */
+	nID = GetCurrentProcessId();
 	return (unsigned int)nID;
 }
 
